@@ -4,10 +4,12 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
+@Slf4j
 @SpringBootApplication
 public class App extends Application {
 
@@ -26,6 +28,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        log.info("Called start(..) with primaryStage");
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/fxml/main.fxml"));
 
         // Sets the JavaFX controller factory to use Spring Boot's controller factory,
@@ -43,6 +46,7 @@ public class App extends Application {
      */
     @Override
     public void stop() {
+        log.info("Called stop()");
         context.stop();
     }
 
