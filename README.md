@@ -8,5 +8,8 @@ Download JavaFX SDK from Gluon website:
 Add the JavaFX SDK library files to your IntelliJ IDE:
 ![demo2.png](demo2.png)
 
-For further information read the
-following article: https://medium.com/@chanakaanuruddha/integrating-javafx-with-spring-boot-a-comprehensive-guide-709542439fff
+For further information read the following article:
+https://medium.com/@chanakaanuruddha/integrating-javafx-with-spring-boot-a-comprehensive-guide-709542439fff
+
+Also, might be interesting to look at (for further improvement):
+https://stackoverflow.com/questions/62728316/my-springboot-powered-javafx-application-wont-run-no-qualifying-bean-of-type

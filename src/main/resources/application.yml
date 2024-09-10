@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: spring-javafx-boot
+  main:
+    banner-mode: off
+logging:
+  file:
+    name: spring-javafx-boot.log
+  level:
+    root: info
+    com.github.vakho10.spring_javafx_boot: debug
