@@ -13,3 +13,6 @@ https://medium.com/@chanakaanuruddha/integrating-javafx-with-spring-boot-a-compr
 
 Also, might be interesting to look at (for further improvement):
 https://stackoverflow.com/questions/62728316/my-springboot-powered-javafx-application-wont-run-no-qualifying-bean-of-type
+
+The project was remade to use this library primarily dedicated for this issue:
+https://github.com/rgielen/javafx-weaver

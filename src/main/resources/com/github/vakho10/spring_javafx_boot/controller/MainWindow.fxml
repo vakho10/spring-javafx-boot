@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.vakho10.spring_javafx_boot.controller.AppController">
+<VBox alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.vakho10.spring_javafx_boot.controller.MainWindow">
    <children>
        <Button onAction="#onHelloButtonClick" text="Hello!" />
    
