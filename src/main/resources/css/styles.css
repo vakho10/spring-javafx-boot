@@ -1,10 +1,15 @@
 /*
- * Base styles — shared flat structure for all themes.
- * Theme-specific colors are in css/themes/*.css
+ * Base styles + theme-aware color rules.
+ * Color variables (-app-*) are defined in css/themes/*.css
  */
 
 .root {
     -fx-font-size: 14px;
+    -fx-background-color: -app-bg;
+    -fx-base: -app-bg;
+    -fx-accent: -app-accent;
+    -fx-focus-color: -app-accent;
+    -fx-faint-focus-color: transparent;
 }
 
 .text {
@@ -12,30 +17,117 @@
 }
 
 
-/* === Flat, square borders on all controls === */
+/* === Font style classes for menu items === */
 
-.button, .text-field, .text-area,
-.combo-box, .choice-box,
-.check-box > .box,
-.list-view, .table-view, .tree-view,
-.tab, .titled-pane > .title, .titled-pane > .content,
-.tooltip, .scroll-bar, .scroll-bar .thumb,
-.progress-bar .bar, .progress-bar .track {
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
+.font-en {
+    -fx-font-family: 'Roboto';
 }
 
+.font-ka {
+    -fx-font-family: 'Noto Sans Georgian';
+}
+
+
+/* === Label === */
+
+.label {
+    -fx-text-fill: -app-text;
+}
+
+
+/* === Button === */
+
 .button {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+    -fx-background-color: -app-surface;
+    -fx-text-fill: -app-text;
     -fx-padding: 6 16;
     -fx-cursor: hand;
 }
 
+.button:hover {
+    -fx-background-color: -app-hover;
+}
+
+.button:focused {
+    -fx-border-color: -app-accent;
+}
+
+.button:pressed {
+    -fx-background-color: -app-active;
+    -fx-border-color: -app-active;
+}
+
+
+/* === TextField === */
+
+.text-field {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+    -fx-background-color: -app-surface;
+    -fx-text-fill: -app-text;
+    -fx-highlight-fill: -app-accent;
+    -fx-prompt-text-fill: -app-prompt-text;
+    -fx-padding: 6;
+}
+
+.text-field:hover {
+    -fx-background-color: -app-hover;
+}
+
+.text-field:focused {
+    -fx-border-color: -app-accent;
+    -fx-background-color: -app-surface;
+}
+
+
+/* === TextArea === */
+
+.text-area {
+    -fx-background-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+    -fx-text-fill: -app-text;
+    -fx-highlight-fill: -app-accent;
+    -fx-background-color: -app-surface;
+}
+
+.text-area:hover {
+    -fx-border-color: -app-hover;
+}
+
+.text-area:focused {
+    -fx-border-color: -app-accent;
+}
+
+.text-area .content {
+    -fx-background-radius: 0;
+    -fx-background-color: -app-surface;
+}
+
+
+/* === ComboBox / ChoiceBox === */
+
 .combo-box, .choice-box {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+    -fx-background-color: -app-surface;
     -fx-cursor: hand;
 }
 
-.check-box, .radio-button {
-    -fx-cursor: hand;
+.combo-box:hover, .choice-box:hover {
+    -fx-background-color: -app-hover;
+}
+
+.combo-box:focused, .choice-box:focused {
+    -fx-border-color: -app-accent;
 }
 
 .combo-box-base > .arrow-button {
@@ -43,40 +135,320 @@
 }
 
 .combo-box-base > .arrow-button > .arrow {
+    -fx-background-color: -app-secondary-text;
     -fx-padding: 2 4;
     -fx-shape: "M 0 0 H 7 L 3.5 4 z";
 }
 
-.list-cell {
-    -fx-padding: 4 8;
+.combo-box .list-view {
+    -fx-background-radius: 0;
+    -fx-background-color: -app-surface;
+    -fx-border-width: 0;
 }
 
-.list-cell:hover, .tree-cell, .tab .tab-close-button {
+
+/* === CheckBox === */
+
+.check-box {
+    -fx-text-fill: -app-text;
     -fx-cursor: hand;
+}
+
+.check-box > .box {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+    -fx-background-color: -app-surface;
+}
+
+.check-box:hover > .box {
+    -fx-background-color: -app-hover;
+}
+
+.check-box:focused > .box {
+    -fx-border-color: -app-accent;
+}
+
+.check-box > .box > .mark {
+    -fx-background-color: transparent;
+}
+
+.check-box:selected > .box > .mark {
+    -fx-background-color: -app-text;
+}
+
+
+/* === RadioButton === */
+
+.radio-button {
+    -fx-text-fill: -app-text;
+    -fx-cursor: hand;
+}
+
+.radio-button > .radio {
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+    -fx-background-color: -app-surface;
+}
+
+.radio-button:hover > .radio {
+    -fx-background-color: -app-hover;
+}
+
+.radio-button:focused > .radio {
+    -fx-border-color: -app-accent;
+}
+
+.radio-button:selected > .radio > .dot {
+    -fx-background-color: -app-accent;
+}
+
+
+/* === MenuBar === */
+
+.menu-bar {
+    -fx-background-color: -app-surface;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -app-border;
+    -fx-padding: 0;
 }
 
 .menu-bar .menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -app-text;
     -fx-padding: 4 8;
     -fx-cursor: hand;
+}
+
+.menu-bar .menu-button:hover,
+.menu-bar .menu-button:showing {
+    -fx-background-color: -app-hover;
 }
 
 .menu-item {
     -fx-background-radius: 0;
+    -fx-background-color: -app-surface;
+    -fx-text-fill: -app-text;
     -fx-cursor: hand;
 }
 
+.menu-item .label {
+    -fx-text-fill: -app-text;
+}
+
+.menu-item:hover, .menu-item:focused {
+    -fx-background-color: -app-hover;
+}
+
+.menu-item:pressed {
+    -fx-background-color: -app-active;
+}
+
+.context-menu {
+    -fx-background-color: -app-surface;
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+    -fx-padding: 2;
+}
+
+.radio-menu-item:checked .label {
+    -fx-text-fill: -app-text;
+}
+
+
+/* === ListView / ListCell === */
+
+.list-view {
+    -fx-background-radius: 0;
+    -fx-background-color: -app-surface;
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+}
+
+.list-view:focused {
+    -fx-border-color: -app-accent;
+}
+
+.list-cell {
+    -fx-background-color: -app-surface;
+    -fx-text-fill: -app-text;
+    -fx-padding: 4 8;
+}
+
+.list-cell:hover {
+    -fx-background-color: -app-hover;
+    -fx-cursor: hand;
+}
+
+.list-cell:selected {
+    -fx-background-color: -app-hover;
+}
+
+
+/* === TableView === */
+
+.table-view {
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+    -fx-background-radius: 0;
+    -fx-background-color: -app-surface;
+    -fx-table-cell-border-color: -app-border;
+}
+
+.table-view:focused {
+    -fx-border-color: -app-accent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: -app-bg;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -app-border;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: -app-border;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -app-text;
+    -fx-alignment: center-left;
+}
+
+.table-view .column-resize-line {
+    -fx-background-color: -app-accent;
+    -fx-pref-width: 1;
+}
+
+.table-row-cell {
+    -fx-background-color: -app-surface;
+    -fx-text-background-color: -app-text;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: -app-hover;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -app-hover;
+}
+
+.table-view .filler {
+    -fx-background-color: transparent;
+}
+
+
+/* === TreeView === */
+
+.tree-view {
+    -fx-background-color: -app-surface;
+    -fx-border-width: 1;
+    -fx-border-color: -app-border;
+}
+
+.tree-view:focused {
+    -fx-border-color: -app-accent;
+}
+
+.tree-cell {
+    -fx-background-color: -app-surface;
+    -fx-text-fill: -app-text;
+    -fx-cursor: hand;
+}
+
+.tree-cell:hover {
+    -fx-background-color: -app-hover;
+}
+
+.tree-cell:selected {
+    -fx-background-color: -app-hover;
+}
+
+.tree-cell > .tree-disclosure-node > .arrow {
+    -fx-background-color: -app-secondary-text;
+}
+
+
+/* === TabPane === */
+
+.tab-pane {
+    -fx-background-color: -app-bg;
+}
+
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: -app-surface;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -app-border;
+}
+
 .tab {
+    -fx-background-radius: 0;
+    -fx-background-color: -app-surface;
     -fx-border-width: 0;
     -fx-padding: 4 12;
 }
 
-.table-view .column-header .label {
-    -fx-alignment: center-left;
+.tab:selected {
+    -fx-background-color: -app-bg;
+}
+
+.tab .tab-label {
+    -fx-text-fill: -app-text;
+}
+
+.tab .tab-close-button {
+    -fx-background-color: -app-secondary-text;
+    -fx-cursor: hand;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+
+/* === TitledPane === */
+
+.titled-pane {
+    -fx-text-fill: -app-text;
+}
+
+.titled-pane > .title {
+    -fx-background-color: -app-hover;
+    -fx-background-radius: 0;
+    -fx-border-width: 0;
+}
+
+.titled-pane > .content {
+    -fx-background-color: -app-bg;
+    -fx-border-color: -app-border;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+}
+
+
+/* === ScrollBar === */
+
+.scroll-bar {
+    -fx-background-color: -app-scrollbar-bg;
+    -fx-background-radius: 0;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: -app-scrollbar-thumb;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: -app-scrollbar-thumb-hover;
 }
 
 .scroll-bar .increment-button,
 .scroll-bar .decrement-button {
+    -fx-background-color: -app-scrollbar-bg;
     -fx-border-width: 0;
+    -fx-background-radius: 0;
 }
 
 .scroll-bar:vertical .increment-arrow,
@@ -87,15 +459,80 @@
     -fx-padding: 0;
 }
 
+
+/* === ProgressBar === */
+
+.progress-bar {
+    -fx-background-color: transparent;
+}
+
+.progress-bar .bar {
+    -fx-background-color: -app-accent;
+    -fx-background-radius: 0;
+    -fx-padding: 3;
+    -fx-background-insets: 0;
+}
+
+.progress-bar .track {
+    -fx-background-color: -app-surface;
+    -fx-background-radius: 0;
+}
+
+
+/* === Slider === */
+
+.slider .track {
+    -fx-background-color: -app-surface;
+    -fx-background-radius: 0;
+}
+
 .slider .thumb {
+    -fx-background-color: -app-secondary-text;
     -fx-background-radius: 6;
     -fx-cursor: hand;
 }
 
-.slider .track {
-    -fx-background-radius: 0;
+.slider .thumb:hover {
+    -fx-background-color: -app-accent;
 }
 
+.slider .thumb:pressed {
+    -fx-background-color: -app-accent-pressed;
+}
+
+
+/* === Tooltip === */
+
+.tooltip {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-background-color: -app-surface;
+    -fx-border-color: -app-border;
+    -fx-border-width: 1;
+    -fx-text-fill: -app-text;
+    -fx-padding: 6;
+}
+
+
+/* === Separator === */
+
+.separator .line {
+    -fx-border-color: -app-border;
+    -fx-border-width: 1 0 0 0;
+}
+
+
+/* === Hyperlink === */
+
 .hyperlink {
+    -fx-text-fill: -app-accent;
     -fx-border-color: transparent;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: -app-accent-hover;
+}
+
+.hyperlink:visited {
+    -fx-text-fill: -app-accent;
 }

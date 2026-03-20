@@ -15,8 +15,7 @@ public class SecondController {
     private final Navigator navigator;
 
     @FXML
-    protected void onBackButtonClick() {
+    private void onBackButtonClick() {
         navigator.navigateTo(MainController.class);
     }
-
 }

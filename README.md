@@ -17,16 +17,18 @@ A desktop application template integrating **Spring Boot 4.0.4** with **JavaFX 2
 ```
 src/main/java/io/github/vakho10/springjavafxboot/
 ├── Launcher.java                  # JVM entry point — bypasses JavaFX module-path check
-├── Main.java                      # JavaFX Application — boots Spring, loads FXML scene
+├── JavaFxApplication.java         # JavaFX Application — boots Spring, loads FXML scene
 ├── AppConfig.java                 # @SpringBootApplication config
 ├── controller/
 │   ├── MainController.java        # FXML controller, Spring-managed @Component
 │   └── SecondController.java      # Second view controller — navigation demo
 ├── navigation/
 │   ├── MessageSourceResourceBundle.java  # Bridges Spring MessageSource → JavaFX ResourceBundle
-│   ├── Navigator.java             # Service for navigation, language & theme switching
+│   ├── NavigationException.java   # Custom exception for navigation errors
+│   ├── Navigator.java             # Service for navigation & language switching
 │   └── ViewResolver.java          # Convention-based FXML template resolver
 └── service/
+    ├── ThemeService.java          # Manages theme & font stylesheets
     └── UserPreferencesService.java # Persists theme & locale via Java Preferences API
 
 src/main/resources/
@@ -34,12 +36,12 @@ src/main/resources/
 ├── messages.properties            # i18n messages (English — default)
 ├── messages_ka.properties         # i18n messages (Georgian)
 ├── css/
-│   ├── styles.css                 # Base shared styles (flat structure, sizing, smoothing)
+│   ├── styles.css                 # Structure + theme-aware colors via looked-up color variables
 │   ├── fonts-en.css               # English font (Roboto)
 │   ├── fonts-ka.css               # Georgian font (Noto Sans Georgian)
 │   └── themes/
-│       ├── dark.css               # 🌙 Dark theme colors
-│       └── light.css              # ☀️ Light theme colors
+│       ├── dark.css               # 🌙 Dark color palette (looked-up color definitions)
+│       └── light.css              # ☀️ Light color palette (looked-up color definitions)
 ├── fonts/
 │   ├── roboto/                    # Roboto (Light, Regular, Medium, Bold)
 │   └── noto-sans-georgian/        # Noto Sans Georgian (Light, Regular, Medium, SemiBold, Bold)
@@ -53,8 +55,8 @@ src/main/resources/
 
 ## ⚙️ How It Works
 
-1. **`Launcher`** is the JVM entry point. It delegates to `Main.main()`. A plain class (not extending `Application`) is required because JavaFX performs a module-path check on `Application` subclasses that fails in classpath-based setups like Spring Boot.
-2. **`Main`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, creates a `BorderPane` scene (menu bar at top, views swap in center), and applies base + theme CSS stylesheets.
+1. **`Launcher`** is the JVM entry point. It delegates to `JavaFxApplication.main()`. A plain class (not extending `Application`) is required because JavaFX performs a module-path check on `Application` subclasses that fails in classpath-based setups like Spring Boot.
+2. **`JavaFxApplication`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, creates a `BorderPane` scene (menu bar at top, views swap in center), and applies base + theme CSS stylesheets.
 3. **`AppConfig`** is the `@SpringBootApplication` root — enables component scanning and auto-configuration.
 4. **Controllers** are Spring `@Component`s with full access to `@Autowired`, `@Value`, and any other Spring features.
 5. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`). Roboto is used for English, Noto Sans Georgian for Georgian — switched automatically via locale-specific CSS stylesheets. LCD subpixel smoothing is enabled for crisp rendering.
@@ -77,11 +79,11 @@ The project includes a Spring MVC–inspired navigation system:
 
 The app separates structure from colors using layered CSS:
 
-- **`styles.css`** — base shared styles (flat square borders, padding, cursor, sizing)
-- **`themes/dark.css`** — 🌙 dark color palette (based on [JavaFX-Dark-Theme](https://github.com/antoniopelusi/JavaFX-Dark-Theme))
-- **`themes/light.css`** — ☀️ light color palette
+- **`styles.css`** — all selectors with structure + colors via JavaFX [looked-up colors](https://openjfx.io/javadoc/25/javafx.graphics/javafx/scene/doc-files/cssref.html#lookedupcolor) (`-app-bg`, `-app-surface`, `-app-text`, etc.)
+- **`themes/dark.css`** — 🌙 defines color variables (based on [JavaFX-Dark-Theme](https://github.com/antoniopelusi/JavaFX-Dark-Theme))
+- **`themes/light.css`** — ☀️ defines color variables
 
-A **Theme** menu in the menu bar lets users switch themes at runtime. The active theme stylesheet is swapped without reloading the view. To add a new theme, create a CSS file in `css/themes/` and register it in `Navigator`.
+Theme switching is managed by `ThemeService` — it swaps the theme stylesheet at runtime without reloading the view. A **Theme** menu in the menu bar lets users toggle between dark and light. To add a new theme, create a CSS file in `css/themes/` defining the `-app-*` color variables and register it in `ThemeService`.
 
 ## 💾 User Preferences
 

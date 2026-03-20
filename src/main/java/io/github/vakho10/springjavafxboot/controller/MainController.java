@@ -26,29 +26,29 @@ public class MainController {
     private int counter = 0;
 
     @FXML
-    protected void initialize() {
+    private void initialize() {
         updateCounterText();
     }
 
     @FXML
-    protected void onHelloButtonClick() {
+    private void onHelloButtonClick() {
         welcomeText.setText(messageSource.getMessage("main.welcome", null, navigator.getCurrentLocale()));
     }
 
     @FXML
-    protected void onIncrementClick() {
+    private void onIncrementClick() {
         counter++;
         updateCounterText();
     }
 
     @FXML
-    protected void onDecrementClick() {
+    private void onDecrementClick() {
         counter--;
         updateCounterText();
     }
 
     @FXML
-    protected void onGoToSecondClick() {
+    private void onGoToSecondClick() {
         navigator.navigateTo(SecondController.class);
     }
 

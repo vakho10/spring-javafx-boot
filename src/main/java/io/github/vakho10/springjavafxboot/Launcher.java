@@ -1,7 +1,7 @@
 package io.github.vakho10.springjavafxboot;
 
 /**
- * Application entry point that delegates to {@link Main}.
+ * Application entry point that delegates to {@link JavaFxApplication}.
  * <p>
  * When the JVM's main class extends {@link javafx.application.Application},
  * the JavaFX launcher performs a module-path check before {@code main()} executes.
@@ -13,6 +13,6 @@ package io.github.vakho10.springjavafxboot;
  */
 public class Launcher {
     public static void main(String[] args) {
-        Main.main(args);
+        JavaFxApplication.main(args);
     }
 }

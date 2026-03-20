@@ -1,6 +1,6 @@
 package io.github.vakho10.springjavafxboot.service;
 
-import io.github.vakho10.springjavafxboot.Main;
+import io.github.vakho10.springjavafxboot.AppConfig;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +20,10 @@ public class UserPreferencesService {
     private static final String KEY_THEME = "theme";
     private static final String KEY_LOCALE = "locale";
 
-    private static final String DEFAULT_THEME = "light";
+    private static final String DEFAULT_THEME = "dark";
     private static final String DEFAULT_LOCALE = "en";
 
-    private final Preferences prefs = Preferences.userNodeForPackage(Main.class);
+    private final Preferences prefs = Preferences.userNodeForPackage(AppConfig.class);
 
     public String getTheme() {
         return prefs.get(KEY_THEME, DEFAULT_THEME);
@@ -35,11 +35,11 @@ public class UserPreferencesService {
     }
 
     public Locale getLocale() {
-        return Locale.of(prefs.get(KEY_LOCALE, DEFAULT_LOCALE));
+        return Locale.forLanguageTag(prefs.get(KEY_LOCALE, DEFAULT_LOCALE));
     }
 
     public void setLocale(Locale locale) {
-        prefs.put(KEY_LOCALE, locale.getLanguage());
+        prefs.put(KEY_LOCALE, locale.toLanguageTag());
         flush();
     }
 
