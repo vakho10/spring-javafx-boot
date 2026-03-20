@@ -27,7 +27,6 @@ src/main/resources/
 ├── css/
 │   └── styles.css                 # Global JavaFX stylesheet (fonts, sizing)
 ├── fonts/
-│   ├── Roboto-*.ttf               # Roboto (Regular, Bold, Italic, BoldItalic)
 │   └── NotoSansGeorgian-*.ttf     # Noto Sans Georgian (Light, Regular, Medium, SemiBold, Bold)
 └── templates/
     └── main.fxml                  # Main view layout

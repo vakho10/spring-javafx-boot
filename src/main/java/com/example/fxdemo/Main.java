@@ -28,11 +28,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         // Load font variants so they can be referenced in CSS
-        Font.loadFont(getClass().getResourceAsStream("/fonts/Roboto-Regular.ttf"), 14);
-        Font.loadFont(getClass().getResourceAsStream("/fonts/Roboto-Bold.ttf"), 14);
-        Font.loadFont(getClass().getResourceAsStream("/fonts/Roboto-Italic.ttf"), 14);
-        Font.loadFont(getClass().getResourceAsStream("/fonts/Roboto-BoldItalic.ttf"), 14);
-
         Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-Light.ttf"), 14);
         Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-Regular.ttf"), 14);
         Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-Medium.ttf"), 14);
