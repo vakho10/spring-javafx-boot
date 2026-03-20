@@ -69,3 +69,7 @@ Build a self-contained executable with a bundled JRE (no Java installation requi
 ```
 
 The output is in `target/dist/spring-javafx-boot/` — run the `.exe` directly.
+
+## 🙏 Credits
+
+- App icons from [icon-icons.com](https://icon-icons.com/) (free icons)
