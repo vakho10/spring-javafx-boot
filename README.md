@@ -28,6 +28,7 @@ src/main/java/io/github/vakho10/springjavafxboot/
 │   ├── Navigator.java             # Service for navigation & language switching
 │   └── ViewResolver.java          # Convention-based FXML template resolver
 └── service/
+    ├── ErrorHandler.java          # Global uncaught exception handler with themed alerts
     ├── ThemeService.java          # Manages theme & font stylesheets
     └── UserPreferencesService.java # Persists theme & locale via Java Preferences API
 
@@ -110,6 +111,18 @@ Uses Spring Boot's `MessageSource` bridged to JavaFX via `MessageSourceResourceB
   messageSource.getMessage("main.counter", new Object[]{counter}, navigator.getCurrentLocale());
   ```
 - **Language menu** — built-in `MenuBar` with radio toggle between languages, managed by `Navigator`. Switching locale rebuilds the menu and reloads the current view.
+
+## 🚨 Error Handling
+
+`ErrorHandler` registers a global uncaught exception handler on both the JavaFX Application Thread and background threads. When an unhandled exception occurs:
+
+- A themed `Alert` dialog is shown with the error message
+- An expandable **"Stack trace"** section reveals the full trace in a `TextArea`
+- The dialog inherits the current theme stylesheets (dark/light)
+- All dialog text is localized (title, header, details label)
+- The exception is also logged via SLF4J
+
+A `.button-danger` CSS class is available for destructive/error-related actions — it uses theme-aware color variables (`-app-danger`, `-app-danger-hover`, etc.).
 
 ## 📋 Prerequisites
 
