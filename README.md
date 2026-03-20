@@ -32,9 +32,12 @@ src/main/resources/
 ├── messages.properties            # i18n messages (English — default)
 ├── messages_ka.properties         # i18n messages (Georgian)
 ├── css/
-│   └── styles.css                 # Global JavaFX stylesheet (fonts, sizing)
+│   ├── styles.css                 # Global JavaFX stylesheet (sizing, smoothing)
+│   ├── fonts-en.css               # English font (Roboto)
+│   └── fonts-ka.css               # Georgian font (Noto Sans Georgian)
 ├── fonts/
-│   └── NotoSansGeorgian-*.ttf     # Noto Sans Georgian (Light, Regular, Medium, SemiBold, Bold)
+│   ├── roboto/                    # Roboto (Light, Regular, Medium, Bold)
+│   └── noto-sans-georgian/        # Noto Sans Georgian (Light, Regular, Medium, SemiBold, Bold)
 ├── icons/
 │   ├── app.ico                    # Application icon (jpackage / Windows)
 │   └── app.png                    # Application icon (JavaFX window)
@@ -49,7 +52,7 @@ src/main/resources/
 2. **`Main`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, creates a `BorderPane` scene (menu bar at top, views swap in center), and applies the CSS stylesheet.
 3. **`AppConfig`** is the `@SpringBootApplication` root — enables component scanning and auto-configuration.
 4. **Controllers** are Spring `@Component`s with full access to `@Autowired`, `@Value`, and any other Spring features.
-5. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`) and referenced globally in `styles.css`. LCD subpixel smoothing is enabled for crisp rendering.
+5. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`). Roboto is used for English, Noto Sans Georgian for Georgian — switched automatically via locale-specific CSS stylesheets. LCD subpixel smoothing is enabled for crisp rendering.
 
 ## 🧭 Navigation
 

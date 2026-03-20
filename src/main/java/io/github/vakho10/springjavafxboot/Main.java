@@ -29,11 +29,15 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Load font variants so they can be referenced in CSS
-        Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-Light.ttf"), 14);
-        Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-Regular.ttf"), 14);
-        Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-Medium.ttf"), 14);
-        Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-SemiBold.ttf"), 14);
-        Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-Bold.ttf"), 14);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/roboto/Roboto-Light.ttf"), 14);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/roboto/Roboto-Regular.ttf"), 14);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/roboto/Roboto-Medium.ttf"), 14);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/roboto/Roboto-Bold.ttf"), 14);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/noto-sans-georgian/NotoSansGeorgian-Light.ttf"), 14);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/noto-sans-georgian/NotoSansGeorgian-Regular.ttf"), 14);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/noto-sans-georgian/NotoSansGeorgian-Medium.ttf"), 14);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/noto-sans-georgian/NotoSansGeorgian-SemiBold.ttf"), 14);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/noto-sans-georgian/NotoSansGeorgian-Bold.ttf"), 14);
 
         // Create scene with BorderPane root: menu bar at top, Navigator swaps center
         Scene scene = new Scene(new BorderPane(), 800, 600);

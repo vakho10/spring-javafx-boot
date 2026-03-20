@@ -15,7 +15,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,10 @@ public class Navigator {
     private BorderPane rootPane;
 
     private static final Locale GEORGIAN = Locale.of("ka");
+    private static final Map<Locale, String> FONT_STYLESHEETS = Map.of(
+            Locale.ENGLISH, "/css/fonts-en.css",
+            GEORGIAN, "/css/fonts-ka.css"
+    );
 
     @Getter
     private Locale currentLocale = Locale.ENGLISH;
@@ -37,6 +43,7 @@ public class Navigator {
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.rootPane = (BorderPane) primaryStage.getScene().getRoot();
+        applyFontStylesheet();
         buildMenuBar();
     }
 
@@ -56,9 +63,21 @@ public class Navigator {
 
     public void switchLocale(Locale locale) {
         this.currentLocale = locale;
+        applyFontStylesheet();
         buildMenuBar();
         if (currentController != null) {
             navigateTo(currentController);
+        }
+    }
+
+    private void applyFontStylesheet() {
+        List<String> stylesheets = primaryStage.getScene().getStylesheets();
+        FONT_STYLESHEETS.values().stream()
+                .map(path -> getClass().getResource(path).toExternalForm())
+                .forEach(stylesheets::remove);
+        String fontCss = FONT_STYLESHEETS.get(currentLocale);
+        if (fontCss != null) {
+            stylesheets.add(getClass().getResource(fontCss).toExternalForm());
         }
     }
 
@@ -68,11 +87,13 @@ public class Navigator {
         ToggleGroup group = new ToggleGroup();
 
         RadioMenuItem englishItem = new RadioMenuItem(messageSource.getMessage("menu.language.english", null, currentLocale));
+        englishItem.setStyle("-fx-font-family: 'Roboto'");
         englishItem.setToggleGroup(group);
         englishItem.setSelected(currentLocale.equals(Locale.ENGLISH));
         englishItem.setOnAction(e -> switchLocale(Locale.ENGLISH));
 
         RadioMenuItem georgianItem = new RadioMenuItem(messageSource.getMessage("menu.language.georgian", null, currentLocale));
+        georgianItem.setStyle("-fx-font-family: 'Noto Sans Georgian'");
         georgianItem.setToggleGroup(group);
         georgianItem.setSelected(currentLocale.equals(GEORGIAN));
         georgianItem.setOnAction(e -> switchLocale(GEORGIAN));
