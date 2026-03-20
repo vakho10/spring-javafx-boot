@@ -24,6 +24,7 @@ public class Navigator {
     private final ViewResolver viewResolver;
     private final ApplicationContext applicationContext;
     private final MessageSource messageSource;
+    private final MessageSourceResourceBundle resourceBundle;
     private Stage primaryStage;
     private BorderPane rootPane;
 
@@ -43,7 +44,8 @@ public class Navigator {
         try {
             FXMLLoader loader = new FXMLLoader(viewResolver.resolve(controllerClass));
             loader.setControllerFactory(applicationContext::getBean);
-            loader.setResources(new MessageSourceResourceBundle(messageSource, currentLocale));
+            resourceBundle.setLocale(currentLocale);
+            loader.setResources(resourceBundle);
             Parent view = loader.load();
             rootPane.setCenter(view);
             currentController = controllerClass;

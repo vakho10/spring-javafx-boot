@@ -1,6 +1,9 @@
 package io.github.vakho10.springjavafxboot.navigation;
 
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Component;
 
 import java.util.Enumeration;
 import java.util.Locale;
@@ -10,15 +13,14 @@ import java.util.ResourceBundle;
  * Adapts Spring's MessageSource to Java's ResourceBundle,
  * allowing FXML's %key syntax to use Spring-managed messages.
  */
+@Component
+@RequiredArgsConstructor
 public class MessageSourceResourceBundle extends ResourceBundle {
 
     private final MessageSource messageSource;
-    private final Locale locale;
 
-    public MessageSourceResourceBundle(MessageSource messageSource, Locale locale) {
-        this.messageSource = messageSource;
-        this.locale = locale;
-    }
+    @Setter
+    private Locale locale = Locale.ENGLISH;
 
     @Override
     protected Object handleGetObject(String key) {

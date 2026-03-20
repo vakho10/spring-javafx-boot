@@ -23,11 +23,14 @@ src/main/java/io/github/vakho10/springjavafxboot/
 │   ├── MainController.java        # FXML controller, Spring-managed @Component
 │   └── SecondController.java      # Second view controller — navigation demo
 └── navigation/
-    ├── Navigator.java             # Service for navigating between views
+    ├── MessageSourceResourceBundle.java  # Bridges Spring MessageSource → JavaFX ResourceBundle
+    ├── Navigator.java             # Service for navigating between views (+ language menu)
     └── ViewResolver.java          # Convention-based FXML template resolver
 
 src/main/resources/
 ├── application.properties         # Spring Boot + view resolver configuration
+├── messages.properties            # i18n messages (English — default)
+├── messages_ka.properties         # i18n messages (Georgian)
 ├── css/
 │   └── styles.css                 # Global JavaFX stylesheet (fonts, sizing)
 ├── fonts/
@@ -43,7 +46,7 @@ src/main/resources/
 ## ⚙️ How It Works
 
 1. **`Launcher`** is the JVM entry point. It delegates to `Main.main()`. A plain class (not extending `Application`) is required because JavaFX performs a module-path check on `Application` subclasses that fails in classpath-based setups like Spring Boot.
-2. **`Main`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, the FXML view, and applies the CSS stylesheet. Controllers are wired via `springContext::getBean`.
+2. **`Main`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, creates a `BorderPane` scene (menu bar at top, views swap in center), and applies the CSS stylesheet.
 3. **`AppConfig`** is the `@SpringBootApplication` root — enables component scanning and auto-configuration.
 4. **Controllers** are Spring `@Component`s with full access to `@Autowired`, `@Value`, and any other Spring features.
 5. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`) and referenced globally in `styles.css`. LCD subpixel smoothing is enabled for crisp rendering.
@@ -61,6 +64,21 @@ The project includes a Spring MVC–inspired navigation system:
   ```java
   navigator.navigateTo(SecondController.class);
   ```
+
+## 🌍 Localization (i18n)
+
+Uses Spring Boot's `MessageSource` bridged to JavaFX via `MessageSourceResourceBundle`:
+
+- **Message files** — `messages.properties` (English) and `messages_ka.properties` (Georgian) in standard Spring Boot location
+- **FXML `%key` syntax** — reference message keys directly in FXML:
+  ```xml
+  <Button text="%main.button.hello"/>
+  ```
+- **Programmatic access** — use `MessageSource` in controllers:
+  ```java
+  messageSource.getMessage("main.welcome", null, navigator.getCurrentLocale());
+  ```
+- **Language menu** — built-in `MenuBar` with radio toggle between languages, managed by `Navigator`. Switching locale rebuilds the menu and reloads the current view.
 
 ## 📋 Prerequisites
 
