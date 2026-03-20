@@ -93,6 +93,14 @@
             <id>bundle</id>
             <build>
                 <plugins>
+                    <!-- Safe clean: don't fail if the .exe is locked -->
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                        </configuration>
+                    </plugin>
+
                     <!-- 1) Download JRE -->
                     <plugin>
                         <groupId>com.googlecode.maven-download-plugin</groupId>
@@ -114,11 +122,29 @@
                         </executions>
                     </plugin>
 
-                    <!-- 2) Copy Spring Boot fat jar to staging directory -->
+                    <!-- 2) Delete old dist (Windows-safe) & copy fat jar to staging -->
                     <plugin>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <version>3.0.0</version>
                         <executions>
+                            <execution>
+                                <id>delete-dist-windows</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <!-- Kill the running exe if it exists, then force-remove dist -->
+                                        <exec executable="cmd" failonerror="false">
+                                            <arg line="/c taskkill /f /im ${project.artifactId}.exe 2&gt;nul"/>
+                                        </exec>
+                                        <exec executable="cmd" failonerror="false">
+                                            <arg line="/c rmdir /s /q &quot;${project.build.directory}\dist&quot; 2&gt;nul"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
                             <execution>
                                 <id>copy-boot-jar</id>
                                 <phase>package</phase>
