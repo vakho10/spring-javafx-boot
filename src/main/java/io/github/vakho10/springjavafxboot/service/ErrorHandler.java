@@ -2,9 +2,7 @@ package io.github.vakho10.springjavafxboot.service;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
@@ -49,7 +47,11 @@ public class ErrorHandler {
 
         Locale locale = localeSupplier != null ? localeSupplier.get() : Locale.ENGLISH;
 
+        // Use a custom OK button with localized text
+        ButtonType okButton = new ButtonType(msg("error.button.ok", locale), ButtonBar.ButtonData.OK_DONE);
+
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.getButtonTypes().setAll(okButton);
         alert.setTitle(msg("error.title", locale));
         alert.setHeaderText(msg("error.header", locale));
         alert.setContentText(throwable.getMessage());
@@ -81,7 +83,22 @@ public class ErrorHandler {
             alert.initOwner(primaryStage);
         }
 
+        // Localize the "Show Details" / "Hide Details" toggle text
+        alert.getDialogPane().expandedProperty().addListener((obs, wasExpanded, isExpanded) ->
+                updateDetailsButtonText(alert, locale));
+        // Set initial text (collapsed state)
+        Platform.runLater(() -> updateDetailsButtonText(alert, locale));
+
         alert.showAndWait();
+    }
+
+    private void updateDetailsButtonText(Alert alert, Locale locale) {
+        Hyperlink detailsButton = (Hyperlink) alert.getDialogPane().lookup(".details-button");
+        if (detailsButton != null) {
+            boolean expanded = alert.getDialogPane().isExpanded();
+            String key = expanded ? "error.hideDetails" : "error.showDetails";
+            detailsButton.setText(msg(key, locale));
+        }
     }
 
     private String msg(String key, Locale locale) {
