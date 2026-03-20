@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
@@ -43,6 +44,7 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Spring Boot + JavaFX");
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/app.png")));
         primaryStage.show();
     }
 

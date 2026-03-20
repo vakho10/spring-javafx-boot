@@ -20,6 +20,13 @@
         <java.version>25</java.version>
         <javafx.version>25.0.2</javafx.version>
         <start-class>io.github.vakho10.springjavafxboot.Launcher</start-class>
+
+        <!-- JRE bundling (used by the 'bundle' profile) -->
+        <jre.download.link.windows>
+            https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jre_x64_windows_hotspot_25.0.2_10.zip
+        </jre.download.link.windows>
+        <jre.root.folder.windows>jdk-25.0.2+10-jre</jre.root.folder.windows>
+        <icon.file.windows>${project.basedir}/src/main/resources/icons/app.ico</icon.file.windows>
     </properties>
 
     <dependencies>
@@ -80,4 +87,87 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>bundle</id>
+            <build>
+                <plugins>
+                    <!-- 1) Download JRE -->
+                    <plugin>
+                        <groupId>com.googlecode.maven-download-plugin</groupId>
+                        <artifactId>download-maven-plugin</artifactId>
+                        <version>1.13.0</version>
+                        <executions>
+                            <execution>
+                                <id>download-jre</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>${jre.download.link.windows}</url>
+                                    <unpack>true</unpack>
+                                    <outputDirectory>${project.build.directory}/java</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- 2) Copy Spring Boot fat jar to staging directory -->
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>copy-boot-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${project.build.directory}/app"/>
+                                        <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                              tofile="${project.build.directory}/app/app.jar"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- 3) Package with jpackage -->
+                    <plugin>
+                        <groupId>org.panteleyev</groupId>
+                        <artifactId>jpackage-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>run-jpackage</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jpackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <name>${project.artifactId}</name>
+                            <icon>${icon.file.windows}</icon>
+                            <appVersion>1.0.0</appVersion>
+                            <vendor>io.github.vakho10</vendor>
+                            <type>APP_IMAGE</type>
+                            <runtimeImage>${project.build.directory}/java/${jre.root.folder.windows}</runtimeImage>
+                            <input>${project.build.directory}/app</input>
+                            <destination>${project.build.directory}/dist</destination>
+                            <mainJar>app.jar</mainJar>
+                            <mainClass>org.springframework.boot.loader.launch.JarLauncher</mainClass>
+                            <javaOptions>
+                                <option>-Dfile.encoding=UTF-8</option>
+                            </javaOptions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

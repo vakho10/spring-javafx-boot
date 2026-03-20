@@ -1,8 +1,8 @@
-# Spring JavaFX Boot
+# 🚀 Spring JavaFX Boot
 
 A desktop application template integrating **Spring Boot 4.0.4** with **JavaFX 25.0.2**. Spring manages the application context, dependency injection, and configuration while JavaFX handles the UI with FXML views and CSS styling.
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 | Component | Version |
 |-----------|---------|
@@ -12,7 +12,7 @@ A desktop application template integrating **Spring Boot 4.0.4** with **JavaFX 2
 | Lombok | managed by Spring Boot |
 | Maven | 3.x (wrapper included) |
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/main/java/io/github/vakho10/springjavafxboot/
@@ -28,11 +28,14 @@ src/main/resources/
 │   └── styles.css                 # Global JavaFX stylesheet (fonts, sizing)
 ├── fonts/
 │   └── NotoSansGeorgian-*.ttf     # Noto Sans Georgian (Light, Regular, Medium, SemiBold, Bold)
+├── icons/
+│   ├── app.ico                    # Application icon (jpackage / Windows)
+│   └── app.png                    # Application icon (JavaFX window)
 └── templates/
     └── main.fxml                  # Main view layout
 ```
 
-## How It Works
+## ⚙️ How It Works
 
 1. **`Launcher`** is the JVM entry point. It delegates to `Main.main()`. A plain class (not extending `Application`) is required because JavaFX performs a module-path check on `Application` subclasses that fails in classpath-based setups like Spring Boot.
 2. **`Main`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, the FXML view, and applies the CSS stylesheet. Controllers are wired via `springContext::getBean`.
@@ -40,13 +43,13 @@ src/main/resources/
 4. **Controllers** are Spring `@Component`s with full access to `@Autowired`, `@Value`, and any other Spring features.
 5. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`) and referenced globally in `styles.css`. LCD subpixel smoothing is enabled for crisp rendering.
 
-## Prerequisites
+## 📋 Prerequisites
 
 - **JDK 25+** on your PATH
 
 JavaFX and all other dependencies are pulled automatically via Maven.
 
-## Running
+## ▶️ Running
 
 **From IDE** — run `io.github.vakho10.springjavafxboot.Launcher` as the main class.
 
@@ -56,3 +59,13 @@ JavaFX and all other dependencies are pulled automatically via Maven.
 ./mvnw clean package
 java -jar target/spring-javafx-boot-1.0-SNAPSHOT.jar
 ```
+
+## 📦 Bundling a Native App Image
+
+Build a self-contained executable with a bundled JRE (no Java installation required for end users):
+
+```bash
+./mvnw clean package -Pbundle
+```
+
+The output is in `target/dist/spring-javafx-boot/` — run the `.exe` directly.
