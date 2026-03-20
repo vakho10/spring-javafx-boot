@@ -29,6 +29,7 @@ src/main/java/io/github/vakho10/springjavafxboot/
 │   └── ViewResolver.java          # Convention-based FXML template resolver
 └── service/
     ├── ErrorHandler.java          # Global uncaught exception handler with themed alerts
+    ├── LocalizedMessageSource.java # Convenience wrapper for locale-aware i18n access
     ├── ThemeService.java          # Manages theme & font stylesheets
     └── UserPreferencesService.java # Persists theme & locale via Java Preferences API
 
@@ -99,16 +100,16 @@ Uses Spring Boot's `MessageSource` bridged to JavaFX via `MessageSourceResourceB
   ```xml
   <Button text="%main.button.hello"/>
   ```
-- **Programmatic access** — use `MessageSource` in controllers:
+- **Programmatic access** — inject `LocalizedMessageSource` for convenient locale-aware access:
   ```java
-  messageSource.getMessage("main.welcome", null, navigator.getCurrentLocale());
+  messages.msg("main.welcome");
   ```
 - **Parameterized messages** — use `{0}`, `{1}`, etc. placeholders in message files:
   ```properties
   main.counter=Counter value: {0}
   ```
   ```java
-  messageSource.getMessage("main.counter", new Object[]{counter}, navigator.getCurrentLocale());
+  messages.msg("main.counter", counter);
   ```
 - **Language menu** — built-in `MenuBar` with radio toggle between languages, managed by `Navigator`. Switching locale rebuilds the menu and reloads the current view.
 
