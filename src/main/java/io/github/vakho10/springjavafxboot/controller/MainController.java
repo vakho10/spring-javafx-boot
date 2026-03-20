@@ -1,4 +1,4 @@
-package com.example.fxdemo.controller;
+package io.github.vakho10.springjavafxboot.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

@@ -1,4 +1,4 @@
-package com.example.fxdemo;
+package io.github.vakho10.springjavafxboot;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

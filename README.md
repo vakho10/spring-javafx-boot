@@ -1,4 +1,4 @@
-# FxDemo — Spring Boot + JavaFX
+# Spring JavaFX Boot
 
 A desktop application template integrating **Spring Boot 4.0.4** with **JavaFX 25.0.2**. Spring manages the application context, dependency injection, and configuration while JavaFX handles the UI with FXML views and CSS styling.
 
@@ -15,7 +15,7 @@ A desktop application template integrating **Spring Boot 4.0.4** with **JavaFX 2
 ## Project Structure
 
 ```
-src/main/java/com/example/fxdemo/
+src/main/java/io/github/vakho10/springjavafxboot/
 ├── Launcher.java                  # JVM entry point — bypasses JavaFX module-path check
 ├── Main.java                      # JavaFX Application — boots Spring, loads FXML scene
 ├── AppConfig.java                 # @SpringBootApplication config
@@ -48,11 +48,11 @@ JavaFX and all other dependencies are pulled automatically via Maven.
 
 ## Running
 
-**From IDE** — run `com.example.fxdemo.Launcher` as the main class.
+**From IDE** — run `io.github.vakho10.springjavafxboot.Launcher` as the main class.
 
 **From command line:**
 
 ```bash
 ./mvnw clean package
-java -jar target/fxdemo-1.0-SNAPSHOT.jar
+java -jar target/spring-javafx-boot-1.0-SNAPSHOT.jar
 ```

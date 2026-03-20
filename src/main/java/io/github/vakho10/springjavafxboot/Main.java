@@ -1,4 +1,4 @@
-package com.example.fxdemo;
+package io.github.vakho10.springjavafxboot;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
