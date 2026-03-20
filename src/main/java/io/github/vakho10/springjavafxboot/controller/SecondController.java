@@ -15,4 +15,5 @@ public class SecondController {
     protected void onBackButtonClick() {
         navigator.navigateTo(MainController.class);
     }
+
 }
