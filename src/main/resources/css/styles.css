@@ -2,3 +2,7 @@
     -fx-font-family: "Noto Sans Georgian";
     -fx-font-size: 14px;
 }
+
+.text {
+    -fx-font-smoothing-type: lcd;
+}
