@@ -8,13 +8,10 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Locale;
-import java.util.function.Supplier;
 
 /**
  * Global error handler that shows themed, localized error alerts
@@ -25,14 +22,12 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class ErrorHandler {
 
-    private final MessageSource messageSource;
+    private final LocalizedMessageSource messages;
 
     private Stage primaryStage;
-    private Supplier<Locale> localeSupplier;
 
-    public void init(Stage primaryStage, Supplier<Locale> localeSupplier) {
+    public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.localeSupplier = localeSupplier;
 
         // Catch uncaught exceptions on the JavaFX Application Thread
         Thread.currentThread().setUncaughtExceptionHandler((t, e) -> showError(e));
@@ -45,22 +40,20 @@ public class ErrorHandler {
     public void showError(Throwable throwable) {
         log.error("Uncaught exception", throwable);
 
-        Locale locale = localeSupplier != null ? localeSupplier.get() : Locale.ENGLISH;
-
         // Use a custom OK button with localized text
-        ButtonType okButton = new ButtonType(msg("error.button.ok", locale), ButtonBar.ButtonData.OK_DONE);
+        ButtonType okButton = new ButtonType(messages.msg("error.button.ok"), ButtonBar.ButtonData.OK_DONE);
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.getButtonTypes().setAll(okButton);
-        alert.setTitle(msg("error.title", locale));
-        alert.setHeaderText(msg("error.header", locale));
+        alert.setTitle(messages.msg("error.title"));
+        alert.setHeaderText(messages.msg("error.header"));
         alert.setContentText(throwable.getMessage());
 
         // Expandable stack trace
         StringWriter sw = new StringWriter();
         throwable.printStackTrace(new PrintWriter(sw));
 
-        Label detailsLabel = new Label(msg("error.details", locale));
+        Label detailsLabel = new Label(messages.msg("error.details"));
         TextArea textArea = new TextArea(sw.toString());
         textArea.setEditable(false);
         textArea.setWrapText(true);
@@ -85,23 +78,19 @@ public class ErrorHandler {
 
         // Localize the "Show Details" / "Hide Details" toggle text
         alert.getDialogPane().expandedProperty().addListener((obs, wasExpanded, isExpanded) ->
-                updateDetailsButtonText(alert, locale));
+                updateDetailsButtonText(alert));
         // Set initial text (collapsed state)
-        Platform.runLater(() -> updateDetailsButtonText(alert, locale));
+        Platform.runLater(() -> updateDetailsButtonText(alert));
 
         alert.showAndWait();
     }
 
-    private void updateDetailsButtonText(Alert alert, Locale locale) {
+    private void updateDetailsButtonText(Alert alert) {
         Hyperlink detailsButton = (Hyperlink) alert.getDialogPane().lookup(".details-button");
         if (detailsButton != null) {
             boolean expanded = alert.getDialogPane().isExpanded();
             String key = expanded ? "error.hideDetails" : "error.showDetails";
-            detailsButton.setText(msg(key, locale));
+            detailsButton.setText(messages.msg(key));
         }
-    }
-
-    private String msg(String key, Locale locale) {
-        return messageSource.getMessage(key, null, key, locale);
     }
 }

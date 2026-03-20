@@ -1,11 +1,11 @@
 package io.github.vakho10.springjavafxboot.controller;
 
 import io.github.vakho10.springjavafxboot.navigation.Navigator;
+import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class MainController {
 
     private final Navigator navigator;
-    private final MessageSource messageSource;
+    private final LocalizedMessageSource messages;
 
     @FXML
     private Label welcomeText;
@@ -32,7 +32,7 @@ public class MainController {
 
     @FXML
     private void onHelloButtonClick() {
-        welcomeText.setText(messageSource.getMessage("main.welcome", null, navigator.getCurrentLocale()));
+        welcomeText.setText(messages.msg("main.welcome"));
     }
 
     @FXML
@@ -54,11 +54,10 @@ public class MainController {
 
     @FXML
     private void onThrowErrorClick() {
-        String errorMessage = messageSource.getMessage("main.error.test", null, navigator.getCurrentLocale());
-        throw new RuntimeException(errorMessage);
+        throw new RuntimeException(messages.msg("main.error.test"));
     }
 
     private void updateCounterText() {
-        counterText.setText(messageSource.getMessage("main.counter", new Object[]{counter}, navigator.getCurrentLocale()));
+        counterText.setText(messages.msg("main.counter", counter));
     }
 }

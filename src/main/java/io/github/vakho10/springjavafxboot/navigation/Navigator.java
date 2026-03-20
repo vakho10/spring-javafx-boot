@@ -1,5 +1,6 @@
 package io.github.vakho10.springjavafxboot.navigation;
 
+import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import io.github.vakho10.springjavafxboot.service.ThemeService;
 import io.github.vakho10.springjavafxboot.service.UserPreferencesService;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,6 @@ import jakarta.annotation.PreDestroy;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class Navigator {
 
     private final ViewResolver viewResolver;
     private final ApplicationContext applicationContext;
-    private final MessageSource messageSource;
+    private final LocalizedMessageSource messages;
     private final MessageSourceResourceBundle resourceBundle;
     private final UserPreferencesService preferencesService;
     private final ThemeService themeService;
@@ -50,6 +50,7 @@ public class Navigator {
 
         // Restore saved preferences
         this.currentLocale = preferencesService.getLocale();
+        messages.setLocale(currentLocale);
 
         // Initialize theme service with the scene
         themeService.init(primaryStage.getScene());
@@ -77,6 +78,7 @@ public class Navigator {
 
     public void switchLocale(Locale locale) {
         this.currentLocale = locale;
+        messages.setLocale(locale);
         preferencesService.setLocale(locale);
         themeService.applyFontStylesheet(locale);
         buildMenuBar(); // Labels are localized, must rebuild
@@ -101,16 +103,16 @@ public class Navigator {
 
     private void buildMenuBar() {
         // Language menu
-        Menu languageMenu = new Menu(msg("menu.language"));
+        Menu languageMenu = new Menu(messages.msg("menu.language"));
         ToggleGroup langGroup = new ToggleGroup();
 
-        RadioMenuItem englishItem = new RadioMenuItem(msg("menu.language.english"));
+        RadioMenuItem englishItem = new RadioMenuItem(messages.msg("menu.language.english"));
         englishItem.getStyleClass().add("font-en");
         englishItem.setToggleGroup(langGroup);
         englishItem.setSelected(currentLocale.equals(Locale.ENGLISH));
         englishItem.setOnAction(e -> switchLocale(Locale.ENGLISH));
 
-        RadioMenuItem georgianItem = new RadioMenuItem(msg("menu.language.georgian"));
+        RadioMenuItem georgianItem = new RadioMenuItem(messages.msg("menu.language.georgian"));
         georgianItem.getStyleClass().add("font-ka");
         georgianItem.setToggleGroup(langGroup);
         georgianItem.setSelected(currentLocale.equals(GEORGIAN));
@@ -119,16 +121,16 @@ public class Navigator {
         languageMenu.getItems().addAll(englishItem, georgianItem);
 
         // Theme menu
-        Menu themeMenu = new Menu(msg("menu.theme"));
+        Menu themeMenu = new Menu(messages.msg("menu.theme"));
         ToggleGroup themeGroup = new ToggleGroup();
         String currentTheme = themeService.getCurrentTheme();
 
-        darkItem = new RadioMenuItem(msg("menu.theme.dark"));
+        darkItem = new RadioMenuItem(messages.msg("menu.theme.dark"));
         darkItem.setToggleGroup(themeGroup);
         darkItem.setSelected("dark".equals(currentTheme));
         darkItem.setOnAction(e -> switchTheme("dark"));
 
-        lightItem = new RadioMenuItem(msg("menu.theme.light"));
+        lightItem = new RadioMenuItem(messages.msg("menu.theme.light"));
         lightItem.setToggleGroup(themeGroup);
         lightItem.setSelected("light".equals(currentTheme));
         lightItem.setOnAction(e -> switchTheme("light"));
@@ -137,9 +139,5 @@ public class Navigator {
 
         MenuBar menuBar = new MenuBar(languageMenu, themeMenu);
         rootPane.setTop(menuBar);
-    }
-
-    private String msg(String key) {
-        return messageSource.getMessage(key, null, currentLocale);
     }
 }

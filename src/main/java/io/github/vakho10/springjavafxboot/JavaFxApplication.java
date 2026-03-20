@@ -63,7 +63,7 @@ public class JavaFxApplication extends Application {
 
         // Set up global error handler with themed, localized alerts
         ErrorHandler errorHandler = springContext.getBean(ErrorHandler.class);
-        errorHandler.init(primaryStage, navigator::getCurrentLocale);
+        errorHandler.init(primaryStage);
 
         navigator.navigateTo(MainController.class);
 
