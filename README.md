@@ -81,6 +81,13 @@ Uses Spring Boot's `MessageSource` bridged to JavaFX via `MessageSourceResourceB
   ```java
   messageSource.getMessage("main.welcome", null, navigator.getCurrentLocale());
   ```
+- **Parameterized messages** — use `{0}`, `{1}`, etc. placeholders in message files:
+  ```properties
+  main.counter=Counter value: {0}
+  ```
+  ```java
+  messageSource.getMessage("main.counter", new Object[]{counter}, navigator.getCurrentLocale());
+  ```
 - **Language menu** — built-in `MenuBar` with radio toggle between languages, managed by `Navigator`. Switching locale rebuilds the menu and reloads the current view.
 
 ## 📋 Prerequisites

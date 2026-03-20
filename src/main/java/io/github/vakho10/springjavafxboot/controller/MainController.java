@@ -18,8 +18,30 @@ public class MainController {
     private Label welcomeText;
 
     @FXML
+    private Label counterText;
+
+    private int counter = 0;
+
+    @FXML
+    protected void initialize() {
+        updateCounterText();
+    }
+
+    @FXML
     protected void onHelloButtonClick() {
         welcomeText.setText(messageSource.getMessage("main.welcome", null, navigator.getCurrentLocale()));
+    }
+
+    @FXML
+    protected void onIncrementClick() {
+        counter++;
+        updateCounterText();
+    }
+
+    @FXML
+    protected void onDecrementClick() {
+        counter--;
+        updateCounterText();
     }
 
     @FXML
@@ -27,4 +49,7 @@ public class MainController {
         navigator.navigateTo(SecondController.class);
     }
 
+    private void updateCounterText() {
+        counterText.setText(messageSource.getMessage("main.counter", new Object[]{counter}, navigator.getCurrentLocale()));
+    }
 }
