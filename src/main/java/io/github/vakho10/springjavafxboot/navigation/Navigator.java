@@ -1,5 +1,6 @@
 package io.github.vakho10.springjavafxboot.navigation;
 
+import io.github.vakho10.springjavafxboot.service.UserPreferencesService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Menu;
@@ -27,6 +28,7 @@ public class Navigator {
     private final ApplicationContext applicationContext;
     private final MessageSource messageSource;
     private final MessageSourceResourceBundle resourceBundle;
+    private final UserPreferencesService preferencesService;
     private Stage primaryStage;
     private BorderPane rootPane;
 
@@ -44,14 +46,19 @@ public class Navigator {
     );
 
     @Getter
-    private Locale currentLocale = Locale.ENGLISH;
+    private Locale currentLocale;
     @Getter
-    private String currentTheme = "light";
+    private String currentTheme;
     private Class<?> currentController;
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.rootPane = (BorderPane) primaryStage.getScene().getRoot();
+
+        // Restore saved preferences
+        this.currentTheme = preferencesService.getTheme();
+        this.currentLocale = preferencesService.getLocale();
+
         applyFontStylesheet();
         applyThemeStylesheet();
         buildMenuBar();
@@ -73,6 +80,7 @@ public class Navigator {
 
     public void switchLocale(Locale locale) {
         this.currentLocale = locale;
+        preferencesService.setLocale(locale);
         applyFontStylesheet();
         buildMenuBar();
         if (currentController != null) {
@@ -82,6 +90,7 @@ public class Navigator {
 
     public void switchTheme(String theme) {
         this.currentTheme = theme;
+        preferencesService.setTheme(theme);
         applyThemeStylesheet();
         buildMenuBar();
     }

@@ -22,10 +22,12 @@ src/main/java/io/github/vakho10/springjavafxboot/
 ├── controller/
 │   ├── MainController.java        # FXML controller, Spring-managed @Component
 │   └── SecondController.java      # Second view controller — navigation demo
-└── navigation/
-    ├── MessageSourceResourceBundle.java  # Bridges Spring MessageSource → JavaFX ResourceBundle
-    ├── Navigator.java             # Service for navigation, language & theme switching
-    └── ViewResolver.java          # Convention-based FXML template resolver
+├── navigation/
+│   ├── MessageSourceResourceBundle.java  # Bridges Spring MessageSource → JavaFX ResourceBundle
+│   ├── Navigator.java             # Service for navigation, language & theme switching
+│   └── ViewResolver.java          # Convention-based FXML template resolver
+└── service/
+    └── UserPreferencesService.java # Persists theme & locale via Java Preferences API
 
 src/main/resources/
 ├── application.properties         # Spring Boot + view resolver configuration
@@ -80,6 +82,10 @@ The app separates structure from colors using layered CSS:
 - **`themes/light.css`** — ☀️ light color palette
 
 A **Theme** menu in the menu bar lets users switch themes at runtime. The active theme stylesheet is swapped without reloading the view. To add a new theme, create a CSS file in `css/themes/` and register it in `Navigator`.
+
+## 💾 User Preferences
+
+Theme and locale choices are persisted via `UserPreferencesService` using Java's [Preferences API](https://docs.oracle.com/en/java/javase/25/docs/api/java.prefs/java/util/prefs/Preferences.html). Values are stored in the OS-native backing store (Windows Registry / macOS plist / Linux `~/.java`) and restored automatically on next launch.
 
 ## 🌍 Localization (i18n)
 
