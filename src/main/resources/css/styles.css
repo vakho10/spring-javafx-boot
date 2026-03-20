@@ -61,6 +61,21 @@
     -fx-border-color: -app-active;
 }
 
+.button-danger {
+    -fx-background-color: -app-danger;
+    -fx-border-color: -app-danger-border;
+    -fx-text-fill: -app-danger-text;
+}
+
+.button-danger:hover {
+    -fx-background-color: -app-danger-hover;
+}
+
+.button-danger:pressed {
+    -fx-background-color: -app-danger-pressed;
+    -fx-border-color: -app-danger-pressed;
+}
+
 
 /* === TextField === */
 
@@ -535,4 +550,58 @@
 
 .hyperlink:visited {
     -fx-text-fill: -app-accent;
+}
+
+
+/* === Dialog / Alert === */
+
+.dialog-pane {
+    -fx-background-color: -app-bg;
+    -fx-border-color: -app-border;
+    -fx-border-width: 1;
+}
+
+.dialog-pane > .header-panel {
+    -fx-background-color: -app-surface;
+    -fx-padding: 12 16;
+}
+
+.dialog-pane > .header-panel .label {
+    -fx-text-fill: -app-text;
+}
+
+.dialog-pane > .header-panel .graphic-container {
+    -fx-padding: 0 8 0 0;
+}
+
+.dialog-pane > .content.label {
+    -fx-text-fill: -app-text;
+    -fx-padding: 12 16;
+}
+
+.dialog-pane > .button-bar {
+    -fx-background-color: -app-surface;
+    -fx-padding: 8 16;
+}
+
+.dialog-pane > .button-bar > .container {
+    -fx-background-color: -app-surface;
+}
+
+.dialog-pane > .expandable-content {
+    -fx-background-color: -app-bg;
+    -fx-padding: 8 16 16 16;
+}
+
+.dialog-pane .details-button {
+    -fx-text-fill: -app-accent;
+    -fx-border-color: transparent;
+}
+
+.dialog-pane .details-button:hover {
+    -fx-text-fill: -app-accent-hover;
+}
+
+.dialog-pane .details-button .arrow {
+    -fx-background-color: -app-accent;
 }

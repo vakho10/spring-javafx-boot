@@ -22,4 +22,6 @@
     </HBox>
 
     <Button text="%main.button.goToSecond" onAction="#onGoToSecondClick"/>
+
+    <Button text="%main.button.throwError" styleClass="button-danger" onAction="#onThrowErrorClick"/>
 </VBox>

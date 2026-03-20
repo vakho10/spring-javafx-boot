@@ -52,6 +52,12 @@ public class MainController {
         navigator.navigateTo(SecondController.class);
     }
 
+    @FXML
+    private void onThrowErrorClick() {
+        String errorMessage = messageSource.getMessage("main.error.test", null, navigator.getCurrentLocale());
+        throw new RuntimeException(errorMessage);
+    }
+
     private void updateCounterText() {
         counterText.setText(messageSource.getMessage("main.counter", new Object[]{counter}, navigator.getCurrentLocale()));
     }

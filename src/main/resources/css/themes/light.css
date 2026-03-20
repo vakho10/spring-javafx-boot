@@ -17,4 +17,9 @@
     -app-scrollbar-thumb-hover: #AAAAAA;
     -app-prompt-text: #999999;
     -app-secondary-text: #555555;
+    -app-danger: #DC3545;
+    -app-danger-hover: #E04B59;
+    -app-danger-pressed: #BB2D3B;
+    -app-danger-border: #BB2D3B;
+    -app-danger-text: white;
 }

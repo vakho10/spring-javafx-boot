@@ -2,6 +2,7 @@ package io.github.vakho10.springjavafxboot;
 
 import io.github.vakho10.springjavafxboot.controller.MainController;
 import io.github.vakho10.springjavafxboot.navigation.Navigator;
+import io.github.vakho10.springjavafxboot.service.ErrorHandler;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -59,6 +60,11 @@ public class JavaFxApplication extends Application {
 
         Navigator navigator = springContext.getBean(Navigator.class);
         navigator.setPrimaryStage(primaryStage);
+
+        // Set up global error handler with themed, localized alerts
+        ErrorHandler errorHandler = springContext.getBean(ErrorHandler.class);
+        errorHandler.init(primaryStage, navigator::getCurrentLocale);
+
         navigator.navigateTo(MainController.class);
 
         primaryStage.show();
