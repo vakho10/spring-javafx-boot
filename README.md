@@ -1,58 +1,59 @@
 # FxDemo — Spring Boot + JavaFX
 
-A demo application that integrates **Spring Boot** with **JavaFX**, allowing you to build desktop GUI applications with full Spring dependency injection, component scanning, and configuration support.
+A desktop application template integrating **Spring Boot 4.0.4** with **JavaFX 25.0.2**. Spring manages the application context, dependency injection, and configuration while JavaFX handles the UI with FXML views and CSS styling.
 
 ## Tech Stack
 
-- **Java 25**
-- **Spring Boot 4.0.4**
-- **JavaFX 25.0.2**
-- **Lombok**
-- **Maven** (with Maven Wrapper)
+| Component | Version |
+|-----------|---------|
+| Java | 25 |
+| Spring Boot | 4.0.4 |
+| JavaFX | 25.0.2 |
+| Lombok | managed by Spring Boot |
+| Maven | 3.x (wrapper included) |
 
 ## Project Structure
 
 ```
 src/main/java/com/example/fxdemo/
-├── Launcher.java              # JVM entry point (avoids JavaFX module-path issues)
-├── Main.java                  # JavaFX Application — boots Spring, loads FXML
-├── AppConfig.java             # @SpringBootApplication config
+├── Launcher.java                  # JVM entry point — bypasses JavaFX module-path check
+├── Main.java                      # JavaFX Application — boots Spring, loads FXML scene
+├── AppConfig.java                 # @SpringBootApplication config
 └── controller/
-    └── MainController.java    # FXML controller, managed by Spring
+    └── MainController.java        # FXML controller, Spring-managed @Component
 
 src/main/resources/
-├── application.properties     # Spring Boot config
+├── application.properties         # Spring Boot configuration
+├── css/
+│   └── styles.css                 # Global JavaFX stylesheet (fonts, sizing)
+├── fonts/
+│   ├── Roboto-*.ttf               # Roboto (Regular, Bold, Italic, BoldItalic)
+│   └── NotoSansGeorgian-*.ttf     # Noto Sans Georgian (Light, Regular, Medium, SemiBold, Bold)
 └── templates/
-    └── main.fxml              # Main UI layout
+    └── main.fxml                  # Main view layout
 ```
 
 ## How It Works
 
-1. **`Launcher`** is the JVM entry point. It delegates to `Main.main()`. Using a plain class (not extending `Application`) avoids JavaFX's module-path check that fails in classpath-based setups.
-2. **`Main`** extends `javafx.application.Application`. In `init()`, it boots the Spring context. In `start()`, it loads the FXML and wires controllers through Spring's `getBean()`.
-3. **`AppConfig`** is the `@SpringBootApplication` class that enables component scanning and auto-configuration.
-4. **Controllers** (e.g., `MainController`) are Spring `@Component`s, so they support `@Autowired`, `@Value`, and all other Spring features.
-
-## Running the App
-
-### From IDE
-
-Run `com.example.fxdemo.Launcher` as the main class.
-
-### From Maven
-
-```bash
-./mvnw javafx:run
-```
+1. **`Launcher`** is the JVM entry point. It delegates to `Main.main()`. A plain class (not extending `Application`) is required because JavaFX performs a module-path check on `Application` subclasses that fails in classpath-based setups like Spring Boot.
+2. **`Main`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, the FXML view, and applies the CSS stylesheet. Controllers are wired via `springContext::getBean`.
+3. **`AppConfig`** is the `@SpringBootApplication` root — enables component scanning and auto-configuration.
+4. **Controllers** are Spring `@Component`s with full access to `@Autowired`, `@Value`, and any other Spring features.
+5. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`) and referenced globally in `styles.css`. LCD subpixel smoothing is enabled for crisp rendering.
 
 ## Prerequisites
 
-- **JDK 25+** installed and on your PATH
-- No additional JavaFX SDK installation needed — dependencies are pulled via Maven
+- **JDK 25+** on your PATH
 
-## Future Plans
+JavaFX and all other dependencies are pulled automatically via Maven.
 
-<!-- TODO: Update this section as the project evolves -->
-- Database integration
-- Multiple views / navigation
-- Packaging as a native installer
+## Running
+
+**From IDE** — run `com.example.fxdemo.Launcher` as the main class.
+
+**From command line:**
+
+```bash
+./mvnw clean package
+java -jar target/fxdemo-1.0-SNAPSHOT.jar
+```
