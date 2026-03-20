@@ -19,11 +19,15 @@ src/main/java/io/github/vakho10/springjavafxboot/
 ├── Launcher.java                  # JVM entry point — bypasses JavaFX module-path check
 ├── Main.java                      # JavaFX Application — boots Spring, loads FXML scene
 ├── AppConfig.java                 # @SpringBootApplication config
-└── controller/
-    └── MainController.java        # FXML controller, Spring-managed @Component
+├── controller/
+│   ├── MainController.java        # FXML controller, Spring-managed @Component
+│   └── SecondController.java      # Second view controller — navigation demo
+└── navigation/
+    ├── Navigator.java             # Service for navigating between views
+    └── ViewResolver.java          # Convention-based FXML template resolver
 
 src/main/resources/
-├── application.properties         # Spring Boot configuration
+├── application.properties         # Spring Boot + view resolver configuration
 ├── css/
 │   └── styles.css                 # Global JavaFX stylesheet (fonts, sizing)
 ├── fonts/
@@ -32,7 +36,8 @@ src/main/resources/
 │   ├── app.ico                    # Application icon (jpackage / Windows)
 │   └── app.png                    # Application icon (JavaFX window)
 └── templates/
-    └── main.fxml                  # Main view layout
+    ├── main.fxml                  # Main view layout
+    └── second.fxml                # Second view layout
 ```
 
 ## ⚙️ How It Works
@@ -42,6 +47,20 @@ src/main/resources/
 3. **`AppConfig`** is the `@SpringBootApplication` root — enables component scanning and auto-configuration.
 4. **Controllers** are Spring `@Component`s with full access to `@Autowired`, `@Value`, and any other Spring features.
 5. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`) and referenced globally in `styles.css`. LCD subpixel smoothing is enabled for crisp rendering.
+
+## 🧭 Navigation
+
+The project includes a Spring MVC–inspired navigation system:
+
+- **`ViewResolver`** maps controller classes to FXML templates by naming convention (e.g. `MainController` → `/templates/main.fxml`). Prefix and suffix are configurable in `application.properties`:
+  ```properties
+  spring.javafx.view.prefix=/templates/
+  spring.javafx.view.suffix=.fxml
+  ```
+- **`Navigator`** is a Spring `@Service` that swaps the scene root. Inject it into any controller and call:
+  ```java
+  navigator.navigateTo(SecondController.class);
+  ```
 
 ## 📋 Prerequisites
 

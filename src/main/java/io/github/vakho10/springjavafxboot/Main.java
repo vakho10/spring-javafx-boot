@@ -1,5 +1,8 @@
 package io.github.vakho10.springjavafxboot;
 
+import io.github.vakho10.springjavafxboot.controller.MainController;
+import io.github.vakho10.springjavafxboot.navigation.Navigator;
+import io.github.vakho10.springjavafxboot.navigation.ViewResolver;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,7 +38,9 @@ public class Main extends Application {
         Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-SemiBold.ttf"), 14);
         Font.loadFont(getClass().getResourceAsStream("/fonts/NotoSansGeorgian-Bold.ttf"), 14);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/templates/main.fxml"));
+        // Load initial view using ViewResolver
+        ViewResolver viewResolver = springContext.getBean(ViewResolver.class);
+        FXMLLoader loader = new FXMLLoader(viewResolver.resolve(MainController.class));
         loader.setControllerFactory(springContext::getBean);
         Parent root = loader.load();
 
@@ -45,6 +50,11 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Spring Boot + JavaFX");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/app.png")));
+
+        // Wire the Navigator with the primary stage
+        Navigator navigator = springContext.getBean(Navigator.class);
+        navigator.setPrimaryStage(primaryStage);
+
         primaryStage.show();
     }
 

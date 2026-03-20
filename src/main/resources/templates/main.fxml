@@ -13,4 +13,5 @@
 
     <Label fx:id="welcomeText"/>
     <Button text="გამარჯობა!" onAction="#onHelloButtonClick"/>
+    <Button text="მეორე გვერდზე გადასვლა ➡" onAction="#onGoToSecondClick"/>
 </VBox>
