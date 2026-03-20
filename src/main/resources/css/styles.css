@@ -1,7 +1,101 @@
+/*
+ * Base styles — shared flat structure for all themes.
+ * Theme-specific colors are in css/themes/*.css
+ */
+
 .root {
     -fx-font-size: 14px;
 }
 
 .text {
     -fx-font-smoothing-type: lcd;
+}
+
+
+/* === Flat, square borders on all controls === */
+
+.button, .text-field, .text-area,
+.combo-box, .choice-box,
+.check-box > .box,
+.list-view, .table-view, .tree-view,
+.tab, .titled-pane > .title, .titled-pane > .content,
+.tooltip, .scroll-bar, .scroll-bar .thumb,
+.progress-bar .bar, .progress-bar .track {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.button {
+    -fx-padding: 6 16;
+    -fx-cursor: hand;
+}
+
+.combo-box, .choice-box {
+    -fx-cursor: hand;
+}
+
+.check-box, .radio-button {
+    -fx-cursor: hand;
+}
+
+.combo-box-base > .arrow-button {
+    -fx-padding: 0 6;
+}
+
+.combo-box-base > .arrow-button > .arrow {
+    -fx-padding: 2 4;
+    -fx-shape: "M 0 0 H 7 L 3.5 4 z";
+}
+
+.list-cell {
+    -fx-padding: 4 8;
+}
+
+.list-cell:hover, .tree-cell, .tab .tab-close-button {
+    -fx-cursor: hand;
+}
+
+.menu-bar .menu-button {
+    -fx-padding: 4 8;
+    -fx-cursor: hand;
+}
+
+.menu-item {
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+}
+
+.tab {
+    -fx-border-width: 0;
+    -fx-padding: 4 12;
+}
+
+.table-view .column-header .label {
+    -fx-alignment: center-left;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-border-width: 0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow,
+.scroll-bar:horizontal .increment-arrow,
+.scroll-bar:horizontal .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+.slider .thumb {
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.slider .track {
+    -fx-background-radius: 0;
+}
+
+.hyperlink {
+    -fx-border-color: transparent;
 }

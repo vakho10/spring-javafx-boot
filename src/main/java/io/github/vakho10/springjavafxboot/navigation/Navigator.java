@@ -36,14 +36,24 @@ public class Navigator {
             GEORGIAN, "/css/fonts-ka.css"
     );
 
+    private static final String DARK_THEME = "/css/themes/dark.css";
+    private static final String LIGHT_THEME = "/css/themes/light.css";
+    private static final Map<String, String> THEME_STYLESHEETS = Map.of(
+            "light", LIGHT_THEME,
+            "dark", DARK_THEME
+    );
+
     @Getter
     private Locale currentLocale = Locale.ENGLISH;
+    @Getter
+    private String currentTheme = "light";
     private Class<?> currentController;
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.rootPane = (BorderPane) primaryStage.getScene().getRoot();
         applyFontStylesheet();
+        applyThemeStylesheet();
         buildMenuBar();
     }
 
@@ -70,6 +80,12 @@ public class Navigator {
         }
     }
 
+    public void switchTheme(String theme) {
+        this.currentTheme = theme;
+        applyThemeStylesheet();
+        buildMenuBar();
+    }
+
     private void applyFontStylesheet() {
         List<String> stylesheets = primaryStage.getScene().getStylesheets();
         FONT_STYLESHEETS.values().stream()
@@ -81,26 +97,55 @@ public class Navigator {
         }
     }
 
+    private void applyThemeStylesheet() {
+        List<String> stylesheets = primaryStage.getScene().getStylesheets();
+        THEME_STYLESHEETS.values().stream()
+                .map(path -> getClass().getResource(path).toExternalForm())
+                .forEach(stylesheets::remove);
+        String themeCss = THEME_STYLESHEETS.get(currentTheme);
+        if (themeCss != null) {
+            stylesheets.add(getClass().getResource(themeCss).toExternalForm());
+        }
+    }
+
     private void buildMenuBar() {
+        // Language menu
         Menu languageMenu = new Menu(messageSource.getMessage("menu.language", null, currentLocale));
 
-        ToggleGroup group = new ToggleGroup();
+        ToggleGroup langGroup = new ToggleGroup();
 
         RadioMenuItem englishItem = new RadioMenuItem(messageSource.getMessage("menu.language.english", null, currentLocale));
         englishItem.setStyle("-fx-font-family: 'Roboto'");
-        englishItem.setToggleGroup(group);
+        englishItem.setToggleGroup(langGroup);
         englishItem.setSelected(currentLocale.equals(Locale.ENGLISH));
         englishItem.setOnAction(e -> switchLocale(Locale.ENGLISH));
 
         RadioMenuItem georgianItem = new RadioMenuItem(messageSource.getMessage("menu.language.georgian", null, currentLocale));
         georgianItem.setStyle("-fx-font-family: 'Noto Sans Georgian'");
-        georgianItem.setToggleGroup(group);
+        georgianItem.setToggleGroup(langGroup);
         georgianItem.setSelected(currentLocale.equals(GEORGIAN));
         georgianItem.setOnAction(e -> switchLocale(GEORGIAN));
 
         languageMenu.getItems().addAll(englishItem, georgianItem);
 
-        MenuBar menuBar = new MenuBar(languageMenu);
+        // Theme menu
+        Menu themeMenu = new Menu(messageSource.getMessage("menu.theme", null, currentLocale));
+
+        ToggleGroup themeGroup = new ToggleGroup();
+
+        RadioMenuItem darkItem = new RadioMenuItem(messageSource.getMessage("menu.theme.dark", null, currentLocale));
+        darkItem.setToggleGroup(themeGroup);
+        darkItem.setSelected("dark".equals(currentTheme));
+        darkItem.setOnAction(e -> switchTheme("dark"));
+
+        RadioMenuItem lightItem = new RadioMenuItem(messageSource.getMessage("menu.theme.light", null, currentLocale));
+        lightItem.setToggleGroup(themeGroup);
+        lightItem.setSelected("light".equals(currentTheme));
+        lightItem.setOnAction(e -> switchTheme("light"));
+
+        themeMenu.getItems().addAll(darkItem, lightItem);
+
+        MenuBar menuBar = new MenuBar(languageMenu, themeMenu);
         rootPane.setTop(menuBar);
     }
 }

@@ -24,7 +24,7 @@ src/main/java/io/github/vakho10/springjavafxboot/
 │   └── SecondController.java      # Second view controller — navigation demo
 └── navigation/
     ├── MessageSourceResourceBundle.java  # Bridges Spring MessageSource → JavaFX ResourceBundle
-    ├── Navigator.java             # Service for navigating between views (+ language menu)
+    ├── Navigator.java             # Service for navigation, language & theme switching
     └── ViewResolver.java          # Convention-based FXML template resolver
 
 src/main/resources/
@@ -32,9 +32,12 @@ src/main/resources/
 ├── messages.properties            # i18n messages (English — default)
 ├── messages_ka.properties         # i18n messages (Georgian)
 ├── css/
-│   ├── styles.css                 # Global JavaFX stylesheet (sizing, smoothing)
+│   ├── styles.css                 # Base shared styles (flat structure, sizing, smoothing)
 │   ├── fonts-en.css               # English font (Roboto)
-│   └── fonts-ka.css               # Georgian font (Noto Sans Georgian)
+│   ├── fonts-ka.css               # Georgian font (Noto Sans Georgian)
+│   └── themes/
+│       ├── dark.css               # 🌙 Dark theme colors
+│       └── light.css              # ☀️ Light theme colors
 ├── fonts/
 │   ├── roboto/                    # Roboto (Light, Regular, Medium, Bold)
 │   └── noto-sans-georgian/        # Noto Sans Georgian (Light, Regular, Medium, SemiBold, Bold)
@@ -49,7 +52,7 @@ src/main/resources/
 ## ⚙️ How It Works
 
 1. **`Launcher`** is the JVM entry point. It delegates to `Main.main()`. A plain class (not extending `Application`) is required because JavaFX performs a module-path check on `Application` subclasses that fails in classpath-based setups like Spring Boot.
-2. **`Main`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, creates a `BorderPane` scene (menu bar at top, views swap in center), and applies the CSS stylesheet.
+2. **`Main`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, creates a `BorderPane` scene (menu bar at top, views swap in center), and applies base + theme CSS stylesheets.
 3. **`AppConfig`** is the `@SpringBootApplication` root — enables component scanning and auto-configuration.
 4. **Controllers** are Spring `@Component`s with full access to `@Autowired`, `@Value`, and any other Spring features.
 5. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`). Roboto is used for English, Noto Sans Georgian for Georgian — switched automatically via locale-specific CSS stylesheets. LCD subpixel smoothing is enabled for crisp rendering.
@@ -67,6 +70,16 @@ The project includes a Spring MVC–inspired navigation system:
   ```java
   navigator.navigateTo(SecondController.class);
   ```
+
+## 🎨 Theming
+
+The app separates structure from colors using layered CSS:
+
+- **`styles.css`** — base shared styles (flat square borders, padding, cursor, sizing)
+- **`themes/dark.css`** — 🌙 dark color palette (based on [JavaFX-Dark-Theme](https://github.com/antoniopelusi/JavaFX-Dark-Theme))
+- **`themes/light.css`** — ☀️ light color palette
+
+A **Theme** menu in the menu bar lets users switch themes at runtime. The active theme stylesheet is swapped without reloading the view. To add a new theme, create a CSS file in `css/themes/` and register it in `Navigator`.
 
 ## 🌍 Localization (i18n)
 
