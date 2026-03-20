@@ -22,8 +22,9 @@ public class Main extends Application {
 
     @Override
     public void init() {
-        // Boot Spring before the UI loads
-        springContext = SpringApplication.run(AppConfig.class);
+        // Boot Spring before the UI loads, forwarding CLI args
+        String[] args = getParameters().getRaw().toArray(String[]::new);
+        springContext = SpringApplication.run(AppConfig.class, args);
     }
 
     @Override

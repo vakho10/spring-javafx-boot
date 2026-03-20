@@ -3,13 +3,17 @@ package io.github.vakho10.springjavafxboot.service;
 import io.github.vakho10.springjavafxboot.Main;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Locale;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /**
  * Persists user preferences (theme, locale) using the Java Preferences API.
  * Values are stored in the OS-native backing store (Windows Registry / macOS plist / Linux ~/.java).
  */
+@Slf4j
 @Service
 public class UserPreferencesService {
 
@@ -27,6 +31,7 @@ public class UserPreferencesService {
 
     public void setTheme(String theme) {
         prefs.put(KEY_THEME, theme);
+        flush();
     }
 
     public Locale getLocale() {
@@ -35,5 +40,14 @@ public class UserPreferencesService {
 
     public void setLocale(Locale locale) {
         prefs.put(KEY_LOCALE, locale.getLanguage());
+        flush();
+    }
+
+    private void flush() {
+        try {
+            prefs.flush();
+        } catch (BackingStoreException e) {
+            log.warn("Failed to flush user preferences", e);
+        }
     }
 }
