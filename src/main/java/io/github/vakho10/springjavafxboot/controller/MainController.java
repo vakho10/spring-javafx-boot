@@ -1,21 +1,25 @@
 package io.github.vakho10.springjavafxboot.controller;
 
-import io.github.vakho10.springjavafxboot.navigation.Navigator;
+import io.github.vakho10.springjavafxboot.router.FxRouter;
+import io.github.vakho10.springjavafxboot.router.ModelAttribute;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
-@Component
+@Controller
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class MainController {
 
-    private final Navigator navigator;
+    private final FxRouter router;
     private final LocalizedMessageSource messages;
+
+    @ModelAttribute
+    private String greeting;
 
     @FXML
     private Label welcomeText;
@@ -27,6 +31,9 @@ public class MainController {
 
     @FXML
     private void initialize() {
+        if (greeting != null) {
+            welcomeText.setText(greeting);
+        }
         updateCounterText();
     }
 
@@ -49,7 +56,7 @@ public class MainController {
 
     @FXML
     private void onGoToSecondClick() {
-        navigator.navigateTo(SecondController.class);
+        router.navigateTo("/second");
     }
 
     @FXML

@@ -1,21 +1,21 @@
 package io.github.vakho10.springjavafxboot.controller;
 
-import io.github.vakho10.springjavafxboot.navigation.Navigator;
+import io.github.vakho10.springjavafxboot.router.FxRouter;
 import javafx.fxml.FXML;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
-@Component
+@Controller
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class SecondController {
 
-    private final Navigator navigator;
+    private final FxRouter router;
 
     @FXML
     private void onBackButtonClick() {
-        navigator.navigateTo(MainController.class);
+        router.navigateTo("/main");
     }
 }
