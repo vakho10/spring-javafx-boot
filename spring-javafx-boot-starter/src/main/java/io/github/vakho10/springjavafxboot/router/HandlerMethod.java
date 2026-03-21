@@ -17,6 +17,9 @@ public record HandlerMethod(
         /** The parent route path, or {@code ""} if this is a root route. */
         String parent,
 
+        /** The title (message key or literal), or {@code ""} if not set. */
+        String title,
+
         /** The {@link FxRoutes @FxRoutes} bean that owns this handler. */
         Object bean,
 
@@ -29,6 +32,13 @@ public record HandlerMethod(
      */
     public boolean hasParent() {
         return parent != null && !parent.isEmpty();
+    }
+
+    /**
+     * Whether this route declares a title.
+     */
+    public boolean hasTitle() {
+        return title != null && !title.isEmpty();
     }
 
     /**

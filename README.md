@@ -40,6 +40,7 @@ spring-javafx-boot/                            # Parent POM (multi-module)
 │       │   ├── WindowOptions.java         # Builder for window configuration (title, size, modality)
 │       │   └── WindowResult.java          # Holds modal return value
 │       └── service/
+│           ├── FxTitleService.java       # Manages window title (i18n, format, route-driven)
 │           └── LocalizedMessageSource.java # Convenience wrapper for locale-aware i18n access
 │
 ├── spring-javafx-boot-demo/                   # Demo application
@@ -118,6 +119,7 @@ The routing system mirrors Spring MVC's request handling model, adapted for a de
 | — | `@ModelAttribute` | Injects model data into FXML controller fields |
 | — | `@RouterOutlet` | Marks a pane as the target for child views |
 | — | `ActiveRoute` | Caches loaded parent layouts for reuse |
+| — | `FxTitleService` | Manages window title (i18n-aware, format pattern, route-driven) |
 | — | `WindowOptions` | Builder for window/modal configuration (title, size, modality) |
 | — | `WindowResult` | Holds modal return value (set by modal controller, read by caller) |
 
@@ -134,13 +136,13 @@ public class AppRoutes {
         return "layout";  // → /templates/layout.fxml (menu bar + outlet)
     }
 
-    @FxMapping(value = "/main", parent = "/")
+    @FxMapping(value = "/main", parent = "/", title = "page.title.main")
     public String main(FxModel model) {
         model.put("greeting", "Hello!");
         return "main";  // rendered inside layout's outlet
     }
 
-    @FxMapping(value = "/second", parent = "/")
+    @FxMapping(value = "/second", parent = "/", title = "page.title.second")
     public String second(FxModel model) {
         return "second";  // rendered inside layout's outlet
     }
@@ -237,6 +239,42 @@ When `router.navigateTo("/main")` is called:
 10. The child view is placed into the parent's `@RouterOutlet`
 
 When navigating from `"/main"` to `"/second"`, the router detects that the parent `"/"` layout is already active and **reuses it** — only the child view is swapped in the outlet.
+
+### Window Title (`FxTitleService`)
+
+`FxTitleService` manages the primary window title — analogous to Angular's `Title` service. Titles can be set **declaratively** via the `title` attribute on `@FxMapping`, or **programmatically** from any controller.
+
+**Declarative** — the `title` value is resolved as an i18n message key (falls back to literal string if no key is found). After navigation, the deepest route in the chain that declares a title wins:
+
+```java
+@FxMapping(value = "/main", parent = "/", title = "page.title.main")
+```
+
+**Programmatic** — inject `FxTitleService` for dynamic title updates:
+
+```java
+@Autowired private FxTitleService titleService;
+
+titleService.setTitle("Dashboard");                      // literal
+titleService.setTitle("page.detail.title", item.getName()); // i18n with args
+```
+
+**Title format** — a configurable pattern wraps every title so the app name appears consistently:
+
+```java
+titleService.setTitleFormat("%s — My App");
+// navigating to "/main" (title = "Dashboard") → "Dashboard — My App"
+```
+
+Initialize the service in `Application.start()`:
+
+```java
+FxTitleService titleService = springContext.getBean(FxTitleService.class);
+titleService.init(primaryStage);
+titleService.setTitleFormat("%s — " + messages.msg("app.title"));
+```
+
+Titles are automatically re-resolved on `router.reload()` (e.g. after a locale switch), so the window title stays in sync with the current language.
 
 ### View Resolution
 

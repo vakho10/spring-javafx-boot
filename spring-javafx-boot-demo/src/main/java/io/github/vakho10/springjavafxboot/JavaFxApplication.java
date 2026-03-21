@@ -2,6 +2,7 @@ package io.github.vakho10.springjavafxboot;
 
 import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.service.ErrorHandler;
+import io.github.vakho10.springjavafxboot.service.FxTitleService;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import io.github.vakho10.springjavafxboot.service.ThemeService;
 import io.github.vakho10.springjavafxboot.service.UserPreferencesService;
@@ -66,7 +67,11 @@ public class JavaFxApplication extends Application {
         addStylesheet(scene, "/css/styles.css");
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle(messages.msg("app.title"));
+
+        // Initialize title service with app-name format: "Page — App Name"
+        FxTitleService titleService = springContext.getBean(FxTitleService.class);
+        titleService.init(primaryStage);
+        titleService.setTitleFormat("%s \u2014 " + messages.msg("app.title"));
 
         try (InputStream iconStream = getClass().getResourceAsStream("/icons/app.png")) {
             if (iconStream != null) {

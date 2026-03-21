@@ -23,12 +23,12 @@ public class AppRoutes {
         return "layout";
     }
 
-    @FxMapping(value = "/main", parent = "/")
+    @FxMapping(value = "/main", parent = "/", title = "page.title.main")
     public String main(FxModel model) {
         return "main";
     }
 
-    @FxMapping(value = "/second", parent = "/")
+    @FxMapping(value = "/second", parent = "/", title = "page.title.second")
     public String second(FxModel model) {
         return "second";
     }

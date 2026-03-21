@@ -3,6 +3,7 @@ package io.github.vakho10.springjavafxboot.autoconfigure;
 import io.github.vakho10.springjavafxboot.navigation.ViewResolver;
 import io.github.vakho10.springjavafxboot.router.FxRouteRegistry;
 import io.github.vakho10.springjavafxboot.router.FxRouter;
+import io.github.vakho10.springjavafxboot.service.FxTitleService;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -52,9 +53,16 @@ public class SpringJavaFxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public FxTitleService fxTitleService(LocalizedMessageSource localizedMessageSource) {
+        return new FxTitleService(localizedMessageSource);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public FxRouter fxRouter(FxRouteRegistry fxRouteRegistry,
                              ViewResolver viewResolver,
-                             ApplicationContext applicationContext) {
-        return new FxRouter(fxRouteRegistry, viewResolver, applicationContext);
+                             ApplicationContext applicationContext,
+                             FxTitleService fxTitleService) {
+        return new FxRouter(fxRouteRegistry, viewResolver, applicationContext, fxTitleService);
     }
 }

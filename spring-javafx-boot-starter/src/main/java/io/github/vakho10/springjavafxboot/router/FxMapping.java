@@ -50,6 +50,16 @@ public @interface FxMapping {
     String value();
 
     /**
+     * The window title to set when this route is navigated to.
+     * <p>
+     * The value is resolved as a message key via {@code LocalizedMessageSource}.
+     * If no message is found for the key, the value is used as a literal string.
+     * <p>
+     * Defaults to {@code ""} (no title change on navigation).
+     */
+    String title() default "";
+
+    /**
      * The parent route path. When set, this route is a child route — its view
      * is rendered inside the parent's {@link RouterOutlet} rather than replacing
      * the entire scene.

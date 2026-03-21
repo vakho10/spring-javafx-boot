@@ -1,6 +1,7 @@
 package io.github.vakho10.springjavafxboot.router;
 
 import io.github.vakho10.springjavafxboot.navigation.ViewResolver;
+import io.github.vakho10.springjavafxboot.service.FxTitleService;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -68,6 +69,7 @@ public class FxRouter {
     private final FxRouteRegistry routeRegistry;
     private final ViewResolver viewResolver;
     private final ApplicationContext applicationContext;
+    private final FxTitleService titleService;
 
     private BorderPane rootPane;
     private String currentPath;
@@ -78,10 +80,12 @@ public class FxRouter {
 
     public FxRouter(FxRouteRegistry routeRegistry,
                     ViewResolver viewResolver,
-                    ApplicationContext applicationContext) {
+                    ApplicationContext applicationContext,
+                    FxTitleService titleService) {
         this.routeRegistry = routeRegistry;
         this.viewResolver = viewResolver;
         this.applicationContext = applicationContext;
+        this.titleService = titleService;
     }
 
     /**
@@ -299,6 +303,23 @@ public class FxRouter {
 
             if (outlet != null) {
                 currentOutlet = outlet;
+            }
+        }
+
+        // Update window title from the deepest route that declares one
+        applyRouteTitle(chain);
+    }
+
+    /**
+     * Applies the title from the deepest route in the chain that declares one.
+     * If no route in the chain has a title, the window title is left unchanged.
+     */
+    private void applyRouteTitle(List<HandlerMethod> chain) {
+        for (int i = chain.size() - 1; i >= 0; i--) {
+            HandlerMethod route = chain.get(i);
+            if (route.hasTitle()) {
+                titleService.setTitle(route.title());
+                return;
             }
         }
     }

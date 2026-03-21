@@ -59,7 +59,8 @@ public class FxRouteRegistry {
                 checkDuplicate(path, routeClass, method);
 
                 method.setAccessible(true);
-                routes.put(path, new HandlerMethod(path, parent, routeBean, method));
+                String title = mapping.title();
+                routes.put(path, new HandlerMethod(path, parent, title, routeBean, method));
             }
         }
 
