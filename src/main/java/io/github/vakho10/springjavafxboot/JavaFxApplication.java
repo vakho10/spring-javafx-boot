@@ -66,6 +66,10 @@ public class JavaFxApplication extends Application {
     public void start(Stage primaryStage) {
         loadFonts();
 
+        // Register Stage as a bean for late-created components (e.g. prototype controllers).
+        // Eager singletons like ErrorHandler receive it via init() instead.
+        springContext.getBeanFactory().registerSingleton("primaryStage", primaryStage);
+
         // Resolve Spring beans
         router = springContext.getBean(FxRouter.class);
         messages = springContext.getBean(LocalizedMessageSource.class);
