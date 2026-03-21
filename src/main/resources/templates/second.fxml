@@ -12,5 +12,8 @@
     </padding>
 
     <Label text="%second.label"/>
+    <Label fx:id="modalResultLabel"/>
     <Button text="%second.button.back" onAction="#onBackButtonClick"/>
+    <Button text="%second.button.openWindow" onAction="#onOpenWindowClick"/>
+    <Button text="%second.button.openModal" onAction="#onOpenModalClick"/>
 </VBox>

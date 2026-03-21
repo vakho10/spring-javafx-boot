@@ -6,14 +6,13 @@ import io.github.vakho10.springjavafxboot.router.FxRoutes;
 
 /**
  * Application route definitions.
- * <p>
- * The root route {@code "/"} loads the application layout (menu bar + content area).
- * Child routes render inside the layout's {@code @RouterOutlet}.
  *
  * <pre>
- *   "/"       → layout.fxml    (LayoutController — menu bar + outlet)
- *   "/main"   → main.fxml      (MainController — child of /)
- *   "/second" → second.fxml    (SecondController — child of /)
+ *   "/"            → layout.fxml       (LayoutController — menu bar + outlet)
+ *   "/main"        → main.fxml         (MainController — child of /)
+ *   "/second"      → second.fxml       (SecondController — child of /)
+ *   "/demo/window" → demo-window.fxml  (DemoWindowController — opened as modeless window)
+ *   "/demo/modal"  → demo-modal.fxml   (DemoModalController — opened as modal dialog)
  * </pre>
  */
 @FxRoutes
@@ -32,5 +31,15 @@ public class AppRoutes {
     @FxMapping(value = "/second", parent = "/")
     public String second(FxModel model) {
         return "second";
+    }
+
+    @FxMapping("/demo/window")
+    public String demoWindow(FxModel model) {
+        return "demo-window";
+    }
+
+    @FxMapping("/demo/modal")
+    public String demoModal(FxModel model) {
+        return "demo-modal";
     }
 }
