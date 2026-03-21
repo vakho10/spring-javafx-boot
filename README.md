@@ -17,22 +17,25 @@ A desktop application template integrating **Spring Boot 4.0.4** with **JavaFX 2
 ```
 src/main/java/io/github/vakho10/springjavafxboot/
 ├── Launcher.java                  # JVM entry point — bypasses JavaFX module-path check
-├── JavaFxApplication.java         # JavaFX Application — boots Spring, loads scene, builds menu bar
+├── JavaFxApplication.java         # JavaFX Application — boots Spring, loads scene, navigates to initial route
 ├── AppConfig.java                 # @SpringBootApplication config
 ├── controller/
+│   ├── LayoutController.java      # Layout shell — menu bar + @RouterOutlet for child views
 │   ├── MainController.java        # FXML controller — Spring-managed @Controller (prototype)
 │   └── SecondController.java      # Second view controller — navigation demo
 ├── navigation/
 │   ├── MessageSourceResourceBundle.java  # Bridges Spring MessageSource → JavaFX ResourceBundle
 │   └── ViewResolver.java          # Convention-based FXML template resolver
 ├── router/
-│   ├── FxMapping.java             # @FxMapping — maps a method to a route path
+│   ├── ActiveRoute.java           # Cached state of a loaded route (view, controller, outlet)
+│   ├── FxMapping.java             # @FxMapping — maps a method to a route path (with optional parent)
 │   ├── FxModel.java               # Model object carrying data from routes to controllers
 │   ├── FxRouter.java              # Central routing service (analogous to DispatcherServlet)
 │   ├── FxRouteRegistry.java       # Scans @FxRoutes beans and builds the route table at startup
 │   ├── FxRoutes.java              # @FxRoutes — marks a class as a route configuration
-│   ├── HandlerMethod.java         # Resolved reference to a @FxMapping method
+│   ├── HandlerMethod.java         # Resolved reference to a @FxMapping method + parent relationship
 │   ├── ModelAttribute.java        # @ModelAttribute — injects model data into controller fields
+│   ├── RouterOutlet.java          # @RouterOutlet — marks a Pane as the target for child views
 │   └── RoutingException.java      # Custom exception for routing errors
 ├── routes/
 │   └── AppRoutes.java             # Application route definitions (@FxRoutes)
@@ -60,6 +63,7 @@ src/main/resources/
 │   ├── app.ico                    # Application icon (jpackage / Windows)
 │   └── app.png                    # Application icon (JavaFX window)
 └── templates/
+    ├── layout.fxml                # Application shell (menu bar + router outlet)
     ├── main.fxml                  # Main view layout
     └── second.fxml                # Second view layout
 ```
@@ -67,14 +71,15 @@ src/main/resources/
 ## ⚙️ How It Works
 
 1. **`Launcher`** is the JVM entry point. It delegates to `JavaFxApplication.main()`. A plain class (not extending `Application`) is required because JavaFX performs a module-path check on `Application` subclasses that fails in classpath-based setups like Spring Boot.
-2. **`JavaFxApplication`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, creates a `BorderPane` scene (menu bar at top, views swap in center), initializes the theme, builds the language/theme menu bar, and navigates to the initial route via `FxRouter`.
+2. **`JavaFxApplication`** extends `Application`. `init()` boots the Spring context, `start()` loads fonts, initializes the theme, registers the `Stage` as a Spring bean, and calls `router.navigateTo("/main")` — which automatically loads the parent layout first, then the child view inside it.
 3. **`AppConfig`** is the `@SpringBootApplication` root — enables component scanning and auto-configuration.
-4. **Controllers** are Spring `@Controller`s with `@Scope("prototype")` — each navigation creates a fresh instance with full access to `@Autowired`, `@Value`, and any other Spring features.
-5. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`). Roboto is used for English, Noto Sans Georgian for Georgian — switched automatically via locale-specific CSS stylesheets. LCD subpixel smoothing is enabled for crisp rendering.
+4. **`LayoutController`** owns the application shell — the menu bar with language and theme toggles. It declares a `@RouterOutlet` where child views render. This keeps layout concerns out of `JavaFxApplication`.
+5. **Controllers** are Spring `@Controller`s with `@Scope("prototype")` — each navigation creates a fresh instance with full access to `@Autowired`, `@Value`, and any other Spring features.
+6. **Fonts** are loaded at startup via `Font.loadFont()` (JavaFX CSS does not support `@font-face`). Roboto is used for English, Noto Sans Georgian for Georgian — switched automatically via locale-specific CSS stylesheets. LCD subpixel smoothing is enabled for crisp rendering.
 
 ## 🧭 Routing
 
-The project features a Spring MVC–inspired routing system with a clean separation between **route configuration** and **FXML view controllers**.
+The project features a Spring MVC–inspired routing system with Angular-style nested child routing and a clean separation between **route configuration** and **FXML view controllers**.
 
 ### Architecture
 
@@ -85,32 +90,79 @@ The routing system mirrors Spring MVC's request handling model, adapted for a de
 | `DispatcherServlet` | `FxRouter` | Central dispatcher — orchestrates the navigation lifecycle |
 | `RequestMappingHandlerMapping` | `FxRouteRegistry` | Scans and registers routes at startup |
 | `@RestController` | `@FxRoutes` | Route configuration class (singleton) |
-| `@GetMapping` | `@FxMapping` | Maps a method to a route path |
+| `@GetMapping` | `@FxMapping` | Maps a method to a route path (with optional `parent`) |
 | `Model` | `FxModel` | Carries data from handler to view |
 | `ViewResolver` | `ViewResolver` | Resolves view name → FXML template |
 | — | `@ModelAttribute` | Injects model data into FXML controller fields |
+| — | `@RouterOutlet` | Marks a pane as the target for child views |
+| — | `ActiveRoute` | Caches loaded parent layouts for reuse |
 
 ### Route Configuration
 
-Routes are defined in `@FxRoutes` classes — Spring-managed singletons responsible for preparing data and returning a view name:
+Routes are defined in `@FxRoutes` classes. The `parent` attribute on `@FxMapping` establishes the hierarchy — child views render inside the parent's `@RouterOutlet`:
 
 ```java
 @FxRoutes
 public class AppRoutes {
 
-    @FxMapping("/main")
-    public String main(FxModel model) {
-        model.put("greeting", "Hello!");
-        return "main";  // → /templates/main.fxml
+    @FxMapping("/")
+    public String layout(FxModel model) {
+        return "layout";  // → /templates/layout.fxml (menu bar + outlet)
     }
 
-    @FxMapping("/settings")
-    public String settings(FxModel model) {
-        model.put("activeTab", "appearance");
-        return "settings";  // → /templates/settings.fxml
+    @FxMapping(value = "/main", parent = "/")
+    public String main(FxModel model) {
+        model.put("greeting", "Hello!");
+        return "main";  // rendered inside layout's outlet
+    }
+
+    @FxMapping(value = "/second", parent = "/")
+    public String second(FxModel model) {
+        return "second";  // rendered inside layout's outlet
     }
 }
 ```
+
+### Child Routing & Layouts
+
+Parent routes define layout templates with a `@RouterOutlet` where child views render — similar to Angular's `<router-outlet>`:
+
+```java
+@Controller
+@Scope("prototype")
+public class LayoutController {
+
+    @FXML
+    @RouterOutlet
+    private BorderPane contentArea;  // child views render here
+
+    @FXML
+    private MenuBar menuBar;
+
+    @FXML
+    private void initialize() {
+        // build menu bar...
+    }
+}
+```
+
+The corresponding FXML:
+```xml
+<BorderPane fx:controller="...LayoutController">
+    <top>
+        <MenuBar fx:id="menuBar"/>
+    </top>
+    <center>
+        <BorderPane fx:id="contentArea"/>
+    </center>
+</BorderPane>
+```
+
+The outlet can be identified in two ways (both are supported):
+- **`@RouterOutlet`** annotation on a controller field (explicit)
+- **`fx:id="routerOutlet"`** in the FXML (convention-based)
+
+Nesting is unlimited — a child route can itself be a parent with its own outlet (parent → child → grandchild).
 
 ### FXML Controllers
 
@@ -137,8 +189,8 @@ public class MainController {
     }
 
     @FXML
-    private void onGoToSettings() {
-        router.navigateTo("/settings", Map.of("activeTab", "appearance"));
+    private void onGoToSecond() {
+        router.navigateTo("/second");
     }
 }
 ```
@@ -147,15 +199,20 @@ public class MainController {
 
 When `router.navigateTo("/main")` is called:
 
-1. `FxRouteRegistry` resolves the path to a `HandlerMethod`
-2. A fresh `FxModel` is created and populated with navigation parameters
-3. The `@FxMapping` handler on the `@FxRoutes` bean is invoked — it populates the model and returns a view name
-4. `ViewResolver` resolves the view name to an FXML template (e.g. `"main"` → `/templates/main.fxml`)
-5. The FXML is loaded with Spring's `ApplicationContext` as the controller factory (creating a fresh prototype controller)
-6. `@ModelAttribute` fields are injected into the controller from the model
-7. The optional `onModelReady(FxModel)` hook is called if the controller defines it
-8. `@FXML initialize()` runs — all model data is available
-9. The view is swapped into `rootPane.setCenter()`
+1. `FxRouteRegistry` resolves `"/main"` and sees `parent = "/"`
+2. The router builds the ancestor chain: `["/", "/main"]`
+3. For each level in the chain, starting from the root:
+  - If the parent `"/"` is **already active** → reuse its layout (menu bar stays)
+  - If not → invoke the `@FxMapping` handler, load the FXML, cache as `ActiveRoute`
+4. The handler is invoked — it populates the `FxModel` and returns a view name
+5. `ViewResolver` resolves the view name to an FXML template
+6. The FXML is loaded with Spring's `ApplicationContext` as the controller factory
+7. `@ModelAttribute` fields are injected into the controller from the model
+8. The optional `onModelReady(FxModel)` hook is called if the controller defines it
+9. `@FXML initialize()` runs — all model data is available
+10. The child view is placed into the parent's `@RouterOutlet`
+
+When navigating from `"/main"` to `"/second"`, the router detects that the parent `"/"` layout is already active and **reuses it** — only the child view is swapped in the outlet.
 
 ### View Resolution
 
@@ -168,9 +225,10 @@ spring.javafx.view.suffix=.fxml
 
 Routes are logged at startup:
 ```
-Mapped "/main"   → AppRoutes.main()
-Mapped "/second" → AppRoutes.second()
-Registered 2 FxMapping route(s)
+Mapped "/"       → AppRoutes.layout()
+Mapped "/main"   → AppRoutes.main()    [parent: /]
+Mapped "/second" → AppRoutes.second()  [parent: /]
+Registered 3 FxMapping route(s)
 ```
 
 ## 🎨 Theming
@@ -207,7 +265,7 @@ Uses Spring Boot's `MessageSource` bridged to JavaFX via `MessageSourceResourceB
   ```java
   messages.msg("main.counter", counter);
   ```
-- **Language menu** — built-in `MenuBar` with radio toggle between languages. Switching locale rebuilds the menu and calls `router.reload()` to reload the current view with new translations.
+- **Language menu** — built-in `MenuBar` in `LayoutController` with radio toggle between languages. Switching locale calls `router.reload()` which rebuilds the layout and reloads the current child view with new translations.
 
 ## 🚨 Error Handling
 

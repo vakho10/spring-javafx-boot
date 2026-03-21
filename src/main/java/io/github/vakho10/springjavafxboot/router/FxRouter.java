@@ -2,10 +2,10 @@ package io.github.vakho10.springjavafxboot.router;
 
 import io.github.vakho10.springjavafxboot.navigation.ViewResolver;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
-import lombok.Getter;
-import lombok.Setter;
+import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -14,76 +14,57 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Map;
+import java.util.*;
 
 /**
- * The central JavaFX routing service — analogous to Spring MVC's {@code DispatcherServlet}.
+ * The central JavaFX routing service — analogous to Spring MVC's {@code DispatcherServlet},
+ * with Angular-style nested child routing.
  * <p>
- * Orchestrates the full navigation lifecycle with a clean separation between
- * route handlers ({@link FxRoutes @FxRoutes} classes) and FXML view controllers
- * ({@code @Controller @Scope("prototype")} classes):
+ * Supports unlimited nesting depth. Parent routes define layout templates with
+ * a {@link RouterOutlet} (or {@code fx:id="routerOutlet"}) where child views render.
+ * When navigating to a child route, the router builds the full ancestor chain,
+ * reuses any already-active parent layouts, and only reloads what changed.
  *
- * <ol>
- *   <li>Resolve the path to a {@link HandlerMethod} via {@link FxRouteRegistry}</li>
- *   <li>Create a fresh {@link FxModel} and populate it with navigation parameters</li>
- *   <li>Invoke the handler on the {@code @FxRoutes} bean — it populates the model
- *       and returns a view name</li>
- *   <li>Pass the view name to {@link ViewResolver} — it loads the FXML, creates a
- *       fresh controller instance via Spring (prototype scope), and wires in
- *       {@code MessageSource} for i18n</li>
- *   <li>Inject {@link ModelAttribute @ModelAttribute} fields into the FXML controller
- *       from the populated model</li>
- *   <li>Trigger the controller's {@code @FXML initialize()} by completing the
- *       FXMLLoader lifecycle</li>
- *   <li>Swap the loaded view into the scene's root pane</li>
- * </ol>
+ * <h3>Route hierarchy example:</h3>
+ * <pre>
+ *   "/"           → layout.fxml       (menu bar + outlet)
+ *   "/main"       → main.fxml         (child of /)
+ *   "/settings"   → settings.fxml     (child of /)
+ * </pre>
  *
- * <h3>Usage from FXML controllers:</h3>
+ * <h3>Navigation:</h3>
  * <pre>{@code
- * @Autowired private FxRouter router;
- *
- * @FXML
- * private void onSettingsClick() {
- *     router.navigateTo("/settings", Map.of("tab", "appearance"));
- * }
+ * router.navigateTo("/main");       // loads "/" layout, then "/main" inside its outlet
+ * router.navigateTo("/settings");   // reuses "/" layout, swaps "/settings" into outlet
  * }</pre>
  *
- * <h3>Usage for initial view (in Application.start()):</h3>
- * <pre>{@code
- * router.setRootPane(rootPane);
- * router.navigateTo("/main");
- * }</pre>
- *
- * @see FxRoutes
  * @see FxMapping
+ * @see FxRoutes
+ * @see RouterOutlet
  * @see FxRouteRegistry
- * @see ModelAttribute
  */
 @Service
 public class FxRouter {
 
     private static final Logger log = LoggerFactory.getLogger(FxRouter.class);
 
+    /**
+     * Convention-based fx:id for router outlets in FXML.
+     */
+    private static final String OUTLET_FX_ID = "routerOutlet";
+
     private final FxRouteRegistry routeRegistry;
     private final ViewResolver viewResolver;
     private final ApplicationContext applicationContext;
 
-    /**
-     * -- SETTER --
-     *  Sets the root pane whose center region will be swapped on navigation.
-     *  Must be called before any navigation (typically in
-     * ).
-     */
-    @Setter
     private BorderPane rootPane;
-    /**
-     * -- GETTER --
-     *  Returns the currently active route path, or
-     *  before first navigation.
-     */
-    @Getter
     private String currentPath;
     private Map<String, Object> currentParams = Map.of();
+
+    /**
+     * Cache of currently active routes, keyed by path.
+     */
+    private final Map<String, ActiveRoute> activeRoutes = new LinkedHashMap<>();
 
     public FxRouter(FxRouteRegistry routeRegistry,
                     ViewResolver viewResolver,
@@ -94,10 +75,15 @@ public class FxRouter {
     }
 
     /**
+     * Sets the root pane whose center region will be swapped on navigation.
+     * Must be called before any navigation (typically in {@code Application.start()}).
+     */
+    public void setRootPane(BorderPane rootPane) {
+        this.rootPane = rootPane;
+    }
+
+    /**
      * Navigate to a route with no parameters.
-     *
-     * @param path the route path (e.g. "/main")
-     * @throws RoutingException if the route is not found or navigation fails
      */
     public void navigateTo(String path) {
         navigateTo(path, Map.of());
@@ -106,64 +92,253 @@ public class FxRouter {
     /**
      * Navigate to a route with parameters.
      * <p>
-     * Parameters are added to the {@link FxModel} before the handler is invoked,
-     * and are available for {@link ModelAttribute} injection in the FXML controller.
+     * For child routes, the router automatically resolves the full ancestor chain,
+     * reuses active parent layouts, and only loads/reloads what is necessary.
      *
-     * @param path   the route path (e.g. "/settings")
+     * @param path   the route path (e.g. "/main")
      * @param params key-value pairs to pre-populate in the model
      * @throws RoutingException if the route is not found or navigation fails
      */
     public void navigateTo(String path, Map<String, Object> params) {
         log.debug("Navigating to: {} with params: {}", path, params.keySet());
 
-        // 1. Resolve route → handler
         HandlerMethod handler = routeRegistry.resolve(path);
         if (handler == null) {
             throw new RoutingException("No @FxMapping found for path: \"" + path + "\"");
         }
 
-        // 2. Create model, pre-populate with navigation params
-        FxModel model = new FxModel();
-        params.forEach(model::put);
-
-        // 3. Invoke the @FxRoutes handler → returns view name
-        String viewName = invokeHandler(handler, model);
-        log.debug("Handler returned view name: \"{}\"", viewName);
-
-        // 4–6. Load FXML, inject @ModelAttribute, get view
-        Parent view = loadAndPrepareView(viewName, model);
-
-        // 7. Swap the view into the root pane
-        Runnable swap = () -> {
+        Runnable navigation = () -> {
             requireRootPane();
-            rootPane.setCenter(view);
+            executeNavigation(handler, params);
             currentPath = path;
             currentParams = params;
-            log.info("Navigated to \"{}\" → view \"{}\"", path, viewName);
         };
 
         if (Platform.isFxApplicationThread()) {
-            swap.run();
+            navigation.run();
         } else {
-            Platform.runLater(swap);
+            Platform.runLater(navigation);
         }
     }
 
     /**
+     * Returns the currently active route path, or {@code null} before first navigation.
+     */
+    public String getCurrentPath() {
+        return currentPath;
+    }
+
+    /**
      * Re-navigates to the current route with the same parameters.
-     * Useful after a locale change to reload the view with new translations.
-     *
-     * @throws RoutingException if no current path is set
+     * Forces a full reload including all parent layouts.
+     * Useful after a locale change.
      */
     public void reload() {
         if (currentPath == null) {
             throw new RoutingException("Cannot reload — no current route.");
         }
+        // Clear active routes to force full rebuild
+        activeRoutes.clear();
         navigateTo(currentPath, currentParams);
     }
 
     // -------------------------------------------------------------------------
-    // Internal
+    // Core navigation engine
+    // -------------------------------------------------------------------------
+
+    private void executeNavigation(HandlerMethod handler, Map<String, Object> params) {
+        // Build the full ancestor chain: [root, ..., parent, target]
+        List<HandlerMethod> chain = buildRouteChain(handler);
+
+        // Walk the chain from root to target
+        Pane currentOutlet = rootPane;
+
+        for (int i = 0; i < chain.size(); i++) {
+            HandlerMethod current = chain.get(i);
+            boolean isTarget = (i == chain.size() - 1);
+
+            // Check if this level is already active and can be reused
+            ActiveRoute active = activeRoutes.get(current.path());
+            if (active != null && !isTarget) {
+                // Parent is already loaded — reuse it, skip to next level
+                log.debug("Reusing active parent: \"{}\"", current.path());
+                if (active.outlet() != null) {
+                    currentOutlet = active.outlet();
+                }
+                continue;
+            }
+
+            // Invoke the handler
+            FxModel model = new FxModel();
+            if (isTarget) {
+                params.forEach(model::put);
+            }
+            String viewName = invokeHandler(current, model);
+            log.debug("Handler for \"{}\" returned view: \"{}\"", current.path(), viewName);
+
+            // Load FXML + inject model attributes
+            ViewResolver.ViewResult result = loadAndPrepareView(viewName, model);
+            Parent view = result.view();
+            Object controller = result.controller();
+
+            // Find the outlet in this view for child routes
+            Pane outlet = null;
+            if (!isTarget || hasChildRoutes(current.path())) {
+                outlet = findOutlet(controller, view);
+            }
+
+            // Invalidate any active routes at this level and below
+            invalidateFrom(current.path());
+
+            // Place the view into the current outlet
+            placeView(currentOutlet, view);
+
+            // Cache as active
+            activeRoutes.put(current.path(), new ActiveRoute(current.path(), view, controller, outlet));
+            log.info("Navigated to \"{}\" → view \"{}\"", current.path(), viewName);
+
+            // Move to the next level's outlet
+            if (outlet != null) {
+                currentOutlet = outlet;
+            }
+        }
+    }
+
+    /**
+     * Builds the route chain from root ancestor to the target handler.
+     * For a route "/settings" with parent "/", this returns ["/", "/settings"].
+     * For unlimited nesting: ["/", "/admin", "/admin/users"].
+     */
+    private List<HandlerMethod> buildRouteChain(HandlerMethod target) {
+        LinkedList<HandlerMethod> chain = new LinkedList<>();
+        HandlerMethod current = target;
+
+        // Walk up the parent chain
+        Set<String> visited = new HashSet<>();
+        while (current != null) {
+            if (!visited.add(current.path())) {
+                throw new RoutingException("Circular parent reference detected at: \"" + current.path() + "\"");
+            }
+            chain.addFirst(current);
+            if (current.hasParent()) {
+                HandlerMethod parent = routeRegistry.resolve(current.parent());
+                if (parent == null) {
+                    throw new RoutingException(
+                            "Parent route \"%s\" not found for child \"%s\""
+                                    .formatted(current.parent(), current.path()));
+                }
+                current = parent;
+            } else {
+                current = null;
+            }
+        }
+
+        return chain;
+    }
+
+    /**
+     * Checks if any registered route declares the given path as its parent.
+     */
+    private boolean hasChildRoutes(String path) {
+        String normalized = routeRegistry.normalizePath(path);
+        return routeRegistry.getRoutes().values().stream()
+                .anyMatch(h -> normalized.equals(h.parent()));
+    }
+
+    /**
+     * Finds the router outlet in a loaded view. Tries two strategies:
+     * <ol>
+     *   <li>{@link RouterOutlet @RouterOutlet} annotation on a controller field</li>
+     *   <li>{@code fx:id="routerOutlet"} convention in the FXML node tree</li>
+     * </ol>
+     */
+    private Pane findOutlet(Object controller, Parent view) {
+        // Strategy 1: @RouterOutlet annotation on controller field
+        if (controller != null) {
+            for (Field field : controller.getClass().getDeclaredFields()) {
+                if (field.isAnnotationPresent(RouterOutlet.class)) {
+                    try {
+                        field.setAccessible(true);
+                        Object value = field.get(controller);
+                        if (value instanceof Pane pane) {
+                            log.debug("Found @RouterOutlet on {}.{}",
+                                    controller.getClass().getSimpleName(), field.getName());
+                            return pane;
+                        } else {
+                            throw new RoutingException(
+                                    "@RouterOutlet field %s.%s must be a Pane, but is %s".formatted(
+                                            controller.getClass().getSimpleName(),
+                                            field.getName(),
+                                            value != null ? value.getClass().getSimpleName() : "null"));
+                        }
+                    } catch (IllegalAccessException e) {
+                        throw new RoutingException(
+                                "Cannot access @RouterOutlet field " + field.getName(), e);
+                    }
+                }
+            }
+        }
+
+        // Strategy 2: fx:id="routerOutlet" convention
+        Node node = view.lookup("#" + OUTLET_FX_ID);
+        if (node instanceof Pane pane) {
+            log.debug("Found outlet via fx:id=\"{}\"", OUTLET_FX_ID);
+            return pane;
+        }
+
+        return null;
+    }
+
+    /**
+     * Places a child view into an outlet pane.
+     */
+    private void placeView(Pane outlet, Parent view) {
+        if (outlet instanceof BorderPane borderPane) {
+            borderPane.setCenter(view);
+        } else {
+            outlet.getChildren().setAll(view);
+        }
+    }
+
+    /**
+     * Invalidates (removes) active routes at or below a given path.
+     * Called when a route at that level is being reloaded.
+     */
+    private void invalidateFrom(String path) {
+        activeRoutes.entrySet().removeIf(entry -> {
+            String activePath = entry.getKey();
+            if (activePath.equals(path)) {
+                return true;
+            }
+            // Also remove any route that is a descendant of this path
+            HandlerMethod handler = routeRegistry.resolve(activePath);
+            if (handler != null && handler.hasParent()) {
+                return isDescendantOf(activePath, path);
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Checks whether a route is a descendant (child, grandchild, etc.) of an ancestor path.
+     */
+    private boolean isDescendantOf(String path, String ancestorPath) {
+        HandlerMethod handler = routeRegistry.resolve(path);
+        Set<String> visited = new HashSet<>();
+        while (handler != null && handler.hasParent()) {
+            if (!visited.add(handler.path())) {
+                return false; // circular reference guard
+            }
+            if (handler.parent().equals(ancestorPath)) {
+                return true;
+            }
+            handler = routeRegistry.resolve(handler.parent());
+        }
+        return false;
+    }
+
+    // -------------------------------------------------------------------------
+    // Handler invocation & view loading (unchanged from v2)
     // -------------------------------------------------------------------------
 
     private String invokeHandler(HandlerMethod handler, FxModel model) {
@@ -209,21 +384,18 @@ public class FxRouter {
         return args;
     }
 
-    private Parent loadAndPrepareView(String viewName, FxModel model) {
+    private ViewResolver.ViewResult loadAndPrepareView(String viewName, FxModel model) {
         try {
-            // Load FXML with Spring controller factory + MessageSource i18n
             ViewResolver.ViewResult result = viewResolver.loadView(
                     viewName, applicationContext::getBean);
 
-            // Inject @ModelAttribute fields into the FXML controller
             Object controller = result.controller();
             if (controller != null) {
                 injectModelAttributes(controller, model);
-                // Trigger post-model initialization if the controller defines it
                 invokePostModelInit(controller, model);
             }
 
-            return result.view();
+            return result;
 
         } catch (RoutingException e) {
             throw e;
@@ -263,11 +435,6 @@ public class FxRouter {
         }
     }
 
-    /**
-     * If the FXML controller has a method {@code void onModelReady(FxModel)},
-     * invoke it after model attribute injection. This provides a hook for
-     * controllers that need the full model (not just individual fields).
-     */
     private void invokePostModelInit(Object controller, FxModel model) {
         try {
             Method onModelReady = controller.getClass().getDeclaredMethod("onModelReady", FxModel.class);
@@ -275,7 +442,7 @@ public class FxRouter {
             onModelReady.invoke(controller, model);
             log.trace("Called onModelReady() on {}", controller.getClass().getSimpleName());
         } catch (NoSuchMethodException e) {
-            // No onModelReady method — that's fine, it's optional
+            // Optional hook — no-op if absent
         } catch (Exception e) {
             throw new RoutingException(
                     "Failed to call onModelReady() on %s".formatted(

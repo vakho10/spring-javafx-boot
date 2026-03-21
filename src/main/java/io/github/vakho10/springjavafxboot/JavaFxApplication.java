@@ -5,12 +5,9 @@ import io.github.vakho10.springjavafxboot.service.ErrorHandler;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import io.github.vakho10.springjavafxboot.service.ThemeService;
 import io.github.vakho10.springjavafxboot.service.UserPreferencesService;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
@@ -26,8 +23,6 @@ public class JavaFxApplication extends Application {
 
     private ConfigurableApplicationContext springContext;
 
-    private static final Locale GEORGIAN = Locale.of("ka");
-
     private static final String[] FONT_PATHS = {
             "/fonts/roboto/Roboto-Light.ttf",
             "/fonts/roboto/Roboto-Regular.ttf",
@@ -39,18 +34,6 @@ public class JavaFxApplication extends Application {
             "/fonts/noto-sans-georgian/NotoSansGeorgian-SemiBold.ttf",
             "/fonts/noto-sans-georgian/NotoSansGeorgian-Bold.ttf"
     };
-
-    // Keep references for theme switching without full menu rebuild
-    private RadioMenuItem darkItem;
-    private RadioMenuItem lightItem;
-
-    // Services (resolved from Spring context in start())
-    private FxRouter router;
-    private LocalizedMessageSource messages;
-    private ThemeService themeService;
-    private UserPreferencesService preferencesService;
-    private BorderPane rootPane;
-    private Locale currentLocale;
 
     public static void main(String[] args) {
         launch(args);
@@ -70,19 +53,15 @@ public class JavaFxApplication extends Application {
         // Eager singletons like ErrorHandler receive it via init() instead.
         springContext.getBeanFactory().registerSingleton("primaryStage", primaryStage);
 
-        // Resolve Spring beans
-        router = springContext.getBean(FxRouter.class);
-        messages = springContext.getBean(LocalizedMessageSource.class);
-        themeService = springContext.getBean(ThemeService.class);
-        preferencesService = springContext.getBean(UserPreferencesService.class);
-
         // Restore saved locale
-        currentLocale = preferencesService.getLocale();
+        UserPreferencesService prefs = springContext.getBean(UserPreferencesService.class);
+        LocalizedMessageSource messages = springContext.getBean(LocalizedMessageSource.class);
+        Locale currentLocale = prefs.getLocale();
         Locale.setDefault(currentLocale);
         messages.setLocale(currentLocale);
 
         // Build scene
-        rootPane = new BorderPane();
+        BorderPane rootPane = new BorderPane();
         Scene scene = new Scene(rootPane, 800, 600);
         addStylesheet(scene, "/css/styles.css");
 
@@ -95,17 +74,17 @@ public class JavaFxApplication extends Application {
         }
 
         // Initialize theme (loads dark.css or light.css based on saved preference)
+        ThemeService themeService = springContext.getBean(ThemeService.class);
         themeService.init(scene);
         themeService.applyFontStylesheet(currentLocale);
-
-        // Build menu bar
-        buildMenuBar();
 
         // Set up global error handler
         ErrorHandler errorHandler = springContext.getBean(ErrorHandler.class);
         errorHandler.init(primaryStage);
 
-        // Initialize router and navigate to initial view
+        // Initialize router and navigate to initial child route.
+        // This loads the "/" layout (with menu bar) then "/main" inside its outlet.
+        FxRouter router = springContext.getBean(FxRouter.class);
         router.setRootPane(rootPane);
         router.navigateTo("/main");
 
@@ -115,62 +94,6 @@ public class JavaFxApplication extends Application {
     @Override
     public void stop() {
         springContext.close();
-    }
-
-    private void switchLocale(Locale locale) {
-        currentLocale = locale;
-        Locale.setDefault(locale);
-        messages.setLocale(locale);
-        preferencesService.setLocale(locale);
-        themeService.applyFontStylesheet(locale);
-        buildMenuBar();
-        router.reload();
-    }
-
-    private void switchTheme(String theme) {
-        themeService.switchTheme(theme);
-        darkItem.setSelected("dark".equals(theme));
-        lightItem.setSelected("light".equals(theme));
-    }
-
-    private void buildMenuBar() {
-        // Language menu
-        Menu languageMenu = new Menu(messages.msg("menu.language"));
-        ToggleGroup langGroup = new ToggleGroup();
-
-        RadioMenuItem englishItem = new RadioMenuItem(messages.msg("menu.language.english"));
-        englishItem.getStyleClass().add("font-en");
-        englishItem.setToggleGroup(langGroup);
-        englishItem.setSelected(currentLocale.equals(Locale.ENGLISH));
-        englishItem.setOnAction(e -> switchLocale(Locale.ENGLISH));
-
-        RadioMenuItem georgianItem = new RadioMenuItem(messages.msg("menu.language.georgian"));
-        georgianItem.getStyleClass().add("font-ka");
-        georgianItem.setToggleGroup(langGroup);
-        georgianItem.setSelected(currentLocale.equals(GEORGIAN));
-        georgianItem.setOnAction(e -> switchLocale(GEORGIAN));
-
-        languageMenu.getItems().addAll(englishItem, georgianItem);
-
-        // Theme menu
-        Menu themeMenu = new Menu(messages.msg("menu.theme"));
-        ToggleGroup themeGroup = new ToggleGroup();
-        String currentTheme = themeService.getCurrentTheme();
-
-        darkItem = new RadioMenuItem(messages.msg("menu.theme.dark"));
-        darkItem.setToggleGroup(themeGroup);
-        darkItem.setSelected("dark".equals(currentTheme));
-        darkItem.setOnAction(e -> switchTheme("dark"));
-
-        lightItem = new RadioMenuItem(messages.msg("menu.theme.light"));
-        lightItem.setToggleGroup(themeGroup);
-        lightItem.setSelected("light".equals(currentTheme));
-        lightItem.setOnAction(e -> switchTheme("light"));
-
-        themeMenu.getItems().addAll(darkItem, lightItem);
-
-        MenuBar menuBar = new MenuBar(languageMenu, themeMenu);
-        rootPane.setTop(menuBar);
     }
 
     private void loadFonts() {

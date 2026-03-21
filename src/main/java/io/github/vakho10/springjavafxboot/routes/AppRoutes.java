@@ -7,25 +7,29 @@ import io.github.vakho10.springjavafxboot.router.FxRoutes;
 /**
  * Application route definitions.
  * <p>
- * Each {@link FxMapping} method prepares data for its target view and
- * returns the logical view name. The FXML controllers are separate
- * prototype-scoped beans that receive the model data via
- * {@link io.github.vakho10.springjavafxboot.router.ModelAttribute @ModelAttribute}.
+ * The root route {@code "/"} loads the application layout (menu bar + content area).
+ * Child routes render inside the layout's {@code @RouterOutlet}.
  *
  * <pre>
- *   "/main"   → main.fxml   (MainController)
- *   "/second" → second.fxml (SecondController)
+ *   "/"       → layout.fxml    (LayoutController — menu bar + outlet)
+ *   "/main"   → main.fxml      (MainController — child of /)
+ *   "/second" → second.fxml    (SecondController — child of /)
  * </pre>
  */
 @FxRoutes
 public class AppRoutes {
 
-    @FxMapping("/main")
+    @FxMapping("/")
+    public String layout(FxModel model) {
+        return "layout";
+    }
+
+    @FxMapping(value = "/main", parent = "/")
     public String main(FxModel model) {
         return "main";
     }
 
-    @FxMapping("/second")
+    @FxMapping(value = "/second", parent = "/")
     public String second(FxModel model) {
         return "second";
     }

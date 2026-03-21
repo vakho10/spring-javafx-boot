@@ -1,11 +1,11 @@
 package io.github.vakho10.springjavafxboot.router;
 
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -16,12 +16,12 @@ import java.util.Map;
  * with {@link FxRoutes @FxRoutes} and registers methods annotated with
  * {@link FxMapping @FxMapping} into a route table.
  * <p>
- * Analogous to Spring MVC's {@code RequestMappingHandlerMapping}. Routes are
- * logged at startup for visibility:
+ * Supports parent–child route relationships. Routes are logged at startup:
  * <pre>
- *   Mapped "/main"     → AppRoutes.main()
- *   Mapped "/settings" → AppRoutes.settings()
- *   Registered 2 FxMapping route(s)
+ *   Mapped "/"       → AppRoutes.layout()
+ *   Mapped "/main"   → AppRoutes.main()     [parent: /]
+ *   Mapped "/second" → AppRoutes.second()   [parent: /]
+ *   Registered 3 FxMapping route(s)
  * </pre>
  *
  * @see FxRoutes
@@ -44,6 +44,7 @@ public class FxRouteRegistry {
     void scanAndRegister() {
         Map<String, Object> routeBeans = applicationContext.getBeansWithAnnotation(FxRoutes.class);
 
+        // First pass: collect all routes
         for (Object routeBean : routeBeans.values()) {
             Class<?> routeClass = routeBean.getClass();
 
@@ -54,14 +55,39 @@ public class FxRouteRegistry {
                 }
 
                 String path = normalizePath(mapping.value());
+                String parent = mapping.parent().isEmpty() ? "" : normalizePath(mapping.parent());
+
                 validateHandlerMethod(method, path, routeClass);
                 checkDuplicate(path, routeClass, method);
 
                 method.setAccessible(true);
-                routes.put(path, new HandlerMethod(path, routeBean, method));
+                routes.put(path, new HandlerMethod(path, parent, routeBean, method));
+            }
+        }
 
-                log.info("Mapped \"{}\" → {}.{}()", path,
-                        routeClass.getSimpleName(), method.getName());
+        // Second pass: validate parent references
+        for (HandlerMethod handler : routes.values()) {
+            if (handler.hasParent() && !routes.containsKey(handler.parent())) {
+                throw new IllegalStateException(
+                        "@FxMapping(\"%s\") references parent \"%s\" which does not exist. "
+                                .formatted(handler.path(), handler.parent())
+                                + "Available routes: " + routes.keySet());
+            }
+        }
+
+        // Log registered routes
+        for (HandlerMethod handler : routes.values()) {
+            if (handler.hasParent()) {
+                log.info("Mapped \"{}\" → {}.{}()  [parent: {}]",
+                        handler.path(),
+                        handler.routeConfigClass().getSimpleName(),
+                        handler.method().getName(),
+                        handler.parent());
+            } else {
+                log.info("Mapped \"{}\" → {}.{}()",
+                        handler.path(),
+                        handler.routeConfigClass().getSimpleName(),
+                        handler.method().getName());
             }
         }
 
@@ -90,7 +116,7 @@ public class FxRouteRegistry {
         return Collections.unmodifiableMap(routes);
     }
 
-    private String normalizePath(String path) {
+    String normalizePath(String path) {
         if (!path.startsWith("/")) {
             path = "/" + path;
         }

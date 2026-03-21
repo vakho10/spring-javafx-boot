@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="io.github.vakho10.springjavafxboot.controller.LayoutController">
+    <top>
+        <MenuBar fx:id="menuBar"/>
+    </top>
+    <center>
+        <!-- Router outlet — child views (/main, /second) render here -->
+        <BorderPane fx:id="contentArea"/>
+    </center>
+</BorderPane>

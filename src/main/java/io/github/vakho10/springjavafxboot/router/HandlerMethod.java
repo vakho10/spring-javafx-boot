@@ -4,20 +4,18 @@ import java.lang.reflect.Method;
 
 /**
  * Represents a resolved {@link FxMapping} handler — the route configuration
- * bean and the method to invoke.
+ * bean, the method to invoke, and the parent relationship.
  * <p>
- * These are created during startup by {@link FxRouteRegistry} from
+ * Created during startup by {@link FxRouteRegistry} from
  * {@link FxRoutes @FxRoutes} classes and stored in the route table.
- * <p>
- * Note: the {@link #bean()} is the {@code @FxRoutes} instance, <em>not</em>
- * an FXML controller. The handler method returns a view name; the FXML
- * controller is a separate Spring-managed bean resolved by the
- * {@link io.github.vakho10.springjavafxboot.navigation.ViewResolver ViewResolver}.
  */
 public record HandlerMethod(
 
         /** The route path (e.g. "/main"). */
         String path,
+
+        /** The parent route path, or {@code ""} if this is a root route. */
+        String parent,
 
         /** The {@link FxRoutes @FxRoutes} bean that owns this handler. */
         Object bean,
@@ -25,6 +23,13 @@ public record HandlerMethod(
         /** The method annotated with {@link FxMapping}. */
         Method method
 ) {
+
+    /**
+     * Whether this route has a parent (i.e. is a child route).
+     */
+    public boolean hasParent() {
+        return parent != null && !parent.isEmpty();
+    }
 
     /**
      * The {@link FxRoutes} class that declares this handler.
