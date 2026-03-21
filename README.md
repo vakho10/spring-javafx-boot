@@ -125,6 +125,14 @@ Uses Spring Boot's `MessageSource` bridged to JavaFX via `MessageSourceResourceB
 
 A `.button-danger` CSS class is available for destructive/error-related actions — it uses theme-aware color variables (`-app-danger`, `-app-danger-hover`, etc.).
 
+## 📝 Logging
+
+Logs are written to both the console and a file at `./logs/spring-javafx-boot.log` (relative to the working directory). Configured via `application.properties` with sensible desktop-app defaults:
+
+- **Level**: `INFO` for both console and file
+- **Rotation**: 10 MB per file, 7 days of history, 50 MB total cap
+- **Archives**: compressed automatically (`*.gz`)
+
 ## 📋 Prerequisites
 
 - **JDK 25+** on your PATH
