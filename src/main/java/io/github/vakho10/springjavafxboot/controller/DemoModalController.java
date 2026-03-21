@@ -3,7 +3,10 @@ package io.github.vakho10.springjavafxboot.controller;
 import io.github.vakho10.springjavafxboot.router.ModelAttribute;
 import io.github.vakho10.springjavafxboot.router.WindowResult;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Window;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -30,11 +33,20 @@ public class DemoModalController {
         if (windowResult != null) {
             windowResult.set(inputField.getText());
         }
-        inputField.getScene().getWindow().hide();
+        closeWindow(inputField);
     }
 
     @FXML
     private void onCancelClick() {
-        inputField.getScene().getWindow().hide();
+        closeWindow(inputField);
+    }
+
+    private void closeWindow(Node node) {
+        Scene scene = node.getScene();
+        if (scene == null) return;
+        Window window = scene.getWindow();
+        if (window != null) {
+            window.hide();
+        }
     }
 }

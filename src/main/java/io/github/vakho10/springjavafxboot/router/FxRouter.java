@@ -17,7 +17,12 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The central JavaFX routing service — analogous to Spring MVC's {@code DispatcherServlet},
@@ -115,7 +120,7 @@ public class FxRouter {
 
         HandlerMethod handler = routeRegistry.resolve(path);
         if (handler == null) {
-            throw new RoutingException("No @FxMapping found for path: \"" + path + "\"");
+            throw new RoutingException("No @FxMapping found for path: \"%s\"".formatted(path));
         }
 
         Runnable navigation = () -> {
@@ -310,7 +315,7 @@ public class FxRouter {
 
         HandlerMethod handler = routeRegistry.resolve(path);
         if (handler == null) {
-            throw new RoutingException("No @FxMapping found for path: \"" + path + "\"");
+            throw new RoutingException("No @FxMapping found for path: \"%s\"".formatted(path));
         }
 
         // Prepare model
@@ -332,7 +337,8 @@ public class FxRouter {
 
         if (options.getModality() != Modality.NONE) {
             stage.initModality(options.getModality());
-            if (rootPane != null && rootPane.getScene() != null) {
+            if (rootPane != null && rootPane.getScene() != null
+                    && rootPane.getScene().getWindow() != null) {
                 stage.initOwner(rootPane.getScene().getWindow());
             }
         }
@@ -381,7 +387,7 @@ public class FxRouter {
         Set<String> visited = new HashSet<>();
         while (current != null) {
             if (!visited.add(current.path())) {
-                throw new RoutingException("Circular parent reference detected at: \"" + current.path() + "\"");
+                throw new RoutingException("Circular parent reference detected at: \"%s\"".formatted(current.path()));
             }
             chain.addFirst(current);
             if (current.hasParent()) {
@@ -427,7 +433,7 @@ public class FxRouter {
                         }
                     } catch (IllegalAccessException e) {
                         throw new RoutingException(
-                                "Cannot access @RouterOutlet field " + field.getName(), e);
+                                "Cannot access @RouterOutlet field %s".formatted(field.getName()), e);
                     }
                 }
             }

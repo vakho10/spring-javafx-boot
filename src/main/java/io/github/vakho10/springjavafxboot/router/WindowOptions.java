@@ -34,6 +34,9 @@ public class WindowOptions {
     }
 
     public WindowOptions size(double width, double height) {
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Width and height must be positive, got: %sx%s".formatted(width, height));
+        }
         this.width = width;
         this.height = height;
         return this;

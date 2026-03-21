@@ -71,6 +71,10 @@
     -fx-background-color: -app-danger-hover;
 }
 
+.button-danger:focused {
+    -fx-border-color: -app-danger-border;
+}
+
 .button-danger:pressed {
     -fx-background-color: -app-danger-pressed;
     -fx-border-color: -app-danger-pressed;
@@ -113,7 +117,7 @@
 }
 
 .text-area:hover {
-    -fx-border-color: -app-hover;
+    -fx-background-color: -app-hover;
 }
 
 .text-area:focused {

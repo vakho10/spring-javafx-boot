@@ -20,6 +20,8 @@ src/main/java/io/github/vakho10/springjavafxboot/
 ├── JavaFxApplication.java         # JavaFX Application — boots Spring, loads scene, navigates to initial route
 ├── AppConfig.java                 # @SpringBootApplication config
 ├── controller/
+│   ├── DemoModalController.java   # Modal dialog controller — returns value via WindowResult
+│   ├── DemoWindowController.java  # Modeless window controller
 │   ├── LayoutController.java      # Layout shell — menu bar + @RouterOutlet for child views
 │   ├── MainController.java        # FXML controller — Spring-managed @Controller (prototype)
 │   └── SecondController.java      # Second view controller — navigation demo
@@ -36,7 +38,9 @@ src/main/java/io/github/vakho10/springjavafxboot/
 │   ├── HandlerMethod.java         # Resolved reference to a @FxMapping method + parent relationship
 │   ├── ModelAttribute.java        # @ModelAttribute — injects model data into controller fields
 │   ├── RouterOutlet.java          # @RouterOutlet — marks a Pane as the target for child views
-│   └── RoutingException.java      # Custom exception for routing errors
+│   ├── RoutingException.java      # Custom exception for routing errors
+│   ├── WindowOptions.java         # Builder for window configuration (title, size, modality)
+│   └── WindowResult.java          # Holds modal return value (set by modal, read by caller)
 ├── routes/
 │   └── AppRoutes.java             # Application route definitions (@FxRoutes)
 └── service/
@@ -63,6 +67,8 @@ src/main/resources/
 │   ├── app.ico                    # Application icon (jpackage / Windows)
 │   └── app.png                    # Application icon (JavaFX window)
 └── templates/
+    ├── demo-modal.fxml            # Modal dialog view
+    ├── demo-window.fxml           # Modeless window view
     ├── layout.fxml                # Application shell (menu bar + router outlet)
     ├── main.fxml                  # Main view layout
     └── second.fxml                # Second view layout
@@ -96,6 +102,8 @@ The routing system mirrors Spring MVC's request handling model, adapted for a de
 | — | `@ModelAttribute` | Injects model data into FXML controller fields |
 | — | `@RouterOutlet` | Marks a pane as the target for child views |
 | — | `ActiveRoute` | Caches loaded parent layouts for reuse |
+| — | `WindowOptions` | Builder for window/modal configuration (title, size, modality) |
+| — | `WindowResult` | Holds modal return value (set by modal controller, read by caller) |
 
 ### Route Configuration
 
@@ -225,11 +233,63 @@ spring.javafx.view.suffix=.fxml
 
 Routes are logged at startup:
 ```
-Mapped "/"       → AppRoutes.layout()
-Mapped "/main"   → AppRoutes.main()    [parent: /]
-Mapped "/second" → AppRoutes.second()  [parent: /]
-Registered 3 FxMapping route(s)
+Mapped "/"            → AppRoutes.layout()
+Mapped "/main"        → AppRoutes.main()        [parent: /]
+Mapped "/second"      → AppRoutes.second()       [parent: /]
+Mapped "/demo/window" → AppRoutes.demoWindow()
+Mapped "/demo/modal"  → AppRoutes.demoModal()
+Registered 5 FxMapping route(s)
 ```
+
+### Windows & Modal Dialogs
+
+The router supports opening routes in separate windows — both **modeless** (independent) and **modal** (blocks parent until closed).
+
+**Modeless window** — opens independently, parent stays interactive:
+```java
+router.openWindow("/demo/window", new WindowOptions()
+    .title("Demo Window")
+    .size(400, 300));
+```
+
+**Modal dialog** — blocks the parent and returns a result via `WindowResult`:
+```java
+WindowResult<String> result = router.openModal("/demo/modal", new WindowOptions()
+    .title("Demo Modal")
+    .size(400, 250)
+    .resizable(false));
+
+result.get().ifPresent(value -> label.setText(value));
+```
+
+The modal's FXML controller receives a `WindowResult` via `@ModelAttribute` and sets the result before closing:
+
+```java
+@ModelAttribute
+private WindowResult<String> windowResult;
+
+@FXML
+private void onConfirm() {
+    windowResult.set(inputField.getText());
+    closeWindow(inputField);
+}
+```
+
+Window and modal routes are defined like any other route in `@FxRoutes` — they just don't need a `parent`:
+
+```java
+@FxMapping("/demo/window")
+public String demoWindow(FxModel model) {
+    return "demo-window";
+}
+
+@FxMapping("/demo/modal")
+public String demoModal(FxModel model) {
+    return "demo-modal";
+}
+```
+
+New windows inherit the parent's stylesheets (theme + fonts) automatically.
 
 ## 🎨 Theming
 

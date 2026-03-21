@@ -66,11 +66,14 @@ public class JavaFxApplication extends Application {
         addStylesheet(scene, "/css/styles.css");
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Spring Boot + JavaFX");
+        primaryStage.setTitle(messages.msg("app.title"));
 
-        InputStream iconStream = getClass().getResourceAsStream("/icons/app.png");
-        if (iconStream != null) {
-            primaryStage.getIcons().add(new Image(iconStream));
+        try (InputStream iconStream = getClass().getResourceAsStream("/icons/app.png")) {
+            if (iconStream != null) {
+                primaryStage.getIcons().add(new Image(iconStream));
+            }
+        } catch (Exception e) {
+            // Non-critical — app works without an icon
         }
 
         // Initialize theme (loads dark.css or light.css based on saved preference)

@@ -3,6 +3,7 @@ package io.github.vakho10.springjavafxboot.controller;
 import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.router.WindowOptions;
 import io.github.vakho10.springjavafxboot.router.WindowResult;
+import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 public class SecondController {
 
     private final FxRouter router;
+    private final LocalizedMessageSource messages;
 
     @FXML
     private Label modalResultLabel;
@@ -40,6 +42,6 @@ public class SecondController {
                 .resizable(false));
 
         result.get().ifPresent(value ->
-                modalResultLabel.setText("Modal returned: " + value));
+                modalResultLabel.setText(messages.msg("second.modal.result", value)));
     }
 }
