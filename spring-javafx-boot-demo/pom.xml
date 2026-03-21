@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.vakho10</groupId>
+        <artifactId>spring-javafx-boot</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>spring-javafx-boot-demo</artifactId>
+    <name>spring-javafx-boot-demo</name>
+    <description>Demo application using spring-javafx-boot-starter</description>
+
+    <properties>
+        <start-class>io.github.vakho10.springjavafxboot.Launcher</start-class>
+
+        <!-- JRE bundling (used by the 'bundle' profile) -->
+        <jre.download.link.windows>
+            https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jre_x64_windows_hotspot_25.0.2_10.zip
+        </jre.download.link.windows>
+        <jre.root.folder.windows>jdk-25.0.2+10-jre</jre.root.folder.windows>
+        <icon.file.windows>${project.basedir}/src/main/resources/icons/app.ico</icon.file.windows>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.vakho10</groupId>
+            <artifactId>spring-javafx-boot-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>bundle</id>
+            <build>
+                <plugins>
+                    <!-- Safe clean: don't fail if the .exe is locked -->
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                        </configuration>
+                    </plugin>
+
+                    <!-- 1) Download JRE -->
+                    <plugin>
+                        <groupId>com.googlecode.maven-download-plugin</groupId>
+                        <artifactId>download-maven-plugin</artifactId>
+                        <version>1.13.0</version>
+                        <executions>
+                            <execution>
+                                <id>download-jre</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>${jre.download.link.windows}</url>
+                                    <unpack>true</unpack>
+                                    <outputDirectory>${project.build.directory}/java</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- 2) Delete old dist (Windows-safe) & copy fat jar to staging -->
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>delete-dist-windows</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <!-- Kill the running exe if it exists, then force-remove dist -->
+                                        <exec executable="cmd" failonerror="false">
+                                            <arg line="/c taskkill /f /im ${project.artifactId}.exe 2&gt;nul"/>
+                                        </exec>
+                                        <exec executable="cmd" failonerror="false">
+                                            <arg line="/c rmdir /s /q &quot;${project.build.directory}\dist&quot; 2&gt;nul"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-boot-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${project.build.directory}/app"/>
+                                        <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                              tofile="${project.build.directory}/app/app.jar"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- 3) Package with jpackage -->
+                    <plugin>
+                        <groupId>org.panteleyev</groupId>
+                        <artifactId>jpackage-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>run-jpackage</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jpackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <name>${project.artifactId}</name>
+                            <icon>${icon.file.windows}</icon>
+                            <appVersion>1.0.0</appVersion>
+                            <vendor>io.github.vakho10</vendor>
+                            <type>APP_IMAGE</type>
+                            <runtimeImage>${project.build.directory}/java/${jre.root.folder.windows}</runtimeImage>
+                            <input>${project.build.directory}/app</input>
+                            <destination>${project.build.directory}/dist</destination>
+                            <mainJar>app.jar</mainJar>
+                            <mainClass>org.springframework.boot.loader.launch.JarLauncher</mainClass>
+                            <javaOptions>
+                                <option>-Dfile.encoding=UTF-8</option>
+                            </javaOptions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

@@ -1,6 +1,9 @@
 # 🚀 Spring JavaFX Boot
 
-A desktop application template integrating **Spring Boot 4.0.4** with **JavaFX 25.0.2**. Spring manages the application context, dependency injection, and configuration while JavaFX handles the UI with FXML views and CSS styling.
+A **Spring Boot starter** for building JavaFX desktop applications with Spring MVC-inspired routing, theming, i18n, and user preferences. The project is split into two modules:
+
+- **`spring-javafx-boot-starter`** — reusable library with routing, view resolution, theme switching, i18n bridging, and preferences persistence. Add it as a dependency to get started.
+- **`spring-javafx-boot-demo`** — example application demonstrating all starter features.
 
 ## 🛠️ Tech Stack
 
@@ -15,64 +18,77 @@ A desktop application template integrating **Spring Boot 4.0.4** with **JavaFX 2
 ## 📁 Project Structure
 
 ```
-src/main/java/io/github/vakho10/springjavafxboot/
-├── Launcher.java                  # JVM entry point — bypasses JavaFX module-path check
-├── JavaFxApplication.java         # JavaFX Application — boots Spring, loads scene, navigates to initial route
-├── AppConfig.java                 # @SpringBootApplication config
-├── controller/
-│   ├── DemoModalController.java   # Modal dialog controller — returns value via WindowResult
-│   ├── DemoWindowController.java  # Modeless window controller
-│   ├── LayoutController.java      # Layout shell — menu bar + @RouterOutlet for child views
-│   ├── MainController.java        # FXML controller — Spring-managed @Controller (prototype)
-│   └── SecondController.java      # Second view controller — navigation demo
-├── navigation/
-│   ├── MessageSourceResourceBundle.java  # Bridges Spring MessageSource → JavaFX ResourceBundle
-│   └── ViewResolver.java          # Convention-based FXML template resolver
-├── router/
-│   ├── ActiveRoute.java           # Cached state of a loaded route (view, controller, outlet)
-│   ├── FxMapping.java             # @FxMapping — maps a method to a route path (with optional parent)
-│   ├── FxModel.java               # Model object carrying data from routes to controllers
-│   ├── FxRouter.java              # Central routing service (analogous to DispatcherServlet)
-│   ├── FxRouteRegistry.java       # Scans @FxRoutes beans and builds the route table at startup
-│   ├── FxRoutes.java              # @FxRoutes — marks a class as a route configuration
-│   ├── HandlerMethod.java         # Resolved reference to a @FxMapping method + parent relationship
-│   ├── ModelAttribute.java        # @ModelAttribute — injects model data into controller fields
-│   ├── RouterOutlet.java          # @RouterOutlet — marks a Pane as the target for child views
-│   ├── RoutingException.java      # Custom exception for routing errors
-│   ├── WindowOptions.java         # Builder for window configuration (title, size, modality)
-│   └── WindowResult.java          # Holds modal return value (set by modal, read by caller)
-├── routes/
-│   └── AppRoutes.java             # Application route definitions (@FxRoutes)
-└── service/
-    ├── ErrorHandler.java          # Global uncaught exception handler with themed alerts
-    ├── LocalizedMessageSource.java # Convenience wrapper for locale-aware i18n access
-    ├── ThemeService.java          # Manages theme & font stylesheets
-    └── UserPreferencesService.java # Persists theme & locale via Java Preferences API
-
-src/main/resources/
-├── application.properties         # Spring Boot + view resolver configuration
-├── messages.properties            # i18n messages (English — default)
-├── messages_ka.properties         # i18n messages (Georgian)
-├── css/
-│   ├── styles.css                 # Structure + theme-aware colors via looked-up color variables
-│   ├── fonts-en.css               # English font (Roboto)
-│   ├── fonts-ka.css               # Georgian font (Noto Sans Georgian)
-│   └── themes/
-│       ├── dark.css               # 🌙 Dark color palette (looked-up color definitions)
-│       └── light.css              # ☀️ Light color palette (looked-up color definitions)
-├── fonts/
-│   ├── roboto/                    # Roboto (Light, Regular, Medium, Bold)
-│   └── noto-sans-georgian/        # Noto Sans Georgian (Light, Regular, Medium, SemiBold, Bold)
-├── icons/
-│   ├── app.ico                    # Application icon (jpackage / Windows)
-│   └── app.png                    # Application icon (JavaFX window)
-└── templates/
-    ├── demo-modal.fxml            # Modal dialog view
-    ├── demo-window.fxml           # Modeless window view
-    ├── layout.fxml                # Application shell (menu bar + router outlet)
-    ├── main.fxml                  # Main view layout
-    └── second.fxml                # Second view layout
+spring-javafx-boot/                            # Parent POM (multi-module)
+├── spring-javafx-boot-starter/                # Reusable starter library
+│   └── src/main/java/.../
+│       ├── autoconfigure/
+│       │   └── SpringJavaFxAutoConfiguration.java  # Auto-configures all starter beans
+│       ├── navigation/
+│       │   ├── MessageSourceResourceBundle.java    # Bridges Spring MessageSource → JavaFX ResourceBundle
+│       │   └── ViewResolver.java                   # Convention-based FXML template resolver
+│       ├── router/
+│       │   ├── ActiveRoute.java           # Cached state of a loaded route (view, controller, outlet)
+│       │   ├── FxMapping.java             # @FxMapping — maps a method to a route path
+│       │   ├── FxModel.java               # Model object carrying data from routes to controllers
+│       │   ├── FxRouter.java              # Central routing service (analogous to DispatcherServlet)
+│       │   ├── FxRouteRegistry.java       # Scans @FxRoutes beans and builds route table at startup
+│       │   ├── FxRoutes.java              # @FxRoutes — marks a class as a route configuration
+│       │   ├── HandlerMethod.java         # Resolved reference to a @FxMapping method
+│       │   ├── ModelAttribute.java        # @ModelAttribute — injects model data into controller fields
+│       │   ├── RouterOutlet.java          # @RouterOutlet — marks a Pane as the target for child views
+│       │   ├── RoutingException.java      # Custom exception for routing errors
+│       │   ├── WindowOptions.java         # Builder for window configuration (title, size, modality)
+│       │   └── WindowResult.java          # Holds modal return value
+│       └── service/
+│           └── LocalizedMessageSource.java # Convenience wrapper for locale-aware i18n access
+│
+├── spring-javafx-boot-demo/                   # Demo application
+│   └── src/main/java/.../
+│       ├── Launcher.java                  # JVM entry point
+│       ├── JavaFxApplication.java         # JavaFX Application — boots Spring, loads scene
+│       ├── AppConfig.java                 # @SpringBootApplication config
+│       ├── controller/
+│       │   ├── DemoModalController.java   # Modal dialog controller
+│       │   ├── DemoWindowController.java  # Modeless window controller
+│       │   ├── LayoutController.java      # Layout shell — menu bar + @RouterOutlet
+│       │   ├── MainController.java        # Main view controller
+│       │   └── SecondController.java      # Second view controller
+│       ├── routes/
+│       │   └── AppRoutes.java             # Application route definitions
+│       └── service/
+│           ├── ErrorHandler.java          # Global error handler with themed alerts
+│           ├── ThemeService.java          # Manages theme & font stylesheets
+│           └── UserPreferencesService.java # Persists theme & locale via Java Preferences API
+│   └── src/main/resources/
+│       ├── application.properties         # Spring Boot + view resolver configuration
+│       ├── messages.properties            # i18n messages (English)
+│       ├── messages_ka.properties         # i18n messages (Georgian)
+│       ├── css/                           # Stylesheets + themes
+│       ├── fonts/                         # Roboto + Noto Sans Georgian
+│       ├── icons/                         # App icons
+│       └── templates/                     # FXML views
 ```
+
+## 🚀 Using the Starter
+
+Add the starter dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>io.github.vakho10</groupId>
+    <artifactId>spring-javafx-boot-starter</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+
+The starter auto-configures all framework beans when JavaFX is on the classpath. Configurable properties:
+
+```properties
+spring.javafx.view.prefix=/templates/   # FXML template location (default)
+spring.javafx.view.suffix=.fxml         # FXML file extension (default)
+```
+
+Every auto-configured bean uses `@ConditionalOnMissingBean` — override any component by defining your own `@Bean`.
 
 ## ⚙️ How It Works
 
@@ -353,15 +369,15 @@ Logs are written to both the console and a file at `./logs/spring-javafx-boot.lo
 
 JavaFX and all other dependencies are pulled automatically via Maven.
 
-## ▶️ Running
+## ▶️ Running the Demo
 
-**From IDE** — run `io.github.vakho10.springjavafxboot.Launcher` as the main class.
+**From IDE** — run `io.github.vakho10.springjavafxboot.Launcher` in the `spring-javafx-boot-demo` module.
 
 **From command line:**
 
 ```bash
 ./mvnw clean package
-java -jar target/spring-javafx-boot-1.0-SNAPSHOT.jar
+java -jar spring-javafx-boot-demo/target/spring-javafx-boot-demo-1.0-SNAPSHOT.jar
 ```
 
 ## 📦 Bundling a Native App Image
@@ -369,10 +385,10 @@ java -jar target/spring-javafx-boot-1.0-SNAPSHOT.jar
 Build a self-contained executable with a bundled JRE (no Java installation required for end users):
 
 ```bash
-./mvnw clean package -Pbundle
+./mvnw clean package -Pbundle -pl spring-javafx-boot-demo -am
 ```
 
-The output is in `target/dist/spring-javafx-boot/` — run the `.exe` directly.
+The output is in `spring-javafx-boot-demo/target/dist/spring-javafx-boot-demo/` — run the `.exe` directly.
 
 ## 🙏 Credits
 

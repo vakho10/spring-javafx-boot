@@ -1,9 +1,8 @@
 package io.github.vakho10.springjavafxboot.service;
 
 import io.github.vakho10.springjavafxboot.AppConfig;
-import org.springframework.stereotype.Service;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 import java.util.prefs.BackingStoreException;

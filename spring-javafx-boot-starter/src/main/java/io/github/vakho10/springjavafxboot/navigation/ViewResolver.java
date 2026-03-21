@@ -4,9 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,21 +28,18 @@ import java.util.function.Function;
  *   spring.javafx.view.suffix=.fxml
  * </pre>
  */
-@Component
 public class ViewResolver {
 
     private static final Logger log = LoggerFactory.getLogger(ViewResolver.class);
 
-    @Value("${spring.javafx.view.prefix:/templates/}")
-    private String prefix;
-
-    @Value("${spring.javafx.view.suffix:.fxml}")
-    private String suffix;
-
     private final MessageSource messageSource;
+    private final String prefix;
+    private final String suffix;
 
-    public ViewResolver(MessageSource messageSource) {
+    public ViewResolver(MessageSource messageSource, String prefix, String suffix) {
         this.messageSource = messageSource;
+        this.prefix = prefix;
+        this.suffix = suffix;
     }
 
     /**

@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -59,7 +58,6 @@ import java.util.Set;
  * @see WindowOptions
  * @see WindowResult
  */
-@Service
 public class FxRouter {
 
     private static final Logger log = LoggerFactory.getLogger(FxRouter.class);

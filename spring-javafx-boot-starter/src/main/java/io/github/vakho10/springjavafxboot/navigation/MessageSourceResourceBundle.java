@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
-import org.springframework.stereotype.Component;
 
 import java.util.Enumeration;
 import java.util.Locale;

@@ -3,7 +3,6 @@ package io.github.vakho10.springjavafxboot.router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 import java.lang.reflect.Method;
@@ -28,7 +27,6 @@ import java.util.Map;
  * @see FxMapping
  * @see FxRouter
  */
-@Component
 public class FxRouteRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(FxRouteRegistry.class);
