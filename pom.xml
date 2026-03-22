@@ -27,5 +27,6 @@
     <modules>
         <module>spring-javafx-boot-starter</module>
         <module>spring-javafx-boot-demo</module>
+        <module>spring-javafx-boot-archetype</module>
     </modules>
 </project>

@@ -1,9 +1,10 @@
 # 🚀 Spring JavaFX Boot
 
-A **Spring Boot starter** for building JavaFX desktop applications with Spring MVC-inspired routing, theming, i18n, and user preferences. The project is split into two modules:
+A **Spring Boot starter** for building JavaFX desktop applications with Spring MVC-inspired routing, theming, i18n, and user preferences. The project is split into three modules:
 
 - **`spring-javafx-boot-starter`** — reusable library with routing, view resolution, theme switching, i18n bridging, and preferences persistence. Add it as a dependency to get started.
 - **`spring-javafx-boot-demo`** — example application demonstrating all starter features.
+- **`spring-javafx-boot-archetype`** — Maven archetype for generating a minimal quickstart project with routing, layout, and i18n out of the box.
 
 ## 🛠️ Tech Stack
 
@@ -90,6 +91,28 @@ spring.javafx.view.suffix=.fxml         # FXML file extension (default)
 ```
 
 Every auto-configured bean uses `@ConditionalOnMissingBean` — override any component by defining your own `@Bean`.
+
+### Quickstart with the Archetype
+
+Generate a ready-to-run project with routing, layout, two views, and i18n pre-configured:
+
+```bash
+mvn archetype:generate \
+  -DarchetypeGroupId=io.github.vakho10 \
+  -DarchetypeArtifactId=spring-javafx-boot-archetype \
+  -DarchetypeVersion=1.0-SNAPSHOT \
+  -DgroupId=com.example \
+  -DartifactId=my-javafx-app
+```
+
+The generated project includes:
+- `Launcher` + `JavaFxApplication` + `AppConfig` — minimal Spring Boot + JavaFX bootstrap
+- Parent layout with a language menu (English / Georgian) and a `@RouterOutlet`
+- Two child views with navigation between them and a counter demo
+- i18n message files for both languages
+- `FxTitleService` integration for localized window titles
+
+No styling, fonts, themes, or preferences — just the essentials to start building.
 
 ## ⚙️ How It Works
 
