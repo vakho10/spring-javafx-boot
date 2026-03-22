@@ -2,8 +2,7 @@ package io.github.vakho10.springjavafxboot.navigation;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 
 import java.io.IOException;
@@ -28,9 +27,8 @@ import java.util.function.Function;
  *   spring.javafx.view.suffix=.fxml
  * </pre>
  */
+@Slf4j
 public class ViewResolver {
-
-    private static final Logger log = LoggerFactory.getLogger(ViewResolver.class);
 
     private final MessageSource messageSource;
     private final String prefix;

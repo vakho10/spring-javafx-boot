@@ -2,8 +2,7 @@ package io.github.vakho10.springjavafxboot.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 
 import java.util.Locale;
@@ -15,10 +14,9 @@ import java.util.Locale;
  * <p>
  * The locale is typically updated when the user switches language.
  */
+@Slf4j
 @RequiredArgsConstructor
 public class LocalizedMessageSource {
-
-    private static final Logger log = LoggerFactory.getLogger(LocalizedMessageSource.class);
 
     private final MessageSource messageSource;
 

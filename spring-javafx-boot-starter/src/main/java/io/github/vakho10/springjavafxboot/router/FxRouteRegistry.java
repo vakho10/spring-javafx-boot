@@ -1,7 +1,6 @@
 package io.github.vakho10.springjavafxboot.router;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 
 import jakarta.annotation.PostConstruct;
@@ -27,9 +26,8 @@ import java.util.Map;
  * @see FxMapping
  * @see FxRouter
  */
+@Slf4j
 public class FxRouteRegistry {
-
-    private static final Logger log = LoggerFactory.getLogger(FxRouteRegistry.class);
 
     private final ApplicationContext applicationContext;
     private final Map<String, HandlerMethod> routes = new LinkedHashMap<>();

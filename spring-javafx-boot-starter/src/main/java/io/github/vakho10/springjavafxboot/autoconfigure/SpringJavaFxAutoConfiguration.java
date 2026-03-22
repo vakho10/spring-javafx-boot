@@ -5,8 +5,7 @@ import io.github.vakho10.springjavafxboot.router.FxRouteRegistry;
 import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.service.FxTitleService;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -28,11 +27,10 @@ import org.springframework.context.annotation.Bean;
  *   spring.javafx.view.suffix=.fxml         # FXML file extension (default)
  * </pre>
  */
+@Slf4j
 @AutoConfiguration
 @ConditionalOnClass(javafx.application.Application.class)
 public class SpringJavaFxAutoConfiguration {
-
-    private static final Logger log = LoggerFactory.getLogger(SpringJavaFxAutoConfiguration.class);
 
     @Bean
     @ConditionalOnMissingBean

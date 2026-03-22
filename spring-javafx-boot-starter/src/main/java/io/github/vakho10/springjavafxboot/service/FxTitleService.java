@@ -1,8 +1,7 @@
 package io.github.vakho10.springjavafxboot.service;
 
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.NoSuchMessageException;
 
 /**
@@ -33,9 +32,8 @@ import org.springframework.context.NoSuchMessageException;
  * @see io.github.vakho10.springjavafxboot.router.FxMapping
  * @see io.github.vakho10.springjavafxboot.router.FxRouter
  */
+@Slf4j
 public class FxTitleService {
-
-    private static final Logger log = LoggerFactory.getLogger(FxTitleService.class);
 
     private final LocalizedMessageSource messages;
 

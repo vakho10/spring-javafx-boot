@@ -10,8 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Field;
@@ -59,9 +58,8 @@ import java.util.Set;
  * @see WindowOptions
  * @see WindowResult
  */
+@Slf4j
 public class FxRouter {
-
-    private static final Logger log = LoggerFactory.getLogger(FxRouter.class);
 
     /** Convention-based fx:id for router outlets in FXML. */
     private static final String OUTLET_FX_ID = "routerOutlet";
