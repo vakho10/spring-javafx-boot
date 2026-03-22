@@ -16,6 +16,8 @@
 
     <properties>
         <start-class>io.github.vakho10.springjavafxboot.Launcher</start-class>
+        <!-- Demo is not published to Maven Central -->
+        <maven.deploy.skip>true</maven.deploy.skip>
 
         <!-- JRE bundling (used by the 'bundle' profile) -->
         <jre.download.link.windows>

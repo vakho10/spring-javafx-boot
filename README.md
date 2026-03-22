@@ -451,6 +451,57 @@ Build a self-contained executable with a bundled JRE (no Java installation requi
 
 The output is in `spring-javafx-boot-demo/target/dist/spring-javafx-boot-demo/` — run the `.exe` directly.
 
+## 🚢 Publishing to Maven Central
+
+The project is set up for automated publishing via GitHub Actions. When you push a version tag, the `release.yml` workflow builds, signs, and publishes the **starter** and **archetype** to Maven Central (the demo is excluded).
+
+### One-time setup
+
+1. **Verify your namespace** on the [Sonatype Central Portal](https://central.sonatype.com/):
+   - Log in → Namespaces → Add `io.github.vakho10`
+   - Sonatype will ask you to create a temporary repo (e.g. a specific repo name) to prove ownership — follow their instructions
+
+2. **Generate a Central Portal token** (Central Portal → Account → Generate User Token) — this gives you a username/password pair
+
+3. **Generate a GPG key** for artifact signing:
+   ```bash
+   gpg --full-generate-key          # RSA 4096, no expiry is fine
+   gpg --list-secret-keys           # note the key ID
+   gpg --keyserver keyserver.ubuntu.com --send-keys <KEY_ID>
+   gpg --armor --export-secret-keys <KEY_ID>   # copy this output
+   ```
+
+4. **Add GitHub repository secrets** (Settings → Secrets → Actions):
+
+   | Secret | Value |
+   |--------|-------|
+   | `MAVEN_CENTRAL_USERNAME` | Token username from step 2 |
+   | `MAVEN_CENTRAL_PASSWORD` | Token password from step 2 |
+   | `GPG_PRIVATE_KEY` | Full armored private key from step 3 |
+   | `GPG_PASSPHRASE` | Passphrase you set in step 3 |
+
+### Releasing a version
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The workflow will:
+1. Set all module versions to `1.0.0` (strips the `v` prefix)
+2. Build with the `release` profile (attaches sources JAR, javadoc JAR, GPG signatures)
+3. Publish to Maven Central via the Sonatype Central Publishing plugin
+4. Create a GitHub Release with auto-generated release notes
+
+After publishing (~10–30 min for Central to sync), users can simply add:
+```xml
+<dependency>
+    <groupId>io.github.vakho10</groupId>
+    <artifactId>spring-javafx-boot-starter</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 ## 🙏 Credits
 
 - App icons from [icon-icons.com](https://icon-icons.com/) (free icons)
