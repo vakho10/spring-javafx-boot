@@ -135,6 +135,7 @@ public class FxRouter {
         if (Platform.isFxApplicationThread()) {
             navigation.run();
         } else {
+            log.warn("navigateTo(\"{}\") called off FX Application Thread — deferring via Platform.runLater()", path);
             Platform.runLater(navigation);
         }
     }
@@ -155,6 +156,7 @@ public class FxRouter {
         if (currentPath == null) {
             throw new RoutingException("Cannot reload — no current route.");
         }
+        log.info("Reloading current route \"{}\"", currentPath);
         activeRoutes.clear();
         navigateTo(currentPath, currentParams);
     }

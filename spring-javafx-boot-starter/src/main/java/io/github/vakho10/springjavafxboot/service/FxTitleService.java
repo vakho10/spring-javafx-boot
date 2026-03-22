@@ -52,6 +52,7 @@ public class FxTitleService {
      */
     public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        log.debug("Initialized with primary stage");
     }
 
     /**
@@ -67,6 +68,7 @@ public class FxTitleService {
      */
     public void setTitleFormat(String format) {
         this.titleFormat = format;
+        log.debug("Title format set to: \"{}\"", format);
     }
 
     /**

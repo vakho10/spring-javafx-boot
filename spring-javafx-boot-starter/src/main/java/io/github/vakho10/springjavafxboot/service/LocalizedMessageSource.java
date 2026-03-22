@@ -2,7 +2,8 @@ package io.github.vakho10.springjavafxboot.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import java.util.Locale;
@@ -17,11 +18,20 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class LocalizedMessageSource {
 
+    private static final Logger log = LoggerFactory.getLogger(LocalizedMessageSource.class);
+
     private final MessageSource messageSource;
 
     @Getter
-    @Setter
     private Locale locale = Locale.ENGLISH;
+
+    /**
+     * Update the current locale. Typically called when the user switches language.
+     */
+    public void setLocale(Locale locale) {
+        log.debug("Locale changed: {} → {}", this.locale, locale);
+        this.locale = locale;
+    }
 
     /**
      * Get a message by key using the current locale.
