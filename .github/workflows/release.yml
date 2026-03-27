@@ -41,7 +41,7 @@ jobs:
         run: ./mvnw versions:set -DnewVersion=${{ steps.version.outputs.VERSION }} -DgenerateBackupPoms=false
 
       - name: Build and publish
-        run: ./mvnw clean deploy -Prelease -DskipTests --batch-mode --no-transfer-progress
+        run: ./mvnw clean deploy -Prelease -DskipTests -pl !spring-javafx-boot-demo --batch-mode --no-transfer-progress
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
