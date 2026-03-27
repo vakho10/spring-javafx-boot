@@ -28,7 +28,7 @@
         <dependency>
             <groupId>io.github.vakho10</groupId>
             <artifactId>spring-javafx-boot-starter</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>

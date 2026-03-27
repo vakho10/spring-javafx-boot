@@ -79,7 +79,7 @@ Add the starter dependency to your `pom.xml`:
 <dependency>
     <groupId>io.github.vakho10</groupId>
     <artifactId>spring-javafx-boot-starter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -100,7 +100,7 @@ Generate a ready-to-run project with routing, layout, two views, and i18n pre-co
 mvn archetype:generate \
   -DarchetypeGroupId=io.github.vakho10 \
   -DarchetypeArtifactId=spring-javafx-boot-archetype \
-  -DarchetypeVersion=1.0-SNAPSHOT \
+  -DarchetypeVersion=1.0.0 \
   -DgroupId=com.example \
   -DartifactId=my-javafx-app
 ```
@@ -438,7 +438,7 @@ JavaFX and all other dependencies are pulled automatically via Maven.
 
 ```bash
 ./mvnw clean package
-java -jar spring-javafx-boot-demo/target/spring-javafx-boot-demo-1.0-SNAPSHOT.jar
+java -jar spring-javafx-boot-demo/target/spring-javafx-boot-demo-1.1.0-SNAPSHOT.jar
 ```
 
 ## 📦 Bundling a Native App Image

@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.vakho10</groupId>
         <artifactId>spring-javafx-boot</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>spring-javafx-boot-starter</artifactId>
