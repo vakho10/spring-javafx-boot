@@ -10,9 +10,9 @@ A **Spring Boot starter** for building JavaFX desktop applications with Spring M
 
 | Component | Version |
 |-----------|---------|
-| Java | 25 |
+| Java | 17+ |
 | Spring Boot | 4.0.4 |
-| JavaFX | 25.0.2 |
+| JavaFX | 21.0.5 |
 | Lombok | managed by Spring Boot |
 | Maven | 3.x (wrapper included) |
 
@@ -372,7 +372,7 @@ New windows inherit the parent's stylesheets (theme + fonts) automatically.
 
 The app separates structure from colors using layered CSS:
 
-- **`styles.css`** — all selectors with structure + colors via JavaFX [looked-up colors](https://openjfx.io/javadoc/25/javafx.graphics/javafx/scene/doc-files/cssref.html#lookedupcolor) (`-app-bg`, `-app-surface`, `-app-text`, etc.)
+- **`styles.css`** — all selectors with structure + colors via JavaFX [looked-up colors](https://openjfx.io/javadoc/21/javafx.graphics/javafx/scene/doc-files/cssref.html#lookedupcolor) (`-app-bg`, `-app-surface`, `-app-text`, etc.)
 - **`themes/dark.css`** — 🌙 defines color variables (based on [JavaFX-Dark-Theme](https://github.com/antoniopelusi/JavaFX-Dark-Theme))
 - **`themes/light.css`** — ☀️ defines color variables
 
@@ -380,7 +380,7 @@ Theme switching is managed by `ThemeService` — it swaps the theme stylesheet a
 
 ## 💾 User Preferences
 
-Theme and locale choices are persisted via `UserPreferencesService` using Java's [Preferences API](https://docs.oracle.com/en/java/javase/25/docs/api/java.prefs/java/util/prefs/Preferences.html). Values are stored in the OS-native backing store (Windows Registry / macOS plist / Linux `~/.java`) and restored automatically on next launch.
+Theme and locale choices are persisted via `UserPreferencesService` using Java's [Preferences API](https://docs.oracle.com/en/java/javase/17/docs/api/java.prefs/java/util/prefs/Preferences.html). Values are stored in the OS-native backing store (Windows Registry / macOS plist / Linux `~/.java`) and restored automatically on next launch.
 
 ## 🌍 Localization (i18n)
 
@@ -426,7 +426,7 @@ Logs are written to both the console and a file at `./logs/spring-javafx-boot.lo
 
 ## 📋 Prerequisites
 
-- **JDK 25+** on your PATH
+- **JDK 17+** on your PATH
 
 JavaFX and all other dependencies are pulled automatically via Maven.
 

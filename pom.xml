@@ -43,8 +43,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>25</java.version>
-        <javafx.version>25.0.2</javafx.version>
+        <java.version>17</java.version>
+        <javafx.version>21.0.5</javafx.version>
     </properties>
 
     <modules>

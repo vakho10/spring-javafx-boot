@@ -21,9 +21,9 @@
 
         <!-- JRE bundling (used by the 'bundle' profile) -->
         <jre.download.link.windows>
-            https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jre_x64_windows_hotspot_25.0.2_10.zip
+            https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.13%2B11/OpenJDK17U-jre_x64_windows_hotspot_17.0.13_11.zip
         </jre.download.link.windows>
-        <jre.root.folder.windows>jdk-25.0.2+10-jre</jre.root.folder.windows>
+        <jre.root.folder.windows>jdk-17.0.13+11-jre</jre.root.folder.windows>
         <icon.file.windows>${project.basedir}/src/main/resources/icons/app.ico</icon.file.windows>
     </properties>
 

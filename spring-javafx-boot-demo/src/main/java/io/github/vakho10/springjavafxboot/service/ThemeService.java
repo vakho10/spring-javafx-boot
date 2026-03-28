@@ -28,7 +28,7 @@ public class ThemeService {
 
     private static final Map<Locale, String> FONT_STYLESHEETS = Map.of(
             Locale.ENGLISH, "/css/fonts-en.css",
-            Locale.of("ka"), "/css/fonts-ka.css"
+            new Locale("ka"), "/css/fonts-ka.css"
     );
 
     @Getter

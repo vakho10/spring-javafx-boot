@@ -29,7 +29,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class LayoutController {
 
-    private static final Locale GEORGIAN = Locale.of("ka");
+    private static final Locale GEORGIAN = new Locale("ka");
 
     private final FxRouter router;
     private final LocalizedMessageSource messages;
