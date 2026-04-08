@@ -60,5 +60,4 @@ site/
 .claude/
 
 ### Project-specific ###
-token.xml
-gpg-phase.txt
+tokens/
