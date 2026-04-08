@@ -1106,8 +1106,9 @@
 
 
 <h1 id="configuration-properties">Configuration Properties<a class="headerlink" href="#configuration-properties" title="Permanent link">&para;</a></h1>
-<p>Spring JavaFX Boot is configured via standard Spring Boot <code>application.properties</code> (or <code>application.yml</code>).</p>
+<p>Spring JavaFX Boot is configured via standard Spring Boot <code>application.properties</code> (or <code>application.yml</code>). All properties are backed by <code>@ConfigurationProperties</code> classes, which means your IDE provides <strong>autocompletion</strong>, <strong>hover documentation</strong>, and <strong>validation</strong> out of the box.</p>
 <h2 id="view-resolver-properties">View Resolver Properties<a class="headerlink" href="#view-resolver-properties" title="Permanent link">&para;</a></h2>
+<p>Defined by <code>FxViewProperties</code> (<code>spring.javafx.view.*</code>):</p>
 <table>
 <thead>
 <tr>
