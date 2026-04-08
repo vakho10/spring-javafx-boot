@@ -4,7 +4,7 @@
 package ${package}.controller;
 
 import io.github.vakho10.springjavafxboot.router.FxRouter;
-import io.github.vakho10.springjavafxboot.router.ModelAttribute;
+import io.github.vakho10.springjavafxboot.annotation.ModelAttribute;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

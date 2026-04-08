@@ -1,6 +1,8 @@
 package io.github.vakho10.springjavafxboot.router;
 
-import io.github.vakho10.springjavafxboot.navigation.ViewResolver;
+import io.github.vakho10.springjavafxboot.annotation.ModelAttribute;
+import io.github.vakho10.springjavafxboot.annotation.RouterOutlet;
+import io.github.vakho10.springjavafxboot.view.ViewResolver;
 import io.github.vakho10.springjavafxboot.service.FxTitleService;
 import javafx.application.Platform;
 import javafx.scene.Node;

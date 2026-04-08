@@ -1,4 +1,4 @@
-package io.github.vakho10.springjavafxboot.navigation;
+package io.github.vakho10.springjavafxboot.view;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

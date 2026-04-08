@@ -1,6 +1,5 @@
-package io.github.vakho10.springjavafxboot.navigation;
+package io.github.vakho10.springjavafxboot.view;
 
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;

@@ -1,6 +1,6 @@
 package io.github.vakho10.springjavafxboot.controller;
 
-import io.github.vakho10.springjavafxboot.router.ModelAttribute;
+import io.github.vakho10.springjavafxboot.annotation.ModelAttribute;
 import io.github.vakho10.springjavafxboot.router.WindowResult;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

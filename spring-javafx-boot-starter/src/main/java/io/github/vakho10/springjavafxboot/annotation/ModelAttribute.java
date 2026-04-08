@@ -1,4 +1,4 @@
-package io.github.vakho10.springjavafxboot.router;
+package io.github.vakho10.springjavafxboot.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a field in an FXML controller for injection from the {@link FxModel}.
+ * Marks a field in an FXML controller for injection from the
+ * {@link io.github.vakho10.springjavafxboot.router.FxModel FxModel}.
  * <p>
  * After the router invokes the {@link FxMapping} handler and obtains a populated
  * model, it loads the FXML view, retrieves the controller, and injects model
@@ -34,8 +35,8 @@ import java.lang.annotation.Target;
  * By default, the model key matches the field name. Use {@link #value()} to
  * override with a custom key.
  *
- * @see FxModel
- * @see FxRouter
+ * @see io.github.vakho10.springjavafxboot.router.FxModel
+ * @see io.github.vakho10.springjavafxboot.router.FxRouter
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

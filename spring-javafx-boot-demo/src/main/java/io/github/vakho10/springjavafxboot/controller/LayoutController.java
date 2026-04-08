@@ -1,7 +1,7 @@
 package io.github.vakho10.springjavafxboot.controller;
 
 import io.github.vakho10.springjavafxboot.router.FxRouter;
-import io.github.vakho10.springjavafxboot.router.RouterOutlet;
+import io.github.vakho10.springjavafxboot.annotation.RouterOutlet;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import io.github.vakho10.springjavafxboot.service.ThemeService;
 import io.github.vakho10.springjavafxboot.service.UserPreferencesService;

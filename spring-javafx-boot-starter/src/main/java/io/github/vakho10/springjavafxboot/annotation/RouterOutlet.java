@@ -1,4 +1,4 @@
-package io.github.vakho10.springjavafxboot.router;
+package io.github.vakho10.springjavafxboot.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * }</pre>
  *
  * @see FxMapping#parent()
- * @see FxRouter
+ * @see io.github.vakho10.springjavafxboot.router.FxRouter
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

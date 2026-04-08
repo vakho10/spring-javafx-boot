@@ -1,8 +1,8 @@
 package io.github.vakho10.springjavafxboot.routes;
 
-import io.github.vakho10.springjavafxboot.router.FxMapping;
+import io.github.vakho10.springjavafxboot.annotation.FxMapping;
+import io.github.vakho10.springjavafxboot.annotation.FxRoutes;
 import io.github.vakho10.springjavafxboot.router.FxModel;
-import io.github.vakho10.springjavafxboot.router.FxRoutes;
 
 /**
  * Application route definitions.

@@ -1,6 +1,6 @@
 package io.github.vakho10.springjavafxboot.autoconfigure;
 
-import io.github.vakho10.springjavafxboot.navigation.ViewResolver;
+import io.github.vakho10.springjavafxboot.view.ViewResolver;
 import io.github.vakho10.springjavafxboot.router.FxRouteRegistry;
 import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.service.FxTitleService;

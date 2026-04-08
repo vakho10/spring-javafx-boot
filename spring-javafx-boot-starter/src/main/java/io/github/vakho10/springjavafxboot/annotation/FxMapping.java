@@ -1,4 +1,4 @@
-package io.github.vakho10.springjavafxboot.router;
+package io.github.vakho10.springjavafxboot.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -8,10 +8,11 @@ import java.lang.annotation.Target;
 /**
  * Maps a method in an {@link FxRoutes} class to a named route.
  * <p>
- * When {@link FxRouter#navigateTo(String)} is called with a matching path,
- * the annotated method is invoked. It receives a fresh {@link FxModel},
+ * When {@link io.github.vakho10.springjavafxboot.router.FxRouter#navigateTo(String)}
+ * is called with a matching path, the annotated method is invoked. It receives a fresh
+ * {@link io.github.vakho10.springjavafxboot.router.FxModel FxModel},
  * populates it with data, and returns a view name that the
- * {@link io.github.vakho10.springjavafxboot.navigation.ViewResolver ViewResolver}
+ * {@link io.github.vakho10.springjavafxboot.view.ViewResolver ViewResolver}
  * resolves to an FXML template.
  *
  * <h3>Simple route:</h3>
@@ -36,8 +37,8 @@ import java.lang.annotation.Target;
  * }</pre>
  *
  * @see FxRoutes
- * @see FxRouter
- * @see FxModel
+ * @see io.github.vakho10.springjavafxboot.router.FxRouter
+ * @see io.github.vakho10.springjavafxboot.router.FxModel
  * @see RouterOutlet
  */
 @Target(ElementType.METHOD)

@@ -1,5 +1,7 @@
 package io.github.vakho10.springjavafxboot.router;
 
+import io.github.vakho10.springjavafxboot.annotation.FxMapping;
+import io.github.vakho10.springjavafxboot.annotation.FxRoutes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 

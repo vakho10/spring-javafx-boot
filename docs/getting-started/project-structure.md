@@ -6,10 +6,11 @@ Spring JavaFX Boot is a multi-module Maven project. Here's how it's organized:
 spring-javafx-boot/
 ├── spring-javafx-boot-starter/        # Reusable library (published to Maven Central)
 │   └── src/main/java/.../
+│       ├── annotation/                # @FxRoutes, @FxMapping, @ModelAttribute, @RouterOutlet
 │       ├── autoconfigure/             # Spring Boot auto-configuration
-│       ├── navigation/                # View resolution & i18n bridging
-│       ├── router/                    # Routing system (core)
-│       └── service/                   # Title & message services
+│       ├── router/                    # Routing engine (FxRouter, FxRouteRegistry, FxModel)
+│       ├── service/                   # Title & message services
+│       └── view/                      # View resolution & i18n bridging
 │
 ├── spring-javafx-boot-demo/           # Reference application
 │   └── src/main/java/.../
@@ -33,10 +34,11 @@ The core library that you add as a dependency. Contains:
 
 | Package | Contents |
 |---------|----------|
-| `autoconfigure` | `SpringJavaFxAutoConfiguration` — registers all framework beans |
-| `navigation` | `ViewResolver` — resolves view names to FXML templates; `MessageSourceResourceBundle` — bridges Spring i18n to JavaFX |
-| `router` | `FxRouter`, `FxRouteRegistry`, annotations (`@FxRoutes`, `@FxMapping`, `@ModelAttribute`, `@RouterOutlet`), `FxModel`, `WindowOptions`, `WindowResult` |
+| `annotation` | `@FxRoutes`, `@FxMapping`, `@ModelAttribute`, `@RouterOutlet` — all public annotations |
+| `autoconfigure` | `SpringJavaFxAutoConfiguration`, `FxViewProperties` — auto-configuration and properties |
+| `router` | `FxRouter`, `FxRouteRegistry`, `FxModel`, `HandlerMethod`, `ActiveRoute`, `WindowOptions`, `WindowResult` — routing engine |
 | `service` | `FxTitleService` — window title management; `LocalizedMessageSource` — convenient i18n access |
+| `view` | `ViewResolver` — resolves view names to FXML templates; `MessageSourceResourceBundle` — bridges Spring i18n to JavaFX |
 
 ### Demo (`spring-javafx-boot-demo`)
 

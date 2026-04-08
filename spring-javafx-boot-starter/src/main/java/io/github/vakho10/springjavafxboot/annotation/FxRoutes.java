@@ -1,4 +1,4 @@
-package io.github.vakho10.springjavafxboot.router;
+package io.github.vakho10.springjavafxboot.annotation;
 
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,8 @@ import java.lang.annotation.Target;
  * <p>
  * Classes annotated with {@code @FxRoutes} contain {@link FxMapping} methods
  * that define navigation routes. These are <em>not</em> FXML controllers — they
- * are Spring-managed singletons responsible only for preparing the {@link FxModel}
+ * are Spring-managed singletons responsible only for preparing the
+ * {@link io.github.vakho10.springjavafxboot.router.FxModel FxModel}
  * and returning a view name.
  * <p>
  * This separation keeps FXML controllers focused on the view lifecycle ({@code @FXML}
@@ -41,7 +42,7 @@ import java.lang.annotation.Target;
  * }</pre>
  *
  * @see FxMapping
- * @see FxRouter
+ * @see io.github.vakho10.springjavafxboot.router.FxRouter
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
