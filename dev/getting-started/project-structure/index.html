@@ -1088,23 +1088,24 @@
 <div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>spring-javafx-boot/
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── spring-javafx-boot-starter/        # Reusable library (published to Maven Central)
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   └── src/main/java/.../
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│       ├── autoconfigure/             # Spring Boot auto-configuration
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│       ├── navigation/                # View resolution &amp; i18n bridging
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│       ├── router/                    # Routing system (core)
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│       └── service/                   # Title &amp; message services
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── spring-javafx-boot-demo/           # Reference application
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └── src/main/java/.../
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│       ├── controller/                # FXML controllers
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│       ├── routes/                    # Route definitions
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│       └── service/                   # App-specific services
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └── src/main/resources/
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│       ├── templates/                 # FXML views
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│       ├── css/                       # Stylesheets &amp; themes
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│       ├── fonts/                     # Custom fonts
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│       └── messages*.properties       # i18n message files
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└── spring-javafx-boot-archetype/      # Maven archetype for scaffolding
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│       ├── annotation/                # @FxRoutes, @FxMapping, @ModelAttribute, @RouterOutlet
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│       ├── autoconfigure/             # Spring Boot auto-configuration
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│       ├── router/                    # Routing engine (FxRouter, FxRouteRegistry, FxModel)
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│       ├── service/                   # Title &amp; message services
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│       └── view/                      # View resolution &amp; i18n bridging
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>├── spring-javafx-boot-demo/           # Reference application
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └── src/main/java/.../
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│       ├── controller/                # FXML controllers
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│       ├── routes/                    # Route definitions
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│       └── service/                   # App-specific services
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └── src/main/resources/
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│       ├── templates/                 # FXML views
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│       ├── css/                       # Stylesheets &amp; themes
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│       ├── fonts/                     # Custom fonts
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│       └── messages*.properties       # i18n message files
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└── spring-javafx-boot-archetype/      # Maven archetype for scaffolding
 </span></code></pre></div>
 <h2 id="module-responsibilities">Module Responsibilities<a class="headerlink" href="#module-responsibilities" title="Permanent link">&para;</a></h2>
 <h3 id="starter-spring-javafx-boot-starter">Starter (<code>spring-javafx-boot-starter</code>)<a class="headerlink" href="#starter-spring-javafx-boot-starter" title="Permanent link">&para;</a></h3>
@@ -1118,20 +1119,24 @@
 </thead>
 <tbody>
 <tr>
-<td><code>autoconfigure</code></td>
-<td><code>SpringJavaFxAutoConfiguration</code> — registers all framework beans</td>
+<td><code>annotation</code></td>
+<td><code>@FxRoutes</code>, <code>@FxMapping</code>, <code>@ModelAttribute</code>, <code>@RouterOutlet</code> — all public annotations</td>
 </tr>
 <tr>
-<td><code>navigation</code></td>
-<td><code>ViewResolver</code> — resolves view names to FXML templates; <code>MessageSourceResourceBundle</code> — bridges Spring i18n to JavaFX</td>
+<td><code>autoconfigure</code></td>
+<td><code>SpringJavaFxAutoConfiguration</code>, <code>FxViewProperties</code> — auto-configuration and properties</td>
 </tr>
 <tr>
 <td><code>router</code></td>
-<td><code>FxRouter</code>, <code>FxRouteRegistry</code>, annotations (<code>@FxRoutes</code>, <code>@FxMapping</code>, <code>@ModelAttribute</code>, <code>@RouterOutlet</code>), <code>FxModel</code>, <code>WindowOptions</code>, <code>WindowResult</code></td>
+<td><code>FxRouter</code>, <code>FxRouteRegistry</code>, <code>FxModel</code>, <code>HandlerMethod</code>, <code>ActiveRoute</code>, <code>WindowOptions</code>, <code>WindowResult</code> — routing engine</td>
 </tr>
 <tr>
 <td><code>service</code></td>
 <td><code>FxTitleService</code> — window title management; <code>LocalizedMessageSource</code> — convenient i18n access</td>
+</tr>
+<tr>
+<td><code>view</code></td>
+<td><code>ViewResolver</code> — resolves view names to FXML templates; <code>MessageSourceResourceBundle</code> — bridges Spring i18n to JavaFX</td>
 </tr>
 </tbody>
 </table>
