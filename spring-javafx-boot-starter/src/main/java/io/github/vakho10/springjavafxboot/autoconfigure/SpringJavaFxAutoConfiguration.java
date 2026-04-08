@@ -6,10 +6,10 @@ import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.service.FxTitleService;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -20,16 +20,13 @@ import org.springframework.context.annotation.Bean;
  * Registers core framework beans (router, view resolver, i18n) when JavaFX is on the
  * classpath. Each bean uses {@code @ConditionalOnMissingBean} so applications can
  * override any component with their own implementation.
- * <p>
- * Configurable properties:
- * <pre>
- *   spring.javafx.view.prefix=/templates/   # FXML template location (default)
- *   spring.javafx.view.suffix=.fxml         # FXML file extension (default)
- * </pre>
+ *
+ * @see FxViewProperties
  */
 @Slf4j
 @AutoConfiguration
 @ConditionalOnClass(javafx.application.Application.class)
+@EnableConfigurationProperties(FxViewProperties.class)
 public class SpringJavaFxAutoConfiguration {
 
     @Bean
@@ -40,12 +37,10 @@ public class SpringJavaFxAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ViewResolver fxViewResolver(
-            MessageSource messageSource,
-            @Value("${spring.javafx.view.prefix:/templates/}") String prefix,
-            @Value("${spring.javafx.view.suffix:.fxml}") String suffix) {
-        log.info("Configuring ViewResolver with prefix=\"{}\" suffix=\"{}\"", prefix, suffix);
-        return new ViewResolver(messageSource, prefix, suffix);
+    public ViewResolver fxViewResolver(MessageSource messageSource, FxViewProperties properties) {
+        log.info("Configuring ViewResolver with prefix=\"{}\" suffix=\"{}\"",
+                properties.getPrefix(), properties.getSuffix());
+        return new ViewResolver(messageSource, properties.getPrefix(), properties.getSuffix());
     }
 
     @Bean

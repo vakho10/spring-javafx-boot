@@ -9,9 +9,10 @@ The auto-configuration is activated by `SpringJavaFxAutoConfiguration`, which is
 ```java
 @AutoConfiguration
 @ConditionalOnClass(javafx.application.Application.class)
+@EnableConfigurationProperties(FxViewProperties.class)
 ```
 
-This means all beans are registered **only** when JavaFX is present on the classpath.
+This means all beans are registered **only** when JavaFX is present on the classpath. The `@EnableConfigurationProperties` annotation binds `spring.javafx.view.*` properties to the `FxViewProperties` class.
 
 ## Registered Beans
 
@@ -46,7 +47,7 @@ The auto-configuration will skip registering `fxViewResolver` since yours alread
 ```
 FxRouter
 ├── FxRouteRegistry ← ApplicationContext
-├── ViewResolver ← MessageSource, prefix, suffix
+├── ViewResolver ← MessageSource, FxViewProperties
 ├── ApplicationContext
 └── FxTitleService ← LocalizedMessageSource ← MessageSource
 ```

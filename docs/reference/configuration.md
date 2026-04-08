@@ -1,8 +1,10 @@
 # Configuration Properties
 
-Spring JavaFX Boot is configured via standard Spring Boot `application.properties` (or `application.yml`).
+Spring JavaFX Boot is configured via standard Spring Boot `application.properties` (or `application.yml`). All properties are backed by `@ConfigurationProperties` classes, which means your IDE provides **autocompletion**, **hover documentation**, and **validation** out of the box.
 
 ## View Resolver Properties
+
+Defined by `FxViewProperties` (`spring.javafx.view.*`):
 
 | Property | Default | Description |
 |----------|---------|-------------|

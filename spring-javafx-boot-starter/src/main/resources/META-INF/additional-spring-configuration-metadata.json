@@ -1,0 +1,16 @@
+{
+  "properties": [
+    {
+      "name": "spring.javafx.view.prefix",
+      "type": "java.lang.String",
+      "description": "Classpath prefix for FXML templates. The view name 'main' resolves to '{prefix}main{suffix}'.",
+      "defaultValue": "/templates/"
+    },
+    {
+      "name": "spring.javafx.view.suffix",
+      "type": "java.lang.String",
+      "description": "File extension for FXML templates.",
+      "defaultValue": ".fxml"
+    }
+  ]
+}
