@@ -1,6 +1,6 @@
 site_name: Spring JavaFX Boot
 site_url: https://vakho10.github.io/spring-javafx-boot/
-site_description: A Spring Boot starter for building JavaFX desktop applications with routing, theming, i18n, and user preferences.
+site_description: A Spring Boot starter for building JavaFX desktop applications with routing, i18n, and window management.
 site_author: Vakho
 
 repo_name: vakho10/spring-javafx-boot
@@ -72,6 +72,8 @@ nav:
       - Demo Application: examples/demo-app.md
 
 extra:
+  version:
+    provider: mike
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/vakho10/spring-javafx-boot
