@@ -1,0 +1,79 @@
+site_name: Spring JavaFX Boot
+site_url: https://vakho10.github.io/spring-javafx-boot/
+site_description: A Spring Boot starter for building JavaFX desktop applications with routing, theming, i18n, and user preferences.
+site_author: Vakho
+
+repo_name: vakho10/spring-javafx-boot
+repo_url: https://github.com/vakho10/spring-javafx-boot
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+      - Project Structure: getting-started/project-structure.md
+  - Guide:
+      - Routing: guide/routing.md
+      - Child Routing & Layouts: guide/child-routing.md
+      - Windows & Modals: guide/windows-modals.md
+      - Theming: guide/theming.md
+      - Internationalization (i18n): guide/i18n.md
+      - User Preferences: guide/preferences.md
+      - Title Management: guide/title-management.md
+  - Reference:
+      - Annotations: reference/annotations.md
+      - Configuration Properties: reference/configuration.md
+      - Auto-Configuration: reference/auto-configuration.md
+  - Examples:
+      - Demo Application: examples/demo-app.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vakho10/spring-javafx-boot

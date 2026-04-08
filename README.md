@@ -6,6 +6,8 @@ A **Spring Boot starter** for building JavaFX desktop applications with Spring M
 - **`spring-javafx-boot-demo`** — example application demonstrating all starter features.
 - **`spring-javafx-boot-archetype`** — Maven archetype for generating a minimal quickstart project with routing, layout, and i18n out of the box.
 
+> 📖 **[Full Documentation](https://vakho10.github.io/spring-javafx-boot/)** — guides, reference, and examples.
+
 ## 🛠️ Tech Stack
 
 | Component | Version |
