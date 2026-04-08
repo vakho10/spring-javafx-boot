@@ -1,6 +1,6 @@
 # Spring JavaFX Boot
 
-A **Spring Boot starter** for building JavaFX desktop applications with Spring MVC-inspired routing, theming, i18n, and user preferences.
+A **Spring Boot starter** for building JavaFX desktop applications with Spring MVC-inspired routing, i18n, and window management.
 
 > **[Full Documentation](https://vakho10.github.io/spring-javafx-boot/)** — guides, reference, and examples.
 
@@ -9,7 +9,6 @@ A **Spring Boot starter** for building JavaFX desktop applications with Spring M
 - **Spring MVC-style routing** — `@FxRoutes` + `@FxMapping`, just like `@RestController` + `@GetMapping`
 - **Nested child routing** — Angular-inspired `@RouterOutlet` for layouts with swappable child views
 - **Windows and modals** — Open routes in new windows or modal dialogs with typed return values
-- **Theming** — Layered CSS with looked-up color variables for dark/light theme switching
 - **Internationalization** — Spring `MessageSource` bridged to JavaFX's `ResourceBundle`
 - **Title management** — Declarative or programmatic i18n-aware window titles
 - **Auto-configuration** — Everything wired up automatically, override any component with `@ConditionalOnMissingBean`
@@ -102,7 +101,7 @@ Or run `io.github.vakho10.springjavafxboot.Launcher` directly from your IDE.
 | Section | Topics |
 |---------|--------|
 | [Getting Started](https://vakho10.github.io/spring-javafx-boot/getting-started/installation/) | Installation, quickstart, project structure |
-| [Guide](https://vakho10.github.io/spring-javafx-boot/guide/routing/) | Routing, child routing, windows & modals, theming, i18n, preferences, title management |
+| [Guide](https://vakho10.github.io/spring-javafx-boot/guide/routing/) | Routing, child routing, windows & modals, i18n, title management |
 | [Reference](https://vakho10.github.io/spring-javafx-boot/reference/annotations/) | Annotations, configuration properties, auto-configuration |
 | [Examples](https://vakho10.github.io/spring-javafx-boot/examples/demo-app/) | Demo application walkthrough |
 

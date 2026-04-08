@@ -1,21 +1,19 @@
 # Spring JavaFX Boot
 
-A **Spring Boot starter** for building JavaFX desktop applications with Spring MVC-inspired routing, theming, internationalization, and user preferences.
+A **Spring Boot starter** for building JavaFX desktop applications with Spring MVC-inspired routing, internationalization, and window management.
 
 ---
 
 ## Why Spring JavaFX Boot?
 
-Building JavaFX applications with Spring Boot is powerful but often involves a lot of boilerplate — wiring up FXML loaders, managing navigation between views, handling theme switching, and bridging Spring's i18n with JavaFX. **Spring JavaFX Boot** solves this by providing a cohesive framework that brings familiar patterns from Spring MVC and Angular to the desktop.
+Building JavaFX applications with Spring Boot is powerful but often involves a lot of boilerplate — wiring up FXML loaders, managing navigation between views, and bridging Spring's i18n with JavaFX. **Spring JavaFX Boot** solves this by providing a cohesive framework that brings familiar patterns from Spring MVC and Angular to the desktop.
 
 ### Key Features
 
 - **Spring MVC-style routing** — Define routes with `@FxRoutes` and `@FxMapping`, just like `@RestController` and `@GetMapping`
 - **Nested child routing** — Angular-inspired `@RouterOutlet` for composing layouts with swappable child views
 - **Windows and modals** — Open routes in new windows or modal dialogs with typed return values
-- **Theming** — Layered CSS with looked-up color variables for easy dark/light theme switching
 - **Internationalization** — Spring `MessageSource` bridged to JavaFX's `ResourceBundle` for seamless i18n
-- **User preferences** — Persist theme and locale choices via Java's Preferences API
 - **Title management** — Declarative or programmatic window titles with i18n support
 - **Auto-configuration** — Everything is auto-configured with `@ConditionalOnMissingBean` — override any component
 

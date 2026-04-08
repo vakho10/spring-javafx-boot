@@ -62,9 +62,7 @@ nav:
       - Routing: guide/routing.md
       - Child Routing & Layouts: guide/child-routing.md
       - Windows & Modals: guide/windows-modals.md
-      - Theming: guide/theming.md
       - Internationalization (i18n): guide/i18n.md
-      - User Preferences: guide/preferences.md
       - Title Management: guide/title-management.md
   - Reference:
       - Annotations: reference/annotations.md

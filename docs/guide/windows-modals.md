@@ -110,4 +110,4 @@ new WindowOptions()
 
 ## Stylesheet Inheritance
 
-New windows automatically inherit all stylesheets from the parent scene (theme + fonts), so they match the application's current visual appearance.
+New windows automatically inherit all stylesheets from the parent scene, so they match the application's current visual appearance.
