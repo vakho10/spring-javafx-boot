@@ -598,6 +598,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#path-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1119,6 +1130,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#path-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1268,7 +1290,7 @@
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Return type</p>
-<p><code>@FxMapping</code> methods must return a <code>String</code> (the view name). They can accept <code>FxModel</code> or <code>Map&lt;String, Object&gt;</code> as parameters.</p>
+<p><code>@FxMapping</code> methods must return a <code>String</code> (the view name). They can accept <code>FxModel</code>, <code>Map&lt;String, Object&gt;</code>, or <code>@PathVariable</code> parameters.</p>
 </div>
 <h2 id="navigating">Navigating<a class="headerlink" href="#navigating" title="Permanent link">&para;</a></h2>
 <p>Inject <code>FxRouter</code> into any Spring-managed bean and call <code>navigateTo()</code>:</p>
@@ -1306,23 +1328,36 @@
 </span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="p">}</span>
 </span></code></pre></div>
+<h3 id="path-variables">Path Variables<a class="headerlink" href="#path-variables" title="Permanent link">&para;</a></h3>
+<p>Routes can include <code>{name}</code> placeholders that are extracted from the navigation path:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@FxMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/detail/{id}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">detail</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">FxModel</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">model</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;item&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">itemService</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;detail&quot;</span><span class="p">;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Navigate using a concrete path:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">router</span><span class="p">.</span><span class="na">navigateTo</span><span class="p">(</span><span class="s">&quot;/detail/42&quot;</span><span class="p">);</span>
+</span></code></pre></div>
+<p>The router matches <code>/detail/42</code> against the <code>/detail/{id}</code> pattern, extracts <code>id = 42</code>, converts it to the declared type (<code>Long</code>), and passes it to the handler. Path variables are also added to the <code>FxModel</code> automatically, so they're available via <code>@ModelAttribute</code> in controllers.</p>
+<p>Exact routes always take priority over parameterized routes. Supported <code>@PathVariable</code> types: <code>String</code>, <code>Integer</code>, <code>Long</code>, <code>Double</code>, <code>Boolean</code>.</p>
 <h2 id="view-resolution">View Resolution<a class="headerlink" href="#view-resolution" title="Permanent link">&para;</a></h2>
 <p><code>ViewResolver</code> maps logical view names to FXML templates using a configurable prefix and suffix:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&quot;main&quot;     → /templates/main.fxml
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>&quot;settings&quot; → /templates/settings.fxml
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>&quot;main&quot;     → /templates/main.fxml
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>&quot;settings&quot; → /templates/settings.fxml
 </span></code></pre></div>
 <p>Configure in <code>application.properties</code>:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="na">spring.javafx.view.prefix</span><span class="o">=</span><span class="s">/templates/   # default</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="na">spring.javafx.view.suffix</span><span class="o">=</span><span class="s">.fxml         # default</span>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="na">spring.javafx.view.prefix</span><span class="o">=</span><span class="s">/templates/   # default</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="na">spring.javafx.view.suffix</span><span class="o">=</span><span class="s">.fxml         # default</span>
 </span></code></pre></div>
 <h2 id="route-logging">Route Logging<a class="headerlink" href="#route-logging" title="Permanent link">&para;</a></h2>
 <p>Routes are logged at startup so you can verify the route table:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Mapped &quot;/&quot;            → AppRoutes.layout()
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Mapped &quot;/main&quot;        → AppRoutes.main()        [parent: /]
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Mapped &quot;/second&quot;      → AppRoutes.second()       [parent: /]
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Mapped &quot;/demo/window&quot; → AppRoutes.demoWindow()
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Mapped &quot;/demo/modal&quot;  → AppRoutes.demoModal()
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Registered 5 FxMapping route(s)
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Mapped &quot;/&quot;            → AppRoutes.layout()
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Mapped &quot;/main&quot;        → AppRoutes.main()        [parent: /]
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Mapped &quot;/second&quot;      → AppRoutes.second()       [parent: /]
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Mapped &quot;/demo/window&quot; → AppRoutes.demoWindow()
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Mapped &quot;/demo/modal&quot;  → AppRoutes.demoModal()
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Registered 5 FxMapping route(s)
 </span></code></pre></div>
 <h2 id="navigation-lifecycle">Navigation Lifecycle<a class="headerlink" href="#navigation-lifecycle" title="Permanent link">&para;</a></h2>
 <p>When <code>router.navigateTo("/main")</code> is called:</p>
@@ -1348,9 +1383,9 @@
 <p>See the <a href="../route-guards/">Route Guards</a> guide for full details.</p>
 <h2 id="reloading">Reloading<a class="headerlink" href="#reloading" title="Permanent link">&para;</a></h2>
 <p>Call <code>router.reload()</code> to force a full reload of the current route and all its parents. This is useful after a locale change:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">Locale</span><span class="p">.</span><span class="na">setDefault</span><span class="p">(</span><span class="n">newLocale</span><span class="p">);</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">messages</span><span class="p">.</span><span class="na">setLocale</span><span class="p">(</span><span class="n">newLocale</span><span class="p">);</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">router</span><span class="p">.</span><span class="na">reload</span><span class="p">();</span><span class="w">  </span><span class="c1">// rebuilds all layouts with new translations</span>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">Locale</span><span class="p">.</span><span class="na">setDefault</span><span class="p">(</span><span class="n">newLocale</span><span class="p">);</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">messages</span><span class="p">.</span><span class="na">setLocale</span><span class="p">(</span><span class="n">newLocale</span><span class="p">);</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">router</span><span class="p">.</span><span class="na">reload</span><span class="p">();</span><span class="w">  </span><span class="c1">// rebuilds all layouts with new translations</span>
 </span></code></pre></div>
 
 
