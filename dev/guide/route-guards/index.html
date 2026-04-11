@@ -12,13 +12,13 @@
         <meta name="author" content="Vakho">
       
       
-        <link rel="canonical" href="https://vakho10.github.io/spring-javafx-boot/dev/guide/child-routing/">
+        <link rel="canonical" href="https://vakho10.github.io/spring-javafx-boot/dev/guide/route-guards/">
       
       
-        <link rel="prev" href="../route-guards/">
+        <link rel="prev" href="../routing/">
       
       
-        <link rel="next" href="../windows-modals/">
+        <link rel="next" href="../child-routing/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Child Routing & Layouts - Spring JavaFX Boot</title>
+        <title>Route Guards - Spring JavaFX Boot</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#child-routing-layouts" class="md-skip">
+        <a href="#route-guards" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Child Routing & Layouts
+              Route Guards
             
           </span>
         </div>
@@ -519,34 +519,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../route-guards/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Route Guards
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -566,7 +538,7 @@
   <span class="md-ellipsis">
     
   
-    Child Routing & Layouts
+    Route Guards
   
 
     
@@ -584,7 +556,7 @@
   <span class="md-ellipsis">
     
   
-    Child Routing & Layouts
+    Route Guards
   
 
     
@@ -610,10 +582,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#how-guards-work" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        How Guards Work
       
     </span>
   </a>
@@ -621,49 +593,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#defining-a-router-outlet" class="md-nav__link">
+  <a href="#the-fxrouteguard-interface" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Defining a Router Outlet
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Defining a Router Outlet">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#option-1-routeroutlet-annotation-explicit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option 1: @RouterOutlet Annotation (Explicit)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#option-2-fxidrouteroutlet-convention" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option 2: fx:id="routerOutlet" Convention
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#outlet-placement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Outlet Placement
+        The FxRouteGuard Interface
       
     </span>
   </a>
@@ -671,10 +604,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#nested-layouts" class="md-nav__link">
+  <a href="#controller-guards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Nested Layouts
+        Controller Guards
       
     </span>
   </a>
@@ -682,10 +615,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#route-chain-resolution" class="md-nav__link">
+  <a href="#global-guards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Route Chain Resolution
+        Global Guards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guard-execution-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guard Execution Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overriding-the-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overriding the Default
       
     </span>
   </a>
@@ -696,6 +651,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../child-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Child Routing & Layouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1053,10 +1036,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#how-guards-work" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        How Guards Work
       
     </span>
   </a>
@@ -1064,49 +1047,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#defining-a-router-outlet" class="md-nav__link">
+  <a href="#the-fxrouteguard-interface" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Defining a Router Outlet
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Defining a Router Outlet">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#option-1-routeroutlet-annotation-explicit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option 1: @RouterOutlet Annotation (Explicit)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#option-2-fxidrouteroutlet-convention" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option 2: fx:id="routerOutlet" Convention
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#outlet-placement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Outlet Placement
+        The FxRouteGuard Interface
       
     </span>
   </a>
@@ -1114,10 +1058,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#nested-layouts" class="md-nav__link">
+  <a href="#controller-guards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Nested Layouts
+        Controller Guards
       
     </span>
   </a>
@@ -1125,10 +1069,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#route-chain-resolution" class="md-nav__link">
+  <a href="#global-guards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Route Chain Resolution
+        Global Guards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guard-execution-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guard Execution Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overriding-the-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overriding the Default
       
     </span>
   </a>
@@ -1155,110 +1121,111 @@
   
 
 
-<h1 id="child-routing-layouts">Child Routing &amp; Layouts<a class="headerlink" href="#child-routing-layouts" title="Permanent link">&para;</a></h1>
-<p>Spring JavaFX Boot supports <strong>Angular-style nested child routing</strong>. Parent routes define layout templates with a designated outlet area where child views are rendered. When navigating between siblings, only the child view is swapped — the parent layout stays in place.</p>
-<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>The <code>parent</code> attribute on <code>@FxMapping</code> establishes the hierarchy:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@FxRoutes</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AppRoutes</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nd">@FxMapping</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">layout</span><span class="p">(</span><span class="n">FxModel</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;layout&quot;</span><span class="p">;</span><span class="w">  </span><span class="c1">// parent layout with menu bar + outlet</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nd">@FxMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/main&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">FxModel</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;main&quot;</span><span class="p">;</span><span class="w">  </span><span class="c1">// rendered inside layout&#39;s outlet</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nd">@FxMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/second&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">second</span><span class="p">(</span><span class="n">FxModel</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;second&quot;</span><span class="p">;</span><span class="w">  </span><span class="c1">// also rendered inside layout&#39;s outlet</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">}</span>
+<h1 id="route-guards">Route Guards<a class="headerlink" href="#route-guards" title="Permanent link">&para;</a></h1>
+<p>Route guards let you <strong>prevent or confirm navigation</strong> — for example, blocking navigation away from a form with unsaved changes, or restricting access to authenticated users.</p>
+<h2 id="how-guards-work">How Guards Work<a class="headerlink" href="#how-guards-work" title="Permanent link">&para;</a></h2>
+<p>Before every navigation, <code>FxRouter</code> runs a guard check:</p>
+<ol>
+<li><strong>Controller <code>canDeactivate</code></strong> — if the current controller implements <code>FxRouteGuard</code>, its <code>canDeactivate()</code> is called</li>
+<li><strong>Global <code>canDeactivate</code></strong> — all global guard beans are checked</li>
+<li><strong>Global <code>canActivate</code></strong> — all global guard beans are checked for the target route</li>
+</ol>
+<p>If <strong>any</strong> guard returns <code>false</code>, navigation is cancelled and the current view stays in place.</p>
+<h2 id="the-fxrouteguard-interface">The FxRouteGuard Interface<a class="headerlink" href="#the-fxrouteguard-interface" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">FxRouteGuard</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="k">default</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">canDeactivate</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">currentPath</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">targetPath</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="k">default</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">canActivate</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">targetPath</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">params</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>When navigating from <code>/main</code> to <code>/second</code>, the router detects that the parent <code>/</code> layout is already active and <strong>reuses it</strong> — only the child view inside the outlet is swapped.</p>
-<h2 id="defining-a-router-outlet">Defining a Router Outlet<a class="headerlink" href="#defining-a-router-outlet" title="Permanent link">&para;</a></h2>
-<p>The parent's FXML controller declares an outlet — a <code>Pane</code> where child views render. There are two ways to identify it:</p>
-<h3 id="option-1-routeroutlet-annotation-explicit">Option 1: <code>@RouterOutlet</code> Annotation (Explicit)<a class="headerlink" href="#option-1-routeroutlet-annotation-explicit" title="Permanent link">&para;</a></h3>
+<p>Both methods are <code>default</code>, so you only need to override the one you care about.</p>
+<h2 id="controller-guards">Controller Guards<a class="headerlink" href="#controller-guards" title="Permanent link">&para;</a></h2>
+<p>Any FXML controller can implement <code>FxRouteGuard</code> to protect its own route. The most common use case is confirming unsaved changes:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@Controller</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nd">@Scope</span><span class="p">(</span><span class="s">&quot;prototype&quot;</span><span class="p">)</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">LayoutController</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">FormController</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">FxRouteGuard</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nd">@FXML</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nd">@RouterOutlet</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BorderPane</span><span class="w"> </span><span class="n">contentArea</span><span class="p">;</span><span class="w">  </span><span class="c1">// child views render here</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nd">@FXML</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">MenuBar</span><span class="w"> </span><span class="n">menuBar</span><span class="p">;</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">hasUnsavedChanges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nd">@Override</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">canDeactivate</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">currentPath</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">targetPath</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hasUnsavedChanges</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">            </span><span class="n">Alert</span><span class="w"> </span><span class="n">alert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Alert</span><span class="p">(</span><span class="n">Alert</span><span class="p">.</span><span class="na">AlertType</span><span class="p">.</span><span class="na">CONFIRMATION</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">                    </span><span class="s">&quot;You have unsaved changes. Discard?&quot;</span><span class="p">);</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">alert</span><span class="p">.</span><span class="na">showAndWait</span><span class="p">()</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">                    </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ButtonType</span><span class="p">.</span><span class="na">OK</span><span class="p">)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">                    </span><span class="p">.</span><span class="na">isPresent</span><span class="p">();</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="nd">@FXML</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onTextChanged</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="n">hasUnsavedChanges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span><span class="nd">@FXML</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onSave</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">        </span><span class="c1">// ... save logic</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">        </span><span class="n">hasUnsavedChanges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="option-2-fxidrouteroutlet-convention">Option 2: <code>fx:id="routerOutlet"</code> Convention<a class="headerlink" href="#option-2-fxidrouteroutlet-convention" title="Permanent link">&para;</a></h3>
-<p>No annotation needed — just name the pane <code>routerOutlet</code> in the FXML:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;BorderPane</span><span class="w"> </span><span class="na">xmlns:fx=</span><span class="s">&quot;http://javafx.com/fxml&quot;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">            </span><span class="na">fx:controller=</span><span class="s">&quot;com.example.controller.LayoutController&quot;</span><span class="nt">&gt;</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&lt;top&gt;</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="nt">&lt;MenuBar</span><span class="w"> </span><span class="na">fx:id=</span><span class="s">&quot;menuBar&quot;</span><span class="nt">/&gt;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">&lt;/top&gt;</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">&lt;center&gt;</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="nt">&lt;BorderPane</span><span class="w"> </span><span class="na">fx:id=</span><span class="s">&quot;routerOutlet&quot;</span><span class="nt">/&gt;</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">&lt;/center&gt;</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nt">&lt;/BorderPane&gt;</span>
+<div class="admonition note">
+<p class="admonition-title">Scope matters</p>
+<p>Controller guards are checked on the <strong>currently active</strong> controller instance. Since controllers are <code>@Scope("prototype")</code>, each navigation creates a fresh instance — the guard state lives with the view.</p>
+</div>
+<h2 id="global-guards">Global Guards<a class="headerlink" href="#global-guards" title="Permanent link">&para;</a></h2>
+<p>Global guards are Spring beans that implement <code>FxRouteGuard</code>. They are checked on <strong>every</strong> navigation, making them ideal for cross-cutting concerns like authentication:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@Component</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AuthGuard</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">FxRouteGuard</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AuthService</span><span class="w"> </span><span class="n">authService</span><span class="p">;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">AuthGuard</span><span class="p">(</span><span class="n">AuthService</span><span class="w"> </span><span class="n">authService</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">authService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">authService</span><span class="p">;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nd">@Override</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">canActivate</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">targetPath</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">params</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">authService</span><span class="p">.</span><span class="na">isLoggedIn</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">targetPath</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;/login&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">        </span><span class="c1">// Redirect to login instead of silently blocking</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">        </span><span class="n">Platform</span><span class="p">.</span><span class="na">runLater</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">router</span><span class="p">.</span><span class="na">navigateTo</span><span class="p">(</span><span class="s">&quot;/login&quot;</span><span class="p">));</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="p">}</span>
 </span></code></pre></div>
+<p>Global guards are automatically discovered — any Spring bean implementing <code>FxRouteGuard</code> is registered as a global guard. The auto-configuration collects all <code>FxRouteGuard</code> beans and passes them to <code>FxRouter</code>.</p>
 <div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Both approaches are supported simultaneously. The router first checks for <code>@RouterOutlet</code>, then falls back to <code>fx:id="routerOutlet"</code>.</p>
-</div>
-<h2 id="outlet-placement">Outlet Placement<a class="headerlink" href="#outlet-placement" title="Permanent link">&para;</a></h2>
-<p>The outlet can be any <code>Pane</code> subclass. The router places child views differently depending on the type:</p>
+<p class="admonition-title">Controller vs Global</p>
 <ul>
-<li><strong><code>BorderPane</code></strong> — child is set as the <code>center</code> content</li>
-<li><strong>Any other <code>Pane</code></strong> — child replaces all children via <code>getChildren().setAll(view)</code></li>
+<li>Use a <strong>controller guard</strong> when the logic is specific to one view (e.g. unsaved changes)</li>
+<li>Use a <strong>global guard</strong> when the logic applies across routes (e.g. authentication, logging)</li>
 </ul>
-<h2 id="nested-layouts">Nested Layouts<a class="headerlink" href="#nested-layouts" title="Permanent link">&para;</a></h2>
-<p>Nesting is unlimited. A child route can itself be a parent with its own outlet:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@FxRoutes</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AppRoutes</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nd">@FxMapping</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">appShell</span><span class="p">(</span><span class="n">FxModel</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;app-shell&quot;</span><span class="p">;</span><span class="w">  </span><span class="c1">// top-level shell with sidebar + outlet</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nd">@FxMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/settings&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">settingsLayout</span><span class="p">(</span><span class="n">FxModel</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;settings-layout&quot;</span><span class="p">;</span><span class="w">  </span><span class="c1">// settings shell with tabs + outlet</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="nd">@FxMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/settings/appearance&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/settings&quot;</span><span class="p">)</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">appearance</span><span class="p">(</span><span class="n">FxModel</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;appearance&quot;</span><span class="p">;</span><span class="w">  </span><span class="c1">// rendered inside settings-layout&#39;s outlet</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span><span class="nd">@FxMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/settings/account&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/settings&quot;</span><span class="p">)</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">account</span><span class="p">(</span><span class="n">FxModel</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;account&quot;</span><span class="p">;</span><span class="w">  </span><span class="c1">// also inside settings-layout&#39;s outlet</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="p">}</span>
-</span></code></pre></div>
-<p>This creates a three-level hierarchy:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>app-shell (/)
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>└── settings-layout (/settings)
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    ├── appearance (/settings/appearance)
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    └── account (/settings/account)
-</span></code></pre></div>
-<h2 id="route-chain-resolution">Route Chain Resolution<a class="headerlink" href="#route-chain-resolution" title="Permanent link">&para;</a></h2>
-<p>When navigating to a deeply nested route, the router automatically builds the full ancestor chain and processes each level:</p>
-<ol>
-<li><strong>Already active parents are reused</strong> — the router caches each loaded layout as an <code>ActiveRoute</code></li>
-<li><strong>Only changed levels are reloaded</strong> — navigating between siblings at the same depth only swaps the leaf view</li>
-<li><strong>Circular references are detected</strong> — the router throws a <code>RoutingException</code> if a route's parent chain forms a cycle</li>
-</ol>
-<div class="admonition warning">
-<p class="admonition-title">Circular parent references</p>
-<p>The router validates parent chains at navigation time. If <code>A → B → A</code> is detected, a <code>RoutingException</code> is thrown immediately.</p>
 </div>
+<h2 id="guard-execution-order">Guard Execution Order<a class="headerlink" href="#guard-execution-order" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>navigateTo(&quot;/target&quot;)
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  │
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  ├─ 1. Active controller&#39;s canDeactivate(current, target)
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  │     └─ blocked? → navigation cancelled
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  │
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  ├─ 2. Global guards&#39; canDeactivate(current, target)
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  │     └─ any blocked? → navigation cancelled
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  │
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  └─ 3. Global guards&#39; canActivate(target, params)
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        └─ any blocked? → navigation cancelled
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  ✓ All passed → proceed with navigation
+</span></code></pre></div>
+<h2 id="overriding-the-default">Overriding the Default<a class="headerlink" href="#overriding-the-default" title="Permanent link">&para;</a></h2>
+<p>Since <code>FxRouter</code> is registered with <code>@ConditionalOnMissingBean</code>, you can provide your own <code>FxRouter</code> bean if you need to customize guard behavior beyond what the default implementation offers.</p>
 
 
 
@@ -1296,7 +1263,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../route-guards/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Route Guards">
+          <a href="../routing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Routing">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1306,20 +1273,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Route Guards
+                Routing
               </div>
             </div>
           </a>
         
         
           
-          <a href="../windows-modals/" class="md-footer__link md-footer__link--next" aria-label="Next: Windows &amp; Modals">
+          <a href="../child-routing/" class="md-footer__link md-footer__link--next" aria-label="Next: Child Routing &amp; Layouts">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Windows & Modals
+                Child Routing & Layouts
               </div>
             </div>
             <div class="md-footer__button md-icon">

@@ -18,7 +18,7 @@
         <link rel="prev" href="../../getting-started/project-structure/">
       
       
-        <link rel="next" href="../child-routing/">
+        <link rel="next" href="../route-guards/">
       
       
         
@@ -637,6 +637,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#route-guards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route Guards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reloading" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -651,6 +662,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../route-guards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Route Guards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1119,6 +1158,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#route-guards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route Guards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reloading" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1278,6 +1328,7 @@
 <p>When <code>router.navigateTo("/main")</code> is called:</p>
 <ol>
 <li><code>FxRouteRegistry</code> resolves <code>"/main"</code> and finds <code>parent = "/"</code></li>
+<li><a href="../route-guards/">Route guards</a> are checked — if any guard returns <code>false</code>, navigation is cancelled</li>
 <li>The router builds the ancestor chain: <code>["/", "/main"]</code></li>
 <li>For each level in the chain, starting from the root:<ul>
 <li>If the parent <code>"/"</code> is <strong>already active</strong> — reuse its cached layout</li>
@@ -1292,6 +1343,9 @@
 <li><code>@FXML initialize()</code> runs — all model data is available</li>
 <li>The child view is placed into the parent's <code>@RouterOutlet</code></li>
 </ol>
+<h2 id="route-guards">Route Guards<a class="headerlink" href="#route-guards" title="Permanent link">&para;</a></h2>
+<p>You can prevent or confirm navigation using <strong>route guards</strong>. Controllers can implement <code>FxRouteGuard</code> to block navigation away (e.g. unsaved changes), and global guard beans can restrict access to routes (e.g. authentication).</p>
+<p>See the <a href="../route-guards/">Route Guards</a> guide for full details.</p>
 <h2 id="reloading">Reloading<a class="headerlink" href="#reloading" title="Permanent link">&para;</a></h2>
 <p>Call <code>router.reload()</code> to force a full reload of the current route and all its parents. This is useful after a locale change:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">Locale</span><span class="p">.</span><span class="na">setDefault</span><span class="p">(</span><span class="n">newLocale</span><span class="p">);</span>
@@ -1352,13 +1406,13 @@
         
         
           
-          <a href="../child-routing/" class="md-footer__link md-footer__link--next" aria-label="Next: Child Routing &amp; Layouts">
+          <a href="../route-guards/" class="md-footer__link md-footer__link--next" aria-label="Next: Route Guards">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Child Routing & Layouts
+                Route Guards
               </div>
             </div>
             <div class="md-footer__button md-icon">
