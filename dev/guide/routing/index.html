@@ -659,6 +659,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#navigation-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reloading" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1191,6 +1202,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#navigation-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reloading" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1363,6 +1385,7 @@
 <p>When <code>router.navigateTo("/main")</code> is called:</p>
 <ol>
 <li><code>FxRouteRegistry</code> resolves <code>"/main"</code> and finds <code>parent = "/"</code></li>
+<li>A <code>NavigationEvent(BEFORE)</code> is published</li>
 <li><a href="../route-guards/">Route guards</a> are checked — if any guard returns <code>false</code>, navigation is cancelled</li>
 <li>The router builds the ancestor chain: <code>["/", "/main"]</code></li>
 <li>For each level in the chain, starting from the root:<ul>
@@ -1377,15 +1400,56 @@
 <li>The optional <code>onModelReady(FxModel)</code> hook is called (if defined on the controller)</li>
 <li><code>@FXML initialize()</code> runs — all model data is available</li>
 <li>The child view is placed into the parent's <code>@RouterOutlet</code></li>
+<li>A <code>NavigationEvent(AFTER)</code> is published</li>
 </ol>
 <h2 id="route-guards">Route Guards<a class="headerlink" href="#route-guards" title="Permanent link">&para;</a></h2>
 <p>You can prevent or confirm navigation using <strong>route guards</strong>. Controllers can implement <code>FxRouteGuard</code> to block navigation away (e.g. unsaved changes), and global guard beans can restrict access to routes (e.g. authentication).</p>
 <p>See the <a href="../route-guards/">Route Guards</a> guide for full details.</p>
+<h2 id="navigation-events">Navigation Events<a class="headerlink" href="#navigation-events" title="Permanent link">&para;</a></h2>
+<p>The router publishes <code>NavigationEvent</code>s via Spring's <code>ApplicationEventPublisher</code>, letting any bean react to navigation without coupling to the router:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nd">@Component</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AnalyticsListener</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nd">@EventListener</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onNavigation</span><span class="p">(</span><span class="n">NavigationEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="na">getPhase</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NavigationPhase</span><span class="p">.</span><span class="na">AFTER</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">            </span><span class="n">analytics</span><span class="p">.</span><span class="na">trackPageView</span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="na">getToPath</span><span class="p">());</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Each navigation fires two events:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>When</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BEFORE</code></td>
+<td>Before guards are checked</td>
+<td>Logging, analytics pre-flight</td>
+</tr>
+<tr>
+<td><code>AFTER</code></td>
+<td>After the view is rendered</td>
+<td>Analytics, breadcrumb updates, status bar</td>
+</tr>
+</tbody>
+</table>
+<p>The event includes <code>fromPath</code>, <code>toPath</code>, and <code>params</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If a route guard blocks navigation, only the <code>BEFORE</code> event is fired — no <code>AFTER</code> event.</p>
+</div>
 <h2 id="reloading">Reloading<a class="headerlink" href="#reloading" title="Permanent link">&para;</a></h2>
 <p>Call <code>router.reload()</code> to force a full reload of the current route and all its parents. This is useful after a locale change:</p>
-<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">Locale</span><span class="p">.</span><span class="na">setDefault</span><span class="p">(</span><span class="n">newLocale</span><span class="p">);</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">messages</span><span class="p">.</span><span class="na">setLocale</span><span class="p">(</span><span class="n">newLocale</span><span class="p">);</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">router</span><span class="p">.</span><span class="na">reload</span><span class="p">();</span><span class="w">  </span><span class="c1">// rebuilds all layouts with new translations</span>
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">Locale</span><span class="p">.</span><span class="na">setDefault</span><span class="p">(</span><span class="n">newLocale</span><span class="p">);</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">messages</span><span class="p">.</span><span class="na">setLocale</span><span class="p">(</span><span class="n">newLocale</span><span class="p">);</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">router</span><span class="p">.</span><span class="na">reload</span><span class="p">();</span><span class="w">  </span><span class="c1">// rebuilds all layouts with new translations</span>
 </span></code></pre></div>
 
 
