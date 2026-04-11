@@ -1,6 +1,7 @@
 package io.github.vakho10.springjavafxboot.router;
 
 import io.github.vakho10.springjavafxboot.annotation.ModelAttribute;
+import io.github.vakho10.springjavafxboot.annotation.PathVariable;
 import io.github.vakho10.springjavafxboot.annotation.RouterOutlet;
 import io.github.vakho10.springjavafxboot.view.ViewResolver;
 import io.github.vakho10.springjavafxboot.service.FxTitleService;
@@ -125,22 +126,28 @@ public class FxRouter {
     public void navigateTo(String path, Map<String, Object> params) {
         log.debug("Navigating to: {} with params: {}", path, params.keySet());
 
-        HandlerMethod handler = routeRegistry.resolve(path);
-        if (handler == null) {
+        ResolvedRoute resolved = routeRegistry.resolveRoute(path);
+        if (resolved == null) {
             throw new RoutingException("No @FxMapping found for path: \"%s\"".formatted(path));
         }
+
+        // Merge path variables into navigation params
+        Map<String, Object> mergedParams = new LinkedHashMap<>(params);
+        resolved.pathVariables().forEach(mergedParams::putIfAbsent);
+
+        HandlerMethod handler = resolved.handler();
 
         Runnable navigation = () -> {
             requireRootPane();
 
-            if (!checkGuards(path, params)) {
+            if (!checkGuards(path, mergedParams)) {
                 log.info("Navigation to \"{}\" blocked by route guard", path);
                 return;
             }
 
-            executeNavigation(handler, params);
+            executeNavigation(handler, mergedParams);
             currentPath = path;
-            currentParams = params;
+            currentParams = mergedParams;
         };
 
         if (Platform.isFxApplicationThread()) {
@@ -387,13 +394,15 @@ public class FxRouter {
         log.debug("Opening window for: {} (modal: {})", path,
                 options.getModality() != Modality.NONE);
 
-        HandlerMethod handler = routeRegistry.resolve(path);
-        if (handler == null) {
+        ResolvedRoute resolved = routeRegistry.resolveRoute(path);
+        if (resolved == null) {
             throw new RoutingException("No @FxMapping found for path: \"%s\"".formatted(path));
         }
+        HandlerMethod handler = resolved.handler();
 
-        // Prepare model
+        // Prepare model (merge path variables)
         FxModel model = new FxModel();
+        resolved.pathVariables().forEach(model::put);
         params.forEach(model::put);
         if (windowResult != null) {
             model.put("windowResult", windowResult);
@@ -594,7 +603,17 @@ public class FxRouter {
 
         for (int i = 0; i < params.length; i++) {
             Class<?> type = params[i].getType();
-            if (FxModel.class.equals(type)) {
+            PathVariable pathVar = params[i].getAnnotation(PathVariable.class);
+
+            if (pathVar != null) {
+                Object rawValue = model.get(pathVar.value());
+                if (rawValue == null) {
+                    throw new RoutingException(
+                            "Path variable \"%s\" not found in model for %s".formatted(
+                                    pathVar.value(), method.getName()));
+                }
+                args[i] = convertPathVariable(rawValue.toString(), type, pathVar.value(), method);
+            } else if (FxModel.class.equals(type)) {
                 args[i] = model;
             } else if (Map.class.isAssignableFrom(type)) {
                 args[i] = model.asMap();
@@ -605,6 +624,31 @@ public class FxRouter {
             }
         }
         return args;
+    }
+
+    private Object convertPathVariable(String value, Class<?> targetType, String varName, Method method) {
+        try {
+            if (String.class.equals(targetType)) {
+                return value;
+            } else if (Integer.class.equals(targetType) || int.class.equals(targetType)) {
+                return Integer.parseInt(value);
+            } else if (Long.class.equals(targetType) || long.class.equals(targetType)) {
+                return Long.parseLong(value);
+            } else if (Double.class.equals(targetType) || double.class.equals(targetType)) {
+                return Double.parseDouble(value);
+            } else if (Boolean.class.equals(targetType) || boolean.class.equals(targetType)) {
+                return Boolean.parseBoolean(value);
+            } else {
+                throw new RoutingException(
+                        "@PathVariable \"%s\" in %s has unsupported type: %s. Supported: String, Integer, Long, Double, Boolean"
+                                .formatted(varName, method.getName(), targetType.getSimpleName()));
+            }
+        } catch (NumberFormatException e) {
+            throw new RoutingException(
+                    "Cannot convert path variable \"%s\" value \"%s\" to %s in %s"
+                            .formatted(varName, value, targetType.getSimpleName(), method.getName()),
+                    e);
+        }
     }
 
     private ViewResolver.ViewResult loadAndPrepareView(String viewName, FxModel model) {

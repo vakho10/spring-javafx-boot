@@ -47,7 +47,7 @@ Maps a method to a named route path. When `FxRouter.navigateTo(path)` is called 
 
 - Must be inside an `@FxRoutes` class
 - Must return `String` (the view name)
-- Parameters can be `FxModel` or `Map<String, Object>`
+- Parameters can be `FxModel`, `Map<String, Object>`, or `@PathVariable`-annotated types
 
 ```java
 @FxMapping(value = "/main", parent = "/", title = "page.title.main")
@@ -56,6 +56,47 @@ public String main(FxModel model) {
     return "main";
 }
 ```
+
+Path variables are supported in the route path:
+
+```java
+@FxMapping(value = "/users/{id}", parent = "/")
+public String userDetail(@PathVariable("id") Long id, FxModel model) {
+    model.put("user", userService.findById(id));
+    return "user-detail";
+}
+```
+
+---
+
+## @PathVariable
+
+Marks a parameter in an `@FxMapping` handler method for injection from a path variable placeholder.
+
+| Property | Value |
+|----------|-------|
+| **Target** | `PARAMETER` |
+| **Retention** | `RUNTIME` |
+
+### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `value` | `String` | *(required)* | The name of the path variable, matching a `{name}` placeholder in the route path |
+
+### Supported Types
+
+`String`, `Integer`/`int`, `Long`/`long`, `Double`/`double`, `Boolean`/`boolean`
+
+```java
+@FxMapping(value = "/detail/{id}", parent = "/")
+public String detail(@PathVariable("id") Long id, FxModel model) {
+    model.put("id", id);
+    return "detail";
+}
+```
+
+Navigation: `router.navigateTo("/detail/42")` — the router extracts `id = 42` and converts it to `Long`.
 
 ---
 

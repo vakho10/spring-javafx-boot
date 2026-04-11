@@ -7,9 +7,13 @@ import org.springframework.context.ApplicationContext;
 
 import jakarta.annotation.PostConstruct;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Scans the Spring {@link ApplicationContext} at startup for beans annotated
@@ -31,8 +35,12 @@ import java.util.Map;
 @Slf4j
 public class FxRouteRegistry {
 
+    /** Matches {@code {name}} placeholders in route paths. */
+    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{([^/}]+)}");
+
     private final ApplicationContext applicationContext;
     private final Map<String, HandlerMethod> routes = new LinkedHashMap<>();
+    private final List<ParameterizedRoute> parameterizedRoutes = new ArrayList<>();
 
     public FxRouteRegistry(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -64,7 +72,14 @@ public class FxRouteRegistry {
             }
         }
 
-        // Second pass: validate parent references
+        // Second pass: build regex patterns for parameterized routes
+        for (HandlerMethod handler : routes.values()) {
+            if (isParameterized(handler.path())) {
+                parameterizedRoutes.add(buildParameterizedRoute(handler));
+            }
+        }
+
+        // Third pass: validate parent references
         for (HandlerMethod handler : routes.values()) {
             if (handler.hasParent() && !routes.containsKey(handler.parent())) {
                 throw new IllegalStateException(
@@ -99,13 +114,49 @@ public class FxRouteRegistry {
     }
 
     /**
-     * Look up a handler for the given path.
+     * Look up a handler for the given path (exact match only).
+     * <p>
+     * For parameterized routes, use {@link #resolveRoute(String)} which also
+     * extracts path variables.
      *
-     * @param path the route path (e.g. "/main")
+     * @param path the route path (e.g. "/main") or template (e.g. "/users/{id}")
      * @return the handler method, or {@code null} if no route matches
      */
     public HandlerMethod resolve(String path) {
         return routes.get(normalizePath(path));
+    }
+
+    /**
+     * Resolves a concrete navigation path against both exact and parameterized routes.
+     * <p>
+     * Exact matches take priority. If no exact match is found, parameterized routes
+     * are checked in registration order.
+     *
+     * @param path the concrete path (e.g. "/users/42")
+     * @return the resolved route with extracted path variables, or {@code null}
+     */
+    public ResolvedRoute resolveRoute(String path) {
+        String normalized = normalizePath(path);
+
+        // 1. Exact match (highest priority)
+        HandlerMethod exact = routes.get(normalized);
+        if (exact != null) {
+            return new ResolvedRoute(exact, Map.of());
+        }
+
+        // 2. Parameterized match
+        for (ParameterizedRoute pr : parameterizedRoutes) {
+            Matcher matcher = pr.pattern.matcher(normalized);
+            if (matcher.matches()) {
+                Map<String, String> vars = new LinkedHashMap<>();
+                for (int i = 0; i < pr.variableNames.size(); i++) {
+                    vars.put(pr.variableNames.get(i), matcher.group(i + 1));
+                }
+                return new ResolvedRoute(pr.handler, Collections.unmodifiableMap(vars));
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -144,13 +195,60 @@ public class FxRouteRegistry {
                             method.getReturnType().getSimpleName()));
         }
 
-        for (Class<?> paramType : method.getParameterTypes()) {
-            if (!FxModel.class.equals(paramType) && !Map.class.isAssignableFrom(paramType)) {
+        for (var param : method.getParameters()) {
+            Class<?> paramType = param.getType();
+            if (!FxModel.class.equals(paramType)
+                    && !Map.class.isAssignableFrom(paramType)
+                    && !param.isAnnotationPresent(
+                            io.github.vakho10.springjavafxboot.annotation.PathVariable.class)) {
                 throw new IllegalStateException(
                         "@FxMapping method %s.%s() has unsupported parameter type: %s. "
                                 .formatted(routeClass.getSimpleName(), method.getName(), paramType.getSimpleName())
-                                + "Supported: FxModel, Map<String, Object>");
+                                + "Supported: FxModel, Map<String, Object>, @PathVariable");
             }
         }
+    }
+
+    // =========================================================================
+    // Parameterized route support
+    // =========================================================================
+
+    /**
+     * Whether a route path contains {@code {variable}} placeholders.
+     */
+    boolean isParameterized(String path) {
+        return path.contains("{") && path.contains("}");
+    }
+
+    private ParameterizedRoute buildParameterizedRoute(HandlerMethod handler) {
+        String path = handler.path();
+        List<String> variableNames = new ArrayList<>();
+        Matcher m = PLACEHOLDER_PATTERN.matcher(path);
+
+        StringBuilder regex = new StringBuilder("^");
+        int lastEnd = 0;
+        while (m.find()) {
+            // Escape the literal segment before the placeholder
+            regex.append(Pattern.quote(path.substring(lastEnd, m.start())));
+            // Capture group for the variable value (any non-slash characters)
+            regex.append("([^/]+)");
+            variableNames.add(m.group(1));
+            lastEnd = m.end();
+        }
+        // Append any trailing literal segment
+        regex.append(Pattern.quote(path.substring(lastEnd)));
+        regex.append("$");
+
+        return new ParameterizedRoute(handler, Pattern.compile(regex.toString()), variableNames);
+    }
+
+    /**
+     * A compiled parameterized route with its regex pattern and variable names.
+     */
+    private record ParameterizedRoute(
+            HandlerMethod handler,
+            Pattern pattern,
+            List<String> variableNames
+    ) {
     }
 }

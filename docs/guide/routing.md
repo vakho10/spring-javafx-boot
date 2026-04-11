@@ -42,7 +42,7 @@ public class AppRoutes {
 ```
 
 !!! note "Return type"
-    `@FxMapping` methods must return a `String` (the view name). They can accept `FxModel` or `Map<String, Object>` as parameters.
+    `@FxMapping` methods must return a `String` (the view name). They can accept `FxModel`, `Map<String, Object>`, or `@PathVariable` parameters.
 
 ## Navigating
 
@@ -90,6 +90,28 @@ public class DetailsController {
     }
 }
 ```
+
+### Path Variables
+
+Routes can include `{name}` placeholders that are extracted from the navigation path:
+
+```java
+@FxMapping(value = "/detail/{id}", parent = "/")
+public String detail(@PathVariable("id") Long id, FxModel model) {
+    model.put("item", itemService.findById(id));
+    return "detail";
+}
+```
+
+Navigate using a concrete path:
+
+```java
+router.navigateTo("/detail/42");
+```
+
+The router matches `/detail/42` against the `/detail/{id}` pattern, extracts `id = 42`, converts it to the declared type (`Long`), and passes it to the handler. Path variables are also added to the `FxModel` automatically, so they're available via `@ModelAttribute` in controllers.
+
+Exact routes always take priority over parameterized routes. Supported `@PathVariable` types: `String`, `Integer`, `Long`, `Double`, `Boolean`.
 
 ## View Resolution
 

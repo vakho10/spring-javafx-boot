@@ -70,6 +70,11 @@ public class MainController {
     }
 
     @FXML
+    private void onViewDetailClick() {
+        router.navigateTo("/detail/" + counter);
+    }
+
+    @FXML
     private void onThrowErrorClick() {
         throw new RuntimeException(messages.msg("main.error.test"));
     }
