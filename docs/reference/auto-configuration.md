@@ -50,7 +50,8 @@ FxRouter
 ├── ViewResolver ← MessageSource, FxViewProperties
 ├── ApplicationContext
 ├── FxTitleService ← LocalizedMessageSource ← MessageSource
-└── List<FxRouteGuard> ← all FxRouteGuard beans (global guards)
+├── List<FxRouteGuard> ← all FxRouteGuard beans (global guards)
+└── ApplicationEventPublisher ← publishes NavigationEvent (BEFORE/AFTER)
 ```
 
 ## Initialization Order

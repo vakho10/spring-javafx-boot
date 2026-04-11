@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 
@@ -64,7 +65,8 @@ public class SpringJavaFxAutoConfiguration {
                              ViewResolver viewResolver,
                              ApplicationContext applicationContext,
                              FxTitleService fxTitleService,
-                             List<FxRouteGuard> routeGuards) {
-        return new FxRouter(fxRouteRegistry, viewResolver, applicationContext, fxTitleService, routeGuards);
+                             List<FxRouteGuard> routeGuards,
+                             ApplicationEventPublisher eventPublisher) {
+        return new FxRouter(fxRouteRegistry, viewResolver, applicationContext, fxTitleService, routeGuards, eventPublisher);
     }
 }

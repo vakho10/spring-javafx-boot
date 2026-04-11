@@ -3,6 +3,8 @@ package io.github.vakho10.springjavafxboot.router;
 import io.github.vakho10.springjavafxboot.annotation.ModelAttribute;
 import io.github.vakho10.springjavafxboot.annotation.PathVariable;
 import io.github.vakho10.springjavafxboot.annotation.RouterOutlet;
+import io.github.vakho10.springjavafxboot.event.NavigationEvent;
+import io.github.vakho10.springjavafxboot.event.NavigationPhase;
 import io.github.vakho10.springjavafxboot.view.ViewResolver;
 import io.github.vakho10.springjavafxboot.service.FxTitleService;
 import javafx.application.Platform;
@@ -15,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -74,6 +77,7 @@ public class FxRouter {
     private final ApplicationContext applicationContext;
     private final FxTitleService titleService;
     private final List<FxRouteGuard> globalGuards;
+    private final ApplicationEventPublisher eventPublisher;
 
     private BorderPane rootPane;
     private String currentPath;
@@ -86,12 +90,14 @@ public class FxRouter {
                     ViewResolver viewResolver,
                     ApplicationContext applicationContext,
                     FxTitleService titleService,
-                    List<FxRouteGuard> globalGuards) {
+                    List<FxRouteGuard> globalGuards,
+                    ApplicationEventPublisher eventPublisher) {
         this.routeRegistry = routeRegistry;
         this.viewResolver = viewResolver;
         this.applicationContext = applicationContext;
         this.titleService = titleService;
         this.globalGuards = globalGuards != null ? globalGuards : List.of();
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -140,6 +146,10 @@ public class FxRouter {
         Runnable navigation = () -> {
             requireRootPane();
 
+            String previousPath = currentPath;
+            eventPublisher.publishEvent(new NavigationEvent(
+                    this, previousPath, path, mergedParams, NavigationPhase.BEFORE));
+
             if (!checkGuards(path, mergedParams)) {
                 log.info("Navigation to \"{}\" blocked by route guard", path);
                 return;
@@ -148,6 +158,9 @@ public class FxRouter {
             executeNavigation(handler, mergedParams);
             currentPath = path;
             currentParams = mergedParams;
+
+            eventPublisher.publishEvent(new NavigationEvent(
+                    this, previousPath, path, mergedParams, NavigationPhase.AFTER));
         };
 
         if (Platform.isFxApplicationThread()) {

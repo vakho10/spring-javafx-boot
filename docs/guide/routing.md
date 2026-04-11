@@ -147,24 +147,55 @@ Registered 5 FxMapping route(s)
 When `router.navigateTo("/main")` is called:
 
 1. `FxRouteRegistry` resolves `"/main"` and finds `parent = "/"`
-2. [Route guards](route-guards.md) are checked — if any guard returns `false`, navigation is cancelled
-3. The router builds the ancestor chain: `["/", "/main"]`
+2. A `NavigationEvent(BEFORE)` is published
+3. [Route guards](route-guards.md) are checked — if any guard returns `false`, navigation is cancelled
+4. The router builds the ancestor chain: `["/", "/main"]`
 4. For each level in the chain, starting from the root:
     - If the parent `"/"` is **already active** — reuse its cached layout
     - If not — invoke the `@FxMapping` handler, load the FXML, cache as `ActiveRoute`
-5. The handler is invoked — it populates `FxModel` and returns a view name
-6. `ViewResolver` resolves the view name to an FXML template path
-7. The FXML is loaded with Spring's `ApplicationContext` as the controller factory
-8. `@ModelAttribute` fields are injected into the controller from the model
-9. The optional `onModelReady(FxModel)` hook is called (if defined on the controller)
-10. `@FXML initialize()` runs — all model data is available
-11. The child view is placed into the parent's `@RouterOutlet`
+6. The handler is invoked — it populates `FxModel` and returns a view name
+7. `ViewResolver` resolves the view name to an FXML template path
+8. The FXML is loaded with Spring's `ApplicationContext` as the controller factory
+9. `@ModelAttribute` fields are injected into the controller from the model
+10. The optional `onModelReady(FxModel)` hook is called (if defined on the controller)
+11. `@FXML initialize()` runs — all model data is available
+12. The child view is placed into the parent's `@RouterOutlet`
+13. A `NavigationEvent(AFTER)` is published
 
 ## Route Guards
 
 You can prevent or confirm navigation using **route guards**. Controllers can implement `FxRouteGuard` to block navigation away (e.g. unsaved changes), and global guard beans can restrict access to routes (e.g. authentication).
 
 See the [Route Guards](route-guards.md) guide for full details.
+
+## Navigation Events
+
+The router publishes `NavigationEvent`s via Spring's `ApplicationEventPublisher`, letting any bean react to navigation without coupling to the router:
+
+```java
+@Component
+public class AnalyticsListener {
+
+    @EventListener
+    public void onNavigation(NavigationEvent event) {
+        if (event.getPhase() == NavigationPhase.AFTER) {
+            analytics.trackPageView(event.getToPath());
+        }
+    }
+}
+```
+
+Each navigation fires two events:
+
+| Phase | When | Use case |
+|-------|------|----------|
+| `BEFORE` | Before guards are checked | Logging, analytics pre-flight |
+| `AFTER` | After the view is rendered | Analytics, breadcrumb updates, status bar |
+
+The event includes `fromPath`, `toPath`, and `params`.
+
+!!! note
+    If a route guard blocks navigation, only the `BEFORE` event is fired — no `AFTER` event.
 
 ## Reloading
 
