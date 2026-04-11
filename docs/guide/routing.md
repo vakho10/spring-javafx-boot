@@ -125,17 +125,24 @@ Registered 5 FxMapping route(s)
 When `router.navigateTo("/main")` is called:
 
 1. `FxRouteRegistry` resolves `"/main"` and finds `parent = "/"`
-2. The router builds the ancestor chain: `["/", "/main"]`
-3. For each level in the chain, starting from the root:
+2. [Route guards](route-guards.md) are checked — if any guard returns `false`, navigation is cancelled
+3. The router builds the ancestor chain: `["/", "/main"]`
+4. For each level in the chain, starting from the root:
     - If the parent `"/"` is **already active** — reuse its cached layout
     - If not — invoke the `@FxMapping` handler, load the FXML, cache as `ActiveRoute`
-4. The handler is invoked — it populates `FxModel` and returns a view name
-5. `ViewResolver` resolves the view name to an FXML template path
-6. The FXML is loaded with Spring's `ApplicationContext` as the controller factory
-7. `@ModelAttribute` fields are injected into the controller from the model
-8. The optional `onModelReady(FxModel)` hook is called (if defined on the controller)
-9. `@FXML initialize()` runs — all model data is available
-10. The child view is placed into the parent's `@RouterOutlet`
+5. The handler is invoked — it populates `FxModel` and returns a view name
+6. `ViewResolver` resolves the view name to an FXML template path
+7. The FXML is loaded with Spring's `ApplicationContext` as the controller factory
+8. `@ModelAttribute` fields are injected into the controller from the model
+9. The optional `onModelReady(FxModel)` hook is called (if defined on the controller)
+10. `@FXML initialize()` runs — all model data is available
+11. The child view is placed into the parent's `@RouterOutlet`
+
+## Route Guards
+
+You can prevent or confirm navigation using **route guards**. Controllers can implement `FxRouteGuard` to block navigation away (e.g. unsaved changes), and global guard beans can restrict access to routes (e.g. authentication).
+
+See the [Route Guards](route-guards.md) guide for full details.
 
 ## Reloading
 

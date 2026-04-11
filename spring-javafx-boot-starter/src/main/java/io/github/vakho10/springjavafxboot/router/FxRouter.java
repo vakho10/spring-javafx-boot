@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -54,9 +55,10 @@ import java.util.Set;
  *     new WindowOptions().title("Select item").size(400, 300));
  * }</pre>
  *
- * @see FxMapping
- * @see FxRoutes
- * @see RouterOutlet
+ * @see io.github.vakho10.springjavafxboot.annotation.FxMapping
+ * @see io.github.vakho10.springjavafxboot.annotation.FxRoutes
+ * @see io.github.vakho10.springjavafxboot.annotation.RouterOutlet
+ * @see FxRouteGuard
  * @see WindowOptions
  * @see WindowResult
  */
@@ -70,6 +72,7 @@ public class FxRouter {
     private final ViewResolver viewResolver;
     private final ApplicationContext applicationContext;
     private final FxTitleService titleService;
+    private final List<FxRouteGuard> globalGuards;
 
     private BorderPane rootPane;
     private String currentPath;
@@ -81,11 +84,13 @@ public class FxRouter {
     public FxRouter(FxRouteRegistry routeRegistry,
                     ViewResolver viewResolver,
                     ApplicationContext applicationContext,
-                    FxTitleService titleService) {
+                    FxTitleService titleService,
+                    List<FxRouteGuard> globalGuards) {
         this.routeRegistry = routeRegistry;
         this.viewResolver = viewResolver;
         this.applicationContext = applicationContext;
         this.titleService = titleService;
+        this.globalGuards = globalGuards != null ? globalGuards : List.of();
     }
 
     /**
@@ -127,6 +132,12 @@ public class FxRouter {
 
         Runnable navigation = () -> {
             requireRootPane();
+
+            if (!checkGuards(path, params)) {
+                log.info("Navigation to \"{}\" blocked by route guard", path);
+                return;
+            }
+
             executeNavigation(handler, params);
             currentPath = path;
             currentParams = params;
@@ -259,6 +270,48 @@ public class FxRouter {
         WindowResult<T> result = new WindowResult<>();
         launchStage(path, params, options, result);
         return result;
+    }
+
+    // =========================================================================
+    // Route guards
+    // =========================================================================
+
+    /**
+     * Checks all applicable guards before navigation proceeds.
+     * Returns {@code true} if navigation is allowed, {@code false} if blocked.
+     */
+    private boolean checkGuards(String targetPath, Map<String, Object> params) {
+        // 1. Check canDeactivate on the active controller (if it implements FxRouteGuard)
+        if (currentPath != null) {
+            ActiveRoute activeRoute = activeRoutes.get(currentPath);
+            if (activeRoute != null && activeRoute.controller() instanceof FxRouteGuard controllerGuard) {
+                if (!controllerGuard.canDeactivate(currentPath, targetPath)) {
+                    log.debug("canDeactivate() blocked by controller {} for \"{}\" → \"{}\"",
+                            activeRoute.controller().getClass().getSimpleName(), currentPath, targetPath);
+                    return false;
+                }
+            }
+
+            // 2. Check canDeactivate on global guards
+            for (FxRouteGuard guard : globalGuards) {
+                if (!guard.canDeactivate(currentPath, targetPath)) {
+                    log.debug("canDeactivate() blocked by global guard {} for \"{}\" → \"{}\"",
+                            guard.getClass().getSimpleName(), currentPath, targetPath);
+                    return false;
+                }
+            }
+        }
+
+        // 3. Check canActivate on global guards
+        for (FxRouteGuard guard : globalGuards) {
+            if (!guard.canActivate(targetPath, params)) {
+                log.debug("canActivate() blocked by global guard {} for \"{}\"",
+                        guard.getClass().getSimpleName(), targetPath);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     // =========================================================================

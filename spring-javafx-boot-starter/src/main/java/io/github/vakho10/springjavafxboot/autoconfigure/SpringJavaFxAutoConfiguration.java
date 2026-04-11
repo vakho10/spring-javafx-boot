@@ -1,6 +1,7 @@
 package io.github.vakho10.springjavafxboot.autoconfigure;
 
 import io.github.vakho10.springjavafxboot.view.ViewResolver;
+import io.github.vakho10.springjavafxboot.router.FxRouteGuard;
 import io.github.vakho10.springjavafxboot.router.FxRouteRegistry;
 import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.service.FxTitleService;
@@ -13,6 +14,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+
+import java.util.List;
 
 /**
  * Auto-configuration for Spring JavaFX Boot.
@@ -60,7 +63,8 @@ public class SpringJavaFxAutoConfiguration {
     public FxRouter fxRouter(FxRouteRegistry fxRouteRegistry,
                              ViewResolver viewResolver,
                              ApplicationContext applicationContext,
-                             FxTitleService fxTitleService) {
-        return new FxRouter(fxRouteRegistry, viewResolver, applicationContext, fxTitleService);
+                             FxTitleService fxTitleService,
+                             List<FxRouteGuard> routeGuards) {
+        return new FxRouter(fxRouteRegistry, viewResolver, applicationContext, fxTitleService, routeGuards);
     }
 }

@@ -60,6 +60,7 @@ nav:
       - Project Structure: getting-started/project-structure.md
   - Guide:
       - Routing: guide/routing.md
+      - Route Guards: guide/route-guards.md
       - Child Routing & Layouts: guide/child-routing.md
       - Windows & Modals: guide/windows-modals.md
       - Internationalization (i18n): guide/i18n.md

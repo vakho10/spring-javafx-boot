@@ -22,7 +22,7 @@ This means all beans are registered **only** when JavaFX is present on the class
 | `fxViewResolver` | `ViewResolver` | Resolves view names to FXML templates |
 | `fxRouteRegistry` | `FxRouteRegistry` | Scans `@FxRoutes` beans and builds the route table |
 | `fxTitleService` | `FxTitleService` | Manages the primary window title |
-| `fxRouter` | `FxRouter` | Central routing service |
+| `fxRouter` | `FxRouter` | Central routing service (auto-injects all `FxRouteGuard` beans) |
 
 ## Overriding Beans
 
@@ -49,7 +49,8 @@ FxRouter
 ├── FxRouteRegistry ← ApplicationContext
 ├── ViewResolver ← MessageSource, FxViewProperties
 ├── ApplicationContext
-└── FxTitleService ← LocalizedMessageSource ← MessageSource
+├── FxTitleService ← LocalizedMessageSource ← MessageSource
+└── List<FxRouteGuard> ← all FxRouteGuard beans (global guards)
 ```
 
 ## Initialization Order
