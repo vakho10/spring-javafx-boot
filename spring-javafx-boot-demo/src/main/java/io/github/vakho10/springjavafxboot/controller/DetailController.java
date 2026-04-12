@@ -25,7 +25,7 @@ public class DetailController {
     private final LocalizedMessageSource messages;
 
     @ModelAttribute
-    private String id;
+    private Long id;
 
     @FXML
     private Label detailLabel;
