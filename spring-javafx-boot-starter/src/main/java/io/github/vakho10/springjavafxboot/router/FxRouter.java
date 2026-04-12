@@ -10,6 +10,8 @@ import io.github.vakho10.springjavafxboot.view.ViewResolver;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -84,6 +86,18 @@ public class FxRouter {
     /** Cache of currently active routes, keyed by path. */
     private final Map<String, ActiveRoute> activeRoutes = new LinkedHashMap<>();
 
+    /** Back navigation stack. */
+    private final Deque<HistoryEntry> backStack = new ArrayDeque<>();
+
+    /** Forward navigation stack (populated by back(), cleared by navigateTo()). */
+    private final Deque<HistoryEntry> forwardStack = new ArrayDeque<>();
+
+    /** Flag to suppress history push during back/forward navigation. */
+    private boolean navigatingHistory = false;
+
+    private record HistoryEntry(String path, Map<String, Object> params) {
+    }
+
     public FxRouter(FxRouteRegistry routeRegistry,
                     ViewResolver viewResolver,
                     ApplicationContext applicationContext,
@@ -153,6 +167,12 @@ public class FxRouter {
                 return;
             }
 
+            // Push current route to back stack (skip during back/forward)
+            if (!navigatingHistory && previousPath != null) {
+                backStack.push(new HistoryEntry(previousPath, currentParams));
+                forwardStack.clear();
+            }
+
             executeNavigation(handler, mergedParams);
             currentPath = path;
             currentParams = mergedParams;
@@ -188,6 +208,64 @@ public class FxRouter {
         log.info("Reloading current route \"{}\"", currentPath);
         activeRoutes.clear();
         navigateTo(currentPath, currentParams);
+    }
+
+    // =========================================================================
+    // Navigation history (back / forward)
+    // =========================================================================
+
+    /**
+     * Navigate back to the previous route in history.
+     *
+     * @throws RoutingException if there is no history to go back to
+     */
+    public void back() {
+        if (backStack.isEmpty()) {
+            throw new RoutingException("Cannot go back — no navigation history.");
+        }
+        HistoryEntry entry = backStack.pop();
+        forwardStack.push(new HistoryEntry(currentPath, currentParams));
+        log.debug("Navigating back to \"{}\"", entry.path());
+        try {
+            navigatingHistory = true;
+            navigateTo(entry.path(), entry.params());
+        } finally {
+            navigatingHistory = false;
+        }
+    }
+
+    /**
+     * Navigate forward to the next route (available after {@link #back()}).
+     *
+     * @throws RoutingException if there is no forward history
+     */
+    public void forward() {
+        if (forwardStack.isEmpty()) {
+            throw new RoutingException("Cannot go forward — no forward history.");
+        }
+        HistoryEntry entry = forwardStack.pop();
+        backStack.push(new HistoryEntry(currentPath, currentParams));
+        log.debug("Navigating forward to \"{}\"", entry.path());
+        try {
+            navigatingHistory = true;
+            navigateTo(entry.path(), entry.params());
+        } finally {
+            navigatingHistory = false;
+        }
+    }
+
+    /**
+     * Whether there is a previous route to navigate back to.
+     */
+    public boolean canGoBack() {
+        return !backStack.isEmpty();
+    }
+
+    /**
+     * Whether there is a forward route (available after {@link #back()}).
+     */
+    public boolean canGoForward() {
+        return !forwardStack.isEmpty();
     }
 
     // =========================================================================

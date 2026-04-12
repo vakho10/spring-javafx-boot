@@ -9,6 +9,7 @@ import java.util.Locale;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -103,6 +104,30 @@ public class LayoutController {
 
         themeMenu.getItems().addAll(darkItem, lightItem);
 
-        menuBar.getMenus().setAll(languageMenu, themeMenu);
+        // Navigation menu (back/forward)
+        Menu navMenu = new Menu(messages.msg("menu.navigation"));
+
+        MenuItem backItem = new MenuItem(messages.msg("menu.navigation.back"));
+        backItem.setOnAction(e -> {
+            if (router.canGoBack()) {
+                router.back();
+            }
+        });
+
+        MenuItem forwardItem = new MenuItem(messages.msg("menu.navigation.forward"));
+        forwardItem.setOnAction(e -> {
+            if (router.canGoForward()) {
+                router.forward();
+            }
+        });
+
+        navMenu.setOnShowing(e -> {
+            backItem.setDisable(!router.canGoBack());
+            forwardItem.setDisable(!router.canGoForward());
+        });
+
+        navMenu.getItems().addAll(backItem, forwardItem);
+
+        menuBar.getMenus().setAll(languageMenu, themeMenu, navMenu);
     }
 }

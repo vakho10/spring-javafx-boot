@@ -197,6 +197,34 @@ The event includes `fromPath`, `toPath`, and `params`.
 !!! note
     If a route guard blocks navigation, only the `BEFORE` event is fired — no `AFTER` event.
 
+## Navigation History
+
+The router maintains a back/forward history stack, similar to a web browser:
+
+```java
+router.navigateTo("/main");
+router.navigateTo("/second");
+router.navigateTo("/detail/42");
+
+router.back();       // goes to "/second"
+router.back();       // goes to "/main"
+router.forward();    // goes to "/second"
+```
+
+### API
+
+| Method | Description |
+|--------|-------------|
+| `router.back()` | Navigate to the previous route |
+| `router.forward()` | Navigate forward (available after `back()`) |
+| `router.canGoBack()` | Whether there is a previous route in history |
+| `router.canGoForward()` | Whether there is a forward route in history |
+
+Regular `navigateTo()` calls push to the back stack and **clear** the forward stack (just like a browser). `back()` and `forward()` move entries between the two stacks without clearing.
+
+!!! note
+    `reload()` does not affect the history stacks.
+
 ## Reloading
 
 Call `router.reload()` to force a full reload of the current route and all its parents. This is useful after a locale change:
