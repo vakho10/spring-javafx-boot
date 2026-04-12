@@ -45,6 +45,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <javafx.version>21.0.5</javafx.version>
+        <!-- Reproducible builds: identical JARs regardless of when/where they're built -->
+        <project.build.outputTimestamp>2024-01-01T00:00:00Z</project.build.outputTimestamp>
     </properties>
 
     <modules>
@@ -52,6 +54,51 @@
         <module>spring-javafx-boot-demo</module>
         <module>spring-javafx-boot-archetype</module>
     </modules>
+
+    <build>
+        <plugins>
+            <!-- Enforce minimum Java and Maven versions, prevent dependency conflicts -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.8.0</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>17</version>
+                                </requireJavaVersion>
+                                <banDuplicatePomDependencyVersions/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Enforce consistent code formatting -->
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.44.4</version>
+                <configuration>
+                    <java>
+                        <importOrder/>
+                        <removeUnusedImports/>
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
+                    </java>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>

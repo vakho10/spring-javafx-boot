@@ -1,11 +1,10 @@
 package io.github.vakho10.springjavafxboot.service;
 
+import java.util.Locale;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
-
-import java.util.Locale;
 
 /**
  * Convenience wrapper around Spring's {@link MessageSource} that tracks the

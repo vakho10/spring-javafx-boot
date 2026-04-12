@@ -1,10 +1,9 @@
 package io.github.vakho10.springjavafxboot.guard;
 
 import io.github.vakho10.springjavafxboot.router.FxRouteGuard;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * Demo global route guard that controls access to the "/second" route.

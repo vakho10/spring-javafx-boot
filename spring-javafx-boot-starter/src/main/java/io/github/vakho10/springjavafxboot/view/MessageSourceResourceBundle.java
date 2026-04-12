@@ -1,12 +1,11 @@
 package io.github.vakho10.springjavafxboot.view;
 
-import lombok.Setter;
-import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
-
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import lombok.Setter;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 
 /**
  * Adapts Spring's {@link MessageSource} to Java's {@link ResourceBundle},

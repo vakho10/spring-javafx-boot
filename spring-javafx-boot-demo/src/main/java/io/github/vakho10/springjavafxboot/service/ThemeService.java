@@ -1,15 +1,14 @@
 package io.github.vakho10.springjavafxboot.service;
 
+import java.net.URL;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import javafx.scene.Scene;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.net.URL;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * Manages visual appearance: theme stylesheets and locale-specific font stylesheets.

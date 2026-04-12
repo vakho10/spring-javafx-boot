@@ -6,7 +6,9 @@ import io.github.vakho10.springjavafxboot.service.FxTitleService;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import io.github.vakho10.springjavafxboot.service.ThemeService;
 import io.github.vakho10.springjavafxboot.service.UserPreferencesService;
-
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Locale;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -15,10 +17,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Locale;
 
 public class JavaFxApplication extends Application {
 

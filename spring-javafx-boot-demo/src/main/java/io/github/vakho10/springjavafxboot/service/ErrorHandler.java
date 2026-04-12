@@ -1,5 +1,7 @@
 package io.github.vakho10.springjavafxboot.service;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -9,9 +11,6 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 /**
  * Global error handler that shows themed, localized error alerts

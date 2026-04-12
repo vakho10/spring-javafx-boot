@@ -2,9 +2,6 @@ package io.github.vakho10.springjavafxboot.router;
 
 import io.github.vakho10.springjavafxboot.annotation.FxMapping;
 import io.github.vakho10.springjavafxboot.annotation.FxRoutes;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
-
 import jakarta.annotation.PostConstruct;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -14,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Scans the Spring {@link ApplicationContext} at startup for beans annotated

@@ -1,10 +1,11 @@
 package io.github.vakho10.springjavafxboot.controller;
 
-import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.annotation.RouterOutlet;
+import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import io.github.vakho10.springjavafxboot.service.ThemeService;
 import io.github.vakho10.springjavafxboot.service.UserPreferencesService;
+import java.util.Locale;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -15,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
-import java.util.Locale;
 
 /**
  * Layout controller — defines the application shell (menu bar + content outlet).

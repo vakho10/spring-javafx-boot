@@ -1,14 +1,13 @@
 package io.github.vakho10.springjavafxboot.view;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.function.Function;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 
 /**
  * Convention-based FXML view resolver inspired by Spring MVC's

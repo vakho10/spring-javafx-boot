@@ -5,8 +5,17 @@ import io.github.vakho10.springjavafxboot.annotation.PathVariable;
 import io.github.vakho10.springjavafxboot.annotation.RouterOutlet;
 import io.github.vakho10.springjavafxboot.event.NavigationEvent;
 import io.github.vakho10.springjavafxboot.event.NavigationPhase;
-import io.github.vakho10.springjavafxboot.view.ViewResolver;
 import io.github.vakho10.springjavafxboot.service.FxTitleService;
+import io.github.vakho10.springjavafxboot.view.ViewResolver;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -18,17 +27,6 @@ import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * The central JavaFX routing service — analogous to Spring MVC's {@code DispatcherServlet},

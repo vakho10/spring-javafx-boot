@@ -1,8 +1,7 @@
 package io.github.vakho10.springjavafxboot.event;
 
-import org.springframework.context.ApplicationEvent;
-
 import java.util.Map;
+import org.springframework.context.ApplicationEvent;
 
 /**
  * Published by {@link io.github.vakho10.springjavafxboot.router.FxRouter} during navigation.

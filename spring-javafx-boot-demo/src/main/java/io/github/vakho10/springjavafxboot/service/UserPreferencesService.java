@@ -1,12 +1,11 @@
 package io.github.vakho10.springjavafxboot.service;
 
 import io.github.vakho10.springjavafxboot.AppConfig;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.util.Locale;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 /**
  * Persists user preferences (theme, locale) using the Java Preferences API.

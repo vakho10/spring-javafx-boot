@@ -1,11 +1,12 @@
 package io.github.vakho10.springjavafxboot.autoconfigure;
 
-import io.github.vakho10.springjavafxboot.view.ViewResolver;
 import io.github.vakho10.springjavafxboot.router.FxRouteGuard;
 import io.github.vakho10.springjavafxboot.router.FxRouteRegistry;
 import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.service.FxTitleService;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
+import io.github.vakho10.springjavafxboot.view.ViewResolver;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -15,8 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-
-import java.util.List;
 
 /**
  * Auto-configuration for Spring JavaFX Boot.
