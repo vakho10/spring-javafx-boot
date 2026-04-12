@@ -1,6 +1,7 @@
 package io.github.vakho10.springjavafxboot.controller;
 
 import io.github.vakho10.springjavafxboot.annotation.ModelAttribute;
+import io.github.vakho10.springjavafxboot.router.FxModel;
 import io.github.vakho10.springjavafxboot.router.FxRouter;
 import io.github.vakho10.springjavafxboot.service.LocalizedMessageSource;
 import javafx.fxml.FXML;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Controller;
  * <p>
  * Navigated to via {@code router.navigateTo("/detail/42")}, where {@code 42}
  * is extracted as the {@code id} path variable.
+ * <p>
+ * Uses {@code onModelReady} instead of {@code @FXML initialize()} because
+ * {@code @ModelAttribute} fields are injected after FXML loading.
  */
 @Controller
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -30,8 +34,11 @@ public class DetailController {
     @FXML
     private Label detailLabel;
 
-    @FXML
-    private void initialize() {
+    /**
+     * Called after {@code @ModelAttribute} fields have been injected.
+     */
+    @SuppressWarnings("unused")
+    private void onModelReady(FxModel model) {
         detailLabel.setText(messages.msg("detail.label", id));
     }
 
